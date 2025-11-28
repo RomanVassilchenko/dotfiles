@@ -1,0 +1,53 @@
+/*
+
+    Name:       dracula
+    Author:     Michael Kaminsky (http://github.com/mkaminsky11)
+
+    Original dracula color scheme by Zeno Rocha (https://github.com/zenorocha/dracula-theme)
+
+*/
+
+
+:root{
+    --xml-editor-button-color: var(--color-grey-225-10-15);
+    --xml-editor-button-border-color: var(--color-grey-225-10-75);
+    --xml-editor-button-background-color: var(--color-grey-225-10-95);
+    --xml-editor-font-size: var(--font-size-default);
+    --xml-editor-font-size-small: 13px;
+    --xml-editor-tag-color: #cba6f7 !important;
+    --xml-editor-string-color: #f9e2af !important;
+}
+
+.CodeMirror,  .CodeMirror-gutters,
+.cm-editor, .cm-gutters {
+    background-color: #1e1e2e !important;
+    color: #cdd6f4 !important;
+    border: none !important;
+  }
+   .CodeMirror-gutters, .cm-gutters { color: #1e1e2e !important;  }
+   .CodeMirror-cursor, .cm-cursor { border-left: solid thin #cdd6f4 !important; }
+   .CodeMirror-linenumber, .cm-lineNumbers { color: #6c7086 !important; }
+   .CodeMirror-selected, .cm-selectionBackground { background: rgba(69, 71, 90, 0.5) !important; }
+   .CodeMirror-line::selection,  .CodeMirror-line > span::selection,  .CodeMirror-line > span > span::selection,
+   .cm-line::selection,  .cm-line > span::selection,  .cm-line > span > span::selection { background: rgba(69, 71, 90, 0.5) !important; }
+   .CodeMirror-line::-moz-selection,  .CodeMirror-line > span::-moz-selection,  .CodeMirror-line > span > span::-moz-selection,
+   .cm-line::-moz-selection,  .cm-line > span::-moz-selection,  .cm-line > span > span::-moz-selection { background: rgba(69, 71, 90, 0.5) !important; }
+   span.cm-comment { color: #6c7086 !important; }
+   span.cm-string,  span.cm-string-2, span.ci { color: #f9e2af !important; }
+   span.cm-number { color: #cba6f7 !important; }
+   span.cm-variable { color: #a6e3a1 !important; }
+   span.cm-variable-2 { color: #cdd6f4 !important; }
+   span.cm-def { color: #a6e3a1 !important; }
+   span.cm-operator { color: #cba6f7 !important; }
+   span.cm-keyword { color: #cba6f7 !important; }
+   span.cm-atom { color: #cba6f7 !important; }
+   span.cm-meta { color: #cdd6f4 !important; }
+   span.cm-tag { color: #cba6f7 !important; }
+   span.cm-attribute { color: #a6e3a1 !important; }
+   span.cm-qualifier { color: #a6e3a1 !important; }
+   span.cm-property { color: #89b4fa !important; }
+   span.cm-builtin { color: #a6e3a1 !important; }
+   span.cm-variable-3,  span.cm-type { color: #f9e2af !important; }
+  
+   .CodeMirror-activeline-background, .cm-activeLine, .cm-activeLineGutter { background: rgba(49, 50, 68, 0.5) !important; }
+   .CodeMirror-matchingbracket { text-decoration: underline; color: #cdd6f4 !important; }

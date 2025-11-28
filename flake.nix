@@ -1,0 +1,74 @@
+{
+  description = "Dotfiles";
+
+  inputs = {
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Pinned nixpkgs for stable package versions (won't change on flake update)
+    nixpkgs-pinned.url = "github:nixos/nixpkgs/nixos-unstable";
+    nvf.url = "github:notashelf/nvf";
+    nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      nixpkgs-pinned,
+      home-manager,
+      nix-flatpak,
+      plasma-manager,
+      agenix,
+      ...
+    }@inputs:
+    let
+      username = "romanv";
+
+      # Helper to build host-specific configurations
+      mkNixosConfig =
+        { gpuProfile, host }:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit
+              inputs
+              username
+              host
+              ;
+            profile = gpuProfile;
+            pkgs-pinned = import nixpkgs-pinned {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
+            };
+          };
+          modules = [
+            ./profiles/${gpuProfile}
+            nix-flatpak.nixosModules.nix-flatpak
+            agenix.nixosModules.default
+          ];
+        };
+    in
+    {
+      nixosConfigurations = {
+        laptop-82sn = mkNixosConfig {
+          gpuProfile = "amd";
+          host = "laptop-82sn";
+        };
+        probook-450 = mkNixosConfig {
+          gpuProfile = "intel";
+          host = "probook-450";
+        };
+      };
+    };
+}

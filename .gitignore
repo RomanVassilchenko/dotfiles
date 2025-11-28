@@ -1,0 +1,10 @@
+# Stow directory - SSH private keys (keep public keys)
+stow/ssh/.ssh/id_*
+!stow/ssh/.ssh/*.pub
+stow/ssh/.ssh/known_hosts
+
+# Nextcloud sync database files
+.sync_*.db
+.sync_*.db-wal
+.sync_*.db-shm
+.nextcloudsync.log

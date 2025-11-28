@@ -1,0 +1,77 @@
+{
+  profile,
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+{
+  imports = [ ];
+
+  programs.zsh = {
+    enable = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting = {
+      enable = true;
+      highlighters = [
+        "main"
+        "brackets"
+        "pattern"
+        "regexp"
+        "root"
+        "line"
+      ];
+    };
+    historySubstringSearch.enable = true;
+
+    history = {
+      ignoreDups = true;
+      save = 10000;
+      size = 10000;
+      path = "${config.xdg.stateHome}/zsh/history";
+    };
+
+    oh-my-zsh = {
+      enable = true;
+    };
+
+    plugins = [
+      {
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+      }
+      {
+        name = "powerlevel10k-config";
+        src = lib.cleanSource ./p10k-config;
+        file = "p10k.zsh";
+      }
+    ];
+
+    initContent = ''
+      # XDG-compliant compinit directory
+      autoload -U compinit
+      compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
+
+      bindkey "\eh" backward-word
+      bindkey "\ej" down-line-or-history
+      bindkey "\ek" up-line-or-history
+      bindkey "\el" forward-word
+      if [ -f $HOME/.zshrc-personal ]; then
+        source $HOME/.zshrc-personal
+      fi
+    '';
+
+    shellAliases = {
+      sv = "sudo nvim";
+      v = "nvim";
+      c = "clear";
+      ncg = "nix-collect-garbage --delete-old && sudo nix-collect-garbage -d && sudo /run/current-system/bin/switch-to-configuration boot";
+      cat = "bat";
+      man = "batman";
+      aq-vpn = "sudo systemctl start openfortivpn-dahua.service";
+      aq-vpn-stop = "sudo systemctl stop openfortivpn-dahua.service";
+      aq-vpn-status = "systemctl status openfortivpn-dahua.service";
+    };
+  };
+}

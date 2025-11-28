@@ -1,0 +1,34 @@
+{
+  "name": "camunda-modeler-plugin-dracula-theme",
+  "version": "0.1.0",
+  "description": "Dracula theme for Camunda Modeler",
+  "main": "index.js",
+  "scripts": {
+    "all": "run-s bundle",
+    "bundle": "webpack",
+    "dev": "webpack -w",
+    "prepublishOnly": "run-s bundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camunda/camunda-modeler-plugin-example.git"
+  },
+  "keywords": [
+    "camunda",
+    "modeler",
+    "plugin",
+    "theme"
+  ],
+  "author": "Henrique Lucas França",
+  "license": "MIT",
+  "devDependencies": {
+    "camunda-modeler-plugin-helpers": "^5.0.0",
+    "npm-run-all": "^4.1.5",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "files": [
+    "dist",
+    "index.js"
+  ]
+}
