@@ -4,6 +4,11 @@ let
 in
 {
   nix = {
+    # Automatic store optimization (weekly deduplication)
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
     settings = {
       download-buffer-size = 200000000;
       auto-optimise-store = true;
@@ -24,6 +29,8 @@ in
       keep-derivations = false;
       # Parallel downloads
       http-connections = 128;
+      # Download all dependencies before building (substitution jobs > max-jobs)
+      max-substitution-jobs = 128;
       # Warn on dirty git trees but don't fail
       warn-dirty = false;
     };
