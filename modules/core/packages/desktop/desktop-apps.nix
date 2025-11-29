@@ -14,6 +14,7 @@
     codex
     camunda-modeler
     solaar
+    thunderbird
     xdg-utils
     distrobox
     docker-compose
