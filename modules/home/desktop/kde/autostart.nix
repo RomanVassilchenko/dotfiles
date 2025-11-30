@@ -89,5 +89,32 @@
       StartupWMClass=Joplin
     '';
 
+    # Thunderbird - Email client, opens on Desktop 4 (configured via KWin window rules)
+    "autostart/thunderbird.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Thunderbird
+      Comment=Email, RSS and newsgroup client
+      Exec=${pkgs.thunderbird}/bin/thunderbird
+      Icon=thunderbird
+      Terminal=false
+      Categories=Network;Email;
+      MimeType=x-scheme-handler/mailto;application/x-xpinstall;
+      StartupWMClass=thunderbird
+    '';
+
+    # Zoom - Video conferencing, opens on Desktop 5 (configured via KWin window rules)
+    "autostart/zoom.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Zoom
+      Comment=Zoom Video Conference
+      Exec=${pkgs.zoom-us}/bin/zoom
+      Icon=Zoom
+      Terminal=false
+      Categories=Network;VideoConference;
+      StartupWMClass=zoom
+    '';
+
   };
 }
