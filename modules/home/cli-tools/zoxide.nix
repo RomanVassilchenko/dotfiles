@@ -5,7 +5,7 @@ _: {
       enableZshIntegration = true;
       enableBashIntegration = true;
       options = [
-        "--cmd cd"
+        "--cmd z"
       ];
     };
   };

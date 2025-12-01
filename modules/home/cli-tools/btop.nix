@@ -19,6 +19,7 @@
       io_mode = true;
       io_graph_combined = false;
       update_ms = 500;
+      theme_background = false;
     };
   };
 }
