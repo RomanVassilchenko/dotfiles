@@ -69,4 +69,22 @@ in
     laptop-82sn
     probook-450
   ];
+
+  # BerekeBank VPN username
+  "secrets/vpn-bereke-username.age".publicKeys = [
+    laptop-82sn
+    probook-450
+  ];
+
+  # BerekeBank VPN password
+  "secrets/vpn-bereke-password.age".publicKeys = [
+    laptop-82sn
+    probook-450
+  ];
+
+  # BerekeBank VPN TOTP secret
+  "secrets/vpn-bereke-totp-secret.age".publicKeys = [
+    laptop-82sn
+    probook-450
+  ];
 }
