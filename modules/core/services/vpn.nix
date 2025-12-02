@@ -1,59 +1,34 @@
-{ pkgs, config, ... }:
+{ pkgs, config, username, ... }:
 {
-  # Enable OpenConnect support for AnyConnect VPN
-  networking.networkmanager = {
-    plugins = with pkgs; [
-      networkmanager-openconnect
-    ];
-
-    # NetworkManager dispatcher scripts for VPN auto-reconnect
-    dispatcherScripts = [
-      {
-        # Auto-reconnect VPN when network connectivity is restored
-        source = pkgs.writeText "vpn-auto-reconnect" ''
-          #!/bin/sh
-          INTERFACE=$1
-          STATUS=$2
-          VPN_NAME="BerekeBank"
-
-          # Log function
-          log() {
-            logger -t "nm-vpn-reconnect" "$1"
-          }
-
-          # Only act on connectivity changes for non-VPN interfaces
-          case "$INTERFACE" in
-            tun*|vpn*)
-              exit 0
-              ;;
-          esac
-
-          case "$STATUS" in
-            up|connectivity-change)
-              # Wait a bit for network to stabilize
-              sleep 3
-
-              # Check if VPN is already connected
-              VPN_STATE=$(nmcli -t -f GENERAL.STATE con show "$VPN_NAME" 2>/dev/null | grep -i activated)
-
-              if [ -z "$VPN_STATE" ]; then
-                log "Network connectivity restored, attempting VPN reconnection..."
-                # Attempt to activate VPN (requires saved credentials or user interaction)
-                # This will prompt for credentials via nm-applet if not saved
-                nmcli con up "$VPN_NAME" 2>&1 | while read line; do log "$line"; done || true
-              fi
-              ;;
-          esac
-        '';
-        type = "basic";
-      }
-    ];
-  };
+  # Allow user to control VPN service without sudo password
+  security.sudo.extraRules = [
+    {
+      users = [ username ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/systemctl start openconnect-berekebank";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl stop openconnect-berekebank";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl restart openconnect-berekebank";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl status openconnect-berekebank";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 
   # Install OpenConnect tools
   environment.systemPackages = with pkgs; [
     openconnect
-    networkmanager-openconnect
+    oath-toolkit # For TOTP generation
   ];
 
   # Improve kernel network parameters for VPN stability
@@ -70,50 +45,6 @@
     # Reduce connection timeout for faster failover
     "net.ipv4.tcp_syn_retries" = 3;
     "net.ipv4.tcp_synack_retries" = 3;
-  };
-
-  # SystemD service to generate NetworkManager VPN connection with secrets
-  systemd.services.networkmanager-berekebank-vpn = {
-    description = "Generate NetworkManager BerekeBank VPN Connection";
-    before = [ "NetworkManager.service" ];
-    wantedBy = [ "NetworkManager.service" ];
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "generate-berekebank-vpn" ''
-        mkdir -p /etc/NetworkManager/system-connections
-
-        # Read secrets
-        GATEWAY=$(cat ${config.age.secrets.vpn-bereke-gateway.path})
-        DNS=$(cat ${config.age.secrets.vpn-bereke-dns.path})
-        DNS_SEARCH=$(cat ${config.age.secrets.vpn-bereke-dns-search.path})
-
-        # Generate connection file with secrets
-        cat > /etc/NetworkManager/system-connections/BerekeBank.nmconnection <<EOF
-        [connection]
-        id=BerekeBank
-        type=vpn
-        autoconnect=true
-
-        [vpn]
-        service-type=org.freedesktop.NetworkManager.openconnect
-        gateway=$GATEWAY
-        protocol=anyconnect
-        useragent=AnyConnect
-
-        [ipv4]
-        method=auto
-        dns=$DNS
-        dns-search=$DNS_SEARCH
-        ignore-auto-dns=true
-        EOF
-
-        chmod 0600 /etc/NetworkManager/system-connections/BerekeBank.nmconnection
-        chown root:root /etc/NetworkManager/system-connections/BerekeBank.nmconnection
-      '';
-      ExecStop = "${pkgs.coreutils}/bin/rm -f /etc/NetworkManager/system-connections/BerekeBank.nmconnection";
-    };
   };
 
   # Configure agenix secrets for VPN
@@ -157,6 +88,63 @@
     mode = "0400";
     owner = "root";
     group = "root";
+  };
+
+  age.secrets.vpn-bereke-username = {
+    file = ../../../secrets/vpn-bereke-username.age;
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  };
+
+  age.secrets.vpn-bereke-password = {
+    file = ../../../secrets/vpn-bereke-password.age;
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  };
+
+  age.secrets.vpn-bereke-totp-secret = {
+    file = ../../../secrets/vpn-bereke-totp-secret.age;
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  };
+
+  # OpenConnect VPN service for BerekeBank with automatic TOTP
+  systemd.services.openconnect-berekebank = {
+    description = "OpenConnect VPN - BerekeBank";
+    after = [ "network-online.target" "agenix.service" ];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
+
+    path = [ pkgs.openconnect pkgs.oath-toolkit pkgs.coreutils ];
+
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = pkgs.writeShellScript "openconnect-berekebank" ''
+        # Read credentials from secrets
+        USERNAME=$(cat ${config.age.secrets.vpn-bereke-username.path})
+        PASSWORD=$(cat ${config.age.secrets.vpn-bereke-password.path})
+        TOTP_SECRET=$(cat ${config.age.secrets.vpn-bereke-totp-secret.path})
+        GATEWAY=$(cat ${config.age.secrets.vpn-bereke-gateway.path})
+
+        # Generate TOTP code
+        TOTP=$(oathtool --totp -b "$TOTP_SECRET")
+
+        # Connect to VPN in foreground (no --background flag)
+        # Password and TOTP are sent on separate lines
+        echo -e "$PASSWORD\n$TOTP" | exec openconnect \
+          --protocol=anyconnect \
+          --user="$USERNAME" \
+          --passwd-on-stdin \
+          "$GATEWAY"
+      '';
+      Restart = "on-failure";
+      RestartSec = "30s";
+      # Wait for network to be fully up before starting
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+    };
   };
 
   # OpenFortiVPN Configuration template for Dahua Dima (without secrets)

@@ -5,6 +5,10 @@
   ...
 }:
 {
+  imports = [
+    ./vpn-tray.nix
+  ];
+
   home.packages = [
     (import ./dot.nix {
       inherit pkgs profile;
