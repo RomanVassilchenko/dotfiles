@@ -4,41 +4,61 @@
   systemd.user.services.git-secrets-config-generator = {
     Unit = {
       Description = "Generate Git configuration with secrets";
-      After = [ "agenix.service" ];
     };
 
     Service = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "generate-git-secrets" ''
-                mkdir -p ~/.config/git
+      ExecStart =
+        let
+          script = pkgs.writeShellApplication {
+            name = "generate-git-secrets";
+            runtimeInputs = with pkgs; [ coreutils ];
+            text = ''
+              mkdir -p ~/.config/git
 
-                # Read secrets
-                WORK_EMAIL=$(cat /run/agenix/work-email)
-                GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
+              # Wait for agenix secrets to be available (system service, so we poll)
+              MAX_WAIT=60
+              WAITED=0
+              while [ ! -f /run/agenix/work-email ] && [ $WAITED -lt $MAX_WAIT ]; do
+                sleep 1
+                WAITED=$((WAITED + 1))
+              done
 
-                # Generate git config with secrets
-                cat > ~/.config/git/secrets << EOF
-        # Automatically generated from encrypted secrets
-        # Do not edit manually - changes will be overwritten
+              if [ ! -f /run/agenix/work-email ]; then
+                echo "Timeout waiting for agenix secrets" >&2
+                exit 1
+              fi
 
-        [user]
-            email = $WORK_EMAIL
+              # Read secrets
+              WORK_EMAIL=$(cat /run/agenix/work-email)
+              GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
 
-        # URL remapping for GitLab SSH access
-        [url "ssh://git@$GITLAB_HOSTNAME/"]
-            insteadOf = https://$GITLAB_HOSTNAME/
+              # Generate git config with secrets
+              cat > ~/.config/git/secrets << EOF
+# Automatically generated from encrypted secrets
+# Do not edit manually - changes will be overwritten
 
-        [url "git@$GITLAB_HOSTNAME:"]
-            insteadOf = https://$GITLAB_HOSTNAME/
+[user]
+    email = $WORK_EMAIL
 
-        # SSL settings for company GitLab
-        [http "https://$GITLAB_HOSTNAME"]
-            sslVerify = false
-        EOF
+# URL remapping for GitLab SSH access
+[url "ssh://git@$GITLAB_HOSTNAME/"]
+    insteadOf = https://$GITLAB_HOSTNAME/
 
-                chmod 600 ~/.config/git/secrets
-      '';
+[url "git@$GITLAB_HOSTNAME:"]
+    insteadOf = https://$GITLAB_HOSTNAME/
+
+# SSL settings for company GitLab
+[http "https://$GITLAB_HOSTNAME"]
+    sslVerify = false
+EOF
+
+              chmod 600 ~/.config/git/secrets
+            '';
+          };
+        in
+        "${script}/bin/generate-git-secrets";
     };
 
     Install = {
