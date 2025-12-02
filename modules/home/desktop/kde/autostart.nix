@@ -116,5 +116,21 @@
       StartupWMClass=zoom
     '';
 
+    # Switch to Desktop 1 on login (runs after other autostart apps)
+    # This ensures we stay on Desktop 1 even when apps open on other desktops
+    "autostart/switch-to-desktop-1.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Switch to Desktop 1
+      Comment=Switch to Desktop 1 after login
+      Exec=sh -c "sleep 3 && ${pkgs.kdotool}/bin/kdotool desktop 1"
+      Icon=preferences-desktop-virtual
+      Terminal=false
+      Categories=Utility;
+      X-KDE-autostart-phase=2
+      X-KDE-autostart-after=panel
+      NoDisplay=true
+    '';
+
   };
 }

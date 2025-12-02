@@ -5,6 +5,49 @@
     plugins = with pkgs; [
       networkmanager-openconnect
     ];
+
+    # NetworkManager dispatcher scripts for VPN auto-reconnect
+    dispatcherScripts = [
+      {
+        # Auto-reconnect VPN when network connectivity is restored
+        source = pkgs.writeText "vpn-auto-reconnect" ''
+          #!/bin/sh
+          INTERFACE=$1
+          STATUS=$2
+          VPN_NAME="BerekeBank"
+
+          # Log function
+          log() {
+            logger -t "nm-vpn-reconnect" "$1"
+          }
+
+          # Only act on connectivity changes for non-VPN interfaces
+          case "$INTERFACE" in
+            tun*|vpn*)
+              exit 0
+              ;;
+          esac
+
+          case "$STATUS" in
+            up|connectivity-change)
+              # Wait a bit for network to stabilize
+              sleep 3
+
+              # Check if VPN is already connected
+              VPN_STATE=$(nmcli -t -f GENERAL.STATE con show "$VPN_NAME" 2>/dev/null | grep -i activated)
+
+              if [ -z "$VPN_STATE" ]; then
+                log "Network connectivity restored, attempting VPN reconnection..."
+                # Attempt to activate VPN (requires saved credentials or user interaction)
+                # This will prompt for credentials via nm-applet if not saved
+                nmcli con up "$VPN_NAME" 2>&1 | while read line; do log "$line"; done || true
+              fi
+              ;;
+          esac
+        '';
+        type = "basic";
+      }
+    ];
   };
 
   # Install OpenConnect tools
@@ -12,6 +55,22 @@
     openconnect
     networkmanager-openconnect
   ];
+
+  # Improve kernel network parameters for VPN stability
+  boot.kernel.sysctl = {
+    # Reduce TCP keepalive time for faster dead connection detection
+    "net.ipv4.tcp_keepalive_time" = 60;
+    "net.ipv4.tcp_keepalive_intvl" = 10;
+    "net.ipv4.tcp_keepalive_probes" = 6;
+
+    # Improve UDP performance for DTLS
+    "net.core.rmem_max" = 16777216;
+    "net.core.wmem_max" = 16777216;
+
+    # Reduce connection timeout for faster failover
+    "net.ipv4.tcp_syn_retries" = 3;
+    "net.ipv4.tcp_synack_retries" = 3;
+  };
 
   # SystemD service to generate NetworkManager VPN connection with secrets
   systemd.services.networkmanager-berekebank-vpn = {
