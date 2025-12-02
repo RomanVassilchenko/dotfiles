@@ -58,6 +58,7 @@ The system is managed through the `dot` command (defined in
 - **`dot list-gens`** - List user and system generations
 - **`dot diag`** - Generate system diagnostic report
 - **`dot trim`** - Run fstrim for SSD optimization
+- **`dot stow`** - Stage changes and rebuild
 
 ### Host Management
 
@@ -71,36 +72,68 @@ The system is managed through the `dot` command (defined in
 ```
 ├── flake.nix                 # Main flake entry point
 ├── hosts/                    # Host-specific configurations
-│   └── {hostname}/
-│       ├── default.nix       # Host-level imports and config
-│       ├── hardware.nix      # Hardware-specific settings
-│       ├── host-packages.nix # Host-specific packages (optional)
-│       └── variables.nix     # Host configuration variables
+│   ├── laptop-82sn/          # AMD Ryzen 6800H + Radeon 680M
+│   │   ├── default.nix       # Host-level imports and config
+│   │   ├── hardware.nix      # Hardware-specific settings
+│   │   ├── host-packages.nix # Host-specific packages
+│   │   ├── performance.nix   # Performance optimizations (Zram, CPU)
+│   │   └── variables.nix     # Host configuration variables
+│   └── probook-450/          # Intel integrated graphics
+│       └── ...
 ├── modules/
 │   ├── core/                 # System-level modules
 │   │   ├── default.nix       # Unconditionally imports all core modules
+│   │   ├── boot/             # Bootloader configuration
 │   │   ├── desktop/
-│   │   │   └── environments/
-│   │   │       ├── plasma.nix    # KDE Plasma 6 system configuration
-│   │   │       └── xserver.nix   # X11 server configuration
-│   │   ├── desktop/
+│   │   │   ├── environments/
+│   │   │   │   ├── plasma.nix    # KDE Plasma 6 system configuration
+│   │   │   │   └── xserver.nix   # X11 server configuration
 │   │   │   └── display-managers/
 │   │   │       └── sddm.nix      # SDDM display manager
-│   │   ├── packages.nix      # System packages
-│   │   └── ...               # Services, security, virtualization, etc.
+│   │   ├── desktop-apps/     # Flatpak, fonts, Steam
+│   │   ├── hardware/         # Hardware configuration
+│   │   ├── network/          # Networking and firewall
+│   │   ├── packages/         # System packages
+│   │   ├── security/         # Agenix secrets management
+│   │   ├── services/         # System services (printing, syncthing, VPN)
+│   │   ├── system/           # System-level settings
+│   │   ├── tools/            # System tools (nh)
+│   │   ├── user/             # User account configuration
+│   │   └── virtualisation/   # Docker, libvirt/QEMU
 │   ├── home/                 # Home-manager modules
 │   │   ├── default.nix       # Unconditionally imports home modules
-│   │   ├── terminal/
-│   │   │   └── ghostty.nix   # Ghostty terminal configuration
-│   │   ├── editors/          # Code editors (nvf, vscode)
-│   │   ├── cli-tools/        # CLI utilities (bat, eza, fzf, lazygit, etc.)
-│   │   └── ...               # Scripts, shell config, theming
+│   │   ├── apps/             # GUI applications (OBS, virt-manager)
+│   │   ├── cli-tools/        # CLI utilities (bat, btop, eza, fzf, htop, etc.)
+│   │   ├── config/           # Git, SSH, XDG configuration
+│   │   ├── desktop/kde/      # Plasma-manager KDE configuration
+│   │   │   ├── autostart.nix     # Application autostart
+│   │   │   ├── config.nix        # KDE settings
+│   │   │   ├── panels.nix        # Panel configuration
+│   │   │   ├── wallpaper.nix     # Wallpaper settings
+│   │   │   └── widgets.nix       # Desktop widgets
+│   │   ├── editors/          # Code editors (nvf, vscode, zed)
+│   │   ├── fastfetch/        # System info display
+│   │   ├── scripts/          # Custom scripts (dot, vpn-tray)
+│   │   ├── shell/zsh/        # ZSH configuration
+│   │   └── terminal/         # Ghostty terminal
 │   └── drivers/              # GPU driver configurations
 │       ├── amd-drivers.nix
-│       └── ...
-└── profiles/                 # GPU profile configurations
-    └── {profile}/
-        └── default.nix       # Profile-specific imports
+│       ├── intel-drivers.nix
+│       ├── nvidia-drivers.nix
+│       ├── nvidia-prime-drivers.nix
+│       ├── nvidia-amd-hybrid.nix
+│       └── local-hardware-clock.nix
+├── profiles/                 # GPU profile configurations
+│   ├── amd/
+│   ├── intel/
+│   ├── nvidia/
+│   ├── nvidia-laptop/
+│   └── amd-hybrid/
+├── secrets/                  # Agenix encrypted secrets
+│   ├── secrets.nix           # Secret definitions
+│   └── *.age                 # Encrypted secret files
+└── git-hooks/                # Git hooks for commit quality
+    └── prepare-commit-msg
 ```
 
 ### Configuration Flow
@@ -108,7 +141,7 @@ The system is managed through the `dot` command (defined in
 1. **`flake.nix`** defines:
    - `system` and `username` variables (shared across all hosts)
    - Inputs: nixpkgs, nixpkgs-pinned, home-manager, nix-flatpak, nvf,
-     plasma-manager
+     plasma-manager, agenix
    - The `mkNixosConfig` helper function:
      - Takes `gpuProfile` and `host` as parameters
      - Passes `inputs`, `username`, `host`, and `profile` as `specialArgs` to
@@ -127,13 +160,14 @@ The system is managed through the `dot` command (defined in
      driver modules
 
 3. **Host Layer** (`hosts/{hostname}/`):
-   - `variables.nix` contains all customization options (git config, app
-     toggles, feature flags)
+   - `variables.nix` contains all customization options (git config, keyboard,
+     print settings)
    - `hardware.nix` contains hardware-specific configuration (generated by
      nixos-generate-config)
    - `default.nix` imports hardware config and optionally `host-packages.nix`
-   - `host-packages.nix` (optional) - Host-specific packages not suitable for
-     variables.nix toggles
+   - `host-packages.nix` (optional) - Host-specific packages
+   - `performance.nix` (optional) - Host-specific performance tuning (Zram, CPU
+     governor)
 
 4. **Driver Layer** (`modules/drivers/`):
    - `default.nix` unconditionally imports all driver modules
@@ -150,16 +184,17 @@ The system is managed through the `dot` command (defined in
 
 6. **Home-Manager Modules** (`modules/home/default.nix`):
    - Unconditionally imports all home modules
+   - KDE configuration via plasma-manager (`desktop/kde/`)
    - Terminal emulator (ghostty) is directly imported
-   - Editors (vscode, nvf) are directly imported
+   - Editors (vscode, nvf, zed) are directly imported
    - Core modules (git, zsh, scripts, cli-tools) are always imported
    - No conditional imports - all modules are active
 
 ### Variables System
 
 All host-specific customization happens through
-`hosts/{hostname}/variables.nix`. The variables file is now minimal and focused
-on essential settings:
+`hosts/{hostname}/variables.nix`. The variables file is minimal and focused on
+essential settings:
 
 **Personal Settings:**
 
@@ -172,12 +207,40 @@ on essential settings:
 - `printEnable` - Enable printing support (true/false)
 - `sshKeyPath` - Path to SSH private key for agenix secrets decryption
 
-**Sensitive Data:**
+### Secrets Management (Agenix)
 
-Sensitive information is stored in encrypted secrets managed by agenix:
+Sensitive information is stored in encrypted secrets managed by agenix in the
+`secrets/` directory:
 
-- `secrets/work-email.age` - Work email address for git commits
-- `secrets/ssh-*` - SSH host IPs, hostnames, and usernames
+**VPN Credentials:**
+
+- `bereke-username.age`, `bereke-password.age` - BerekeBank VPN credentials
+- `bereke-totp-secret.age` - TOTP secret for auto-generating 2FA codes
+- `bereke-gateway.age`, `bereke-dns.age`, `bereke-dns-search.age` - VPN network
+  config
+- `bereke-gitlab-hostname.age` - GitLab hostname
+- `dahua-host.age`, `dahua-password.age`, `dahua-cert.age` - Dahua VPN
+  credentials
+
+**SSH Configuration:**
+
+- `host-aq-ip.age`, `host-home-ip.age` - SSH host IP addresses
+- `aq-username.age` - SSH username
+
+**Work:**
+
+- `work-email.age` - Work email address for git commits
+
+**Managing secrets:**
+
+```bash
+# Edit an existing secret
+agenix -e secrets/work-email.age
+
+# Add a new secret
+# 1. Add entry to secrets/secrets.nix
+# 2. Run: agenix -e secrets/new-secret.age
+```
 
 ### Module Import Pattern
 
@@ -200,12 +263,18 @@ The codebase uses unconditional imports for a streamlined configuration:
     ./terminal/ghostty.nix
     ./editors/nvf.nix
     ./editors/vscode.nix
+    ./editors/zed.nix
 
     # CLI tools
     ./cli-tools/bat.nix
+    ./cli-tools/btop.nix
     ./cli-tools/eza.nix
     ./cli-tools/fzf.nix
+    ./cli-tools/htop.nix
     # ... and more
+
+    # KDE Plasma configuration
+    ./desktop/kde
   ];
 }
 ```
@@ -225,22 +294,51 @@ The system is configured for desktop/laptop use with:
 
 **Desktop Environment:**
 
-- KDE Plasma 6 desktop environment
-- SDDM display manager
-- X11 server enabled (required for Plasma)
+- KDE Plasma 6 desktop environment with plasma-manager
+- SDDM display manager (Wayland enabled)
+- 6 virtual desktops with window rules
+- Krohnkite tiling manager
+- Night Color at 5500K temperature
+- Round corners visual enhancement (8px)
 - Full KDE application suite (Dolphin, Konsole, Kate, Spectacle, etc.)
+
+**Autostart Applications:**
+
+Configured in `modules/home/desktop/kde/autostart.nix`:
+
+- Bitwarden (password manager)
+- Telegram (Desktop 3)
+- Brave browser (Desktop 1)
+- ZapZap (WhatsApp Flatpak)
+- Solaar (Logitech device manager)
+- Joplin (note-taking)
+- Thunderbird (Desktop 4)
+- Zoom (Desktop 5)
+- VPN Tray Indicator
+
+**KWin Window Rules:**
+
+Automatic window placement per desktop:
+
+- Desktop 1: Brave browser
+- Desktop 2: VSCode, Zed editor
+- Desktop 3: Telegram
+- Desktop 4: Thunderbird
+- Desktop 5: Zoom
+- Desktop 6: Camunda Modeler
 
 **System Features:**
 
 - Desktop applications (browsers, terminals, IDEs)
-- Theming and appearance (GTK, Qt)
+- Theming and appearance (BreezeDark color scheme)
 - GUI system tools (Flatpak, fonts, Steam)
 - Virtualization support (libvirt/QEMU)
 - Optional printing support (controlled via `printEnable`)
+- VPN integration with tray indicator
 
 **CLI Environment:**
 
-- Full CLI toolset: bat, btop, eza, fzf, lazygit, zoxide
+- Full CLI toolset: bat, btop, eza, fzf, htop, lazygit, zoxide
 - Neovim with nvf configuration
 - Ghostty terminal emulator
 - Git, SSH, and ZSH configuration
@@ -251,30 +349,81 @@ modules are oriented toward desktop/laptop use.
 
 ### KDE Plasma 6 Configuration
 
-The system uses KDE Plasma 6 as the desktop environment with the following
-configuration:
+The system uses KDE Plasma 6 with plasma-manager for declarative configuration:
 
-- **`modules/core/desktop/environments/plasma.nix`** - System-level Plasma 6
-  configuration
-  - Enables KDE Plasma 6 desktop environment
-  - Configures core Plasma packages (plasma-desktop, plasma-workspace)
-  - Installs KDE applications (Dolphin, Konsole, Kate, Ark, Okular, Gwenview,
-    Spectacle)
-  - Sets up system integration (plasma-pa, plasma-nm, kscreen, bluedevil,
-    powerdevil)
-  - Configures KWallet PAM integration for automatic wallet unlocking
+**System-level** (`modules/core/desktop/environments/plasma.nix`):
 
-- **`modules/core/desktop/display-managers/sddm.nix`** - SDDM display manager
-  configuration
-  - Manages login screen and session selection
-  - Wayland support enabled by default
+- Enables KDE Plasma 6 desktop environment
+- Configures core Plasma packages (plasma-desktop, plasma-workspace)
+- Installs KDE applications (Dolphin, Konsole, Kate, Ark, Okular, Gwenview,
+  Spectacle)
+- Sets up system integration (plasma-pa, plasma-nm, kscreen, bluedevil,
+  powerdevil)
+- Configures KWallet PAM integration for automatic wallet unlocking
 
-- **`modules/core/desktop/environments/xserver.nix`** - X11 server configuration
-  - Required for Plasma 6 functionality
-  - Configured with keyboard layouts from `variables.nix`
+**User-level** (`modules/home/desktop/kde/`):
 
-Future declarative Plasma configuration may use plasma-manager (currently added
-as a flake input but not yet configured).
+- `autostart.nix` - Application autostart configuration
+- `config.nix` - KDE settings (shortcuts, window rules, appearance)
+- `panels.nix` - Panel layout and configuration
+- `wallpaper.nix` - Wallpaper settings
+- `widgets.nix` - Desktop widget configuration
+
+**Display Manager** (`modules/core/desktop/display-managers/sddm.nix`):
+
+- SDDM display manager with Wayland support
+- Manages login screen and session selection
+
+### VPN Integration
+
+The system includes enterprise VPN support with automatic configuration:
+
+**OpenConnect (BerekeBank):**
+
+- Auto-TOTP generation using oath-toolkit
+- Systemd service with automatic restart
+- Encrypted credentials via agenix
+
+**OpenFortiVPN (Dahua Dima):**
+
+- Certificate-based authentication
+- Systemd service management
+
+**VPN Tray Indicator:**
+
+- PyQt6 system tray application (`modules/home/scripts/vpn-tray.nix`)
+- Connect/disconnect functionality
+- Real-time status display
+- Autostart on login
+
+**Passwordless sudo for VPN:**
+
+Configured in `modules/core/services/vpn.nix` for service management without
+password prompts.
+
+### Performance Optimizations
+
+Host-specific performance tuning in `hosts/{hostname}/performance.nix`:
+
+**Zram Swap (laptop-82sn):**
+
+- zstd compression algorithm
+- 50% of RAM allocated
+- Higher swap priority than disk
+
+**CPU Governor:**
+
+- schedutil governor for balanced performance/power
+
+**Kernel Tuning:**
+
+- Network performance optimizations for VPN stability
+- SSD fstrim weekly schedule
+
+**Hardware Acceleration (AMD):**
+
+- VA-API and VDPAU with radeonsi
+- Environment variables for video acceleration
 
 ### GPU Profile System
 
@@ -287,8 +436,8 @@ GPU profiles are defined in `profiles/` and each host specifies its profile in
 
 **Currently available profiles:**
 
-- **amd** - AMD GPU drivers
-- **intel** - Intel integrated graphics
+- **amd** - AMD GPU drivers (laptop-82sn)
+- **intel** - Intel integrated graphics (probook-450)
 - **nvidia** - NVIDIA dedicated GPU
 - **nvidia-laptop** - NVIDIA + Intel hybrid (laptops)
 - **amd-hybrid** - NVIDIA + AMD hybrid
@@ -345,7 +494,6 @@ Home-manager is integrated at the NixOS configuration level with:
 1. Clone the dotfiles repository
 2. Run `./dot-setup.sh` from the dotfiles directory
    - Auto-detects hostname and GPU profile
-   - Prompts for system type (laptop/desktop or server)
    - Creates host configuration in `hosts/{hostname}/`
    - Copies hardware config from `/etc/nixos` or generates new one
    - Adds host to `flake.nix`
@@ -358,7 +506,6 @@ Home-manager is integrated at the NixOS configuration level with:
 1. Run `dot add-host {hostname} {profile}` (auto-detects profile if omitted)
    - Creates directory structure in `hosts/{hostname}/`
    - Auto-detects GPU profile or uses provided profile
-   - Prompts for system type (laptop/desktop or server)
    - Generates `variables.nix`, `hardware.nix`, and `default.nix`
    - Adds host to `flake.nix`
 2. Edit `hosts/{hostname}/variables.nix` to customize settings
@@ -383,17 +530,20 @@ imported. To exclude functionality, comment out the import in the respective
 
 ### Customizing KDE Plasma Behavior
 
-KDE Plasma configuration is currently done through the GUI System Settings
-application:
+KDE Plasma configuration is done through plasma-manager in
+`modules/home/desktop/kde/`:
+
+- **`config.nix`**: Shortcuts, window rules, general KDE settings
+- **`autostart.nix`**: Application autostart configuration
+- **`panels.nix`**: Panel layout and widgets
+- **`wallpaper.nix`**: Desktop wallpaper settings
+- **`widgets.nix`**: Desktop widget configuration
+
+For settings not yet in plasma-manager, use GUI System Settings:
 
 - **Appearance**: Themes, colors, icons, fonts
 - **Workspace Behavior**: Window management, activities, virtual desktops
-- **Shortcuts**: Keyboard shortcuts and global hotkeys
-- **Applications**: Default applications, file associations
 - **Input Devices**: Keyboard, mouse, touchpad settings
-
-Future versions may use plasma-manager for declarative configuration. The
-plasma-manager flake input is already added but not yet configured.
 
 ## Validation and Troubleshooting
 
@@ -427,10 +577,8 @@ If `dot rebuild` fails:
 1. **Check hostname mismatch**: Ensure `hostname` matches `host` variable in
    `flake.nix`
    - Run `hostname` to see current hostname
-   - Run `dot update-host` to sync hostname with flake.nix
 
-2. **Review variables.nix**: Ensure all enabled apps have corresponding modules
-   - If `{app}Enable = true`, the module file must exist in `modules/home/`
+2. **Review variables.nix**: Ensure all paths and values are correct
 
 3. **Check for syntax errors**: Run `nix flake check` for detailed error
    messages
@@ -442,28 +590,24 @@ If `dot rebuild` fails:
 
 ### Common Issues
 
-- **"hostname mismatch" error**: `dot` verifies hostname before rebuild. Run
-  `dot update-host` or manually edit `flake.nix`
-- **Missing module error**: An enabled app in `variables.nix` has no
-  corresponding module file
+- **"hostname mismatch" error**: `dot` verifies hostname before rebuild
 - **Home-manager backup files**: Automatically cleaned by `dot` rebuild process
 - **Failed flake check**: Often indicates missing imports or syntax errors in
   `.nix` files
+- **VPN connection issues**: Check secrets decryption and service status with
+  `systemctl status openconnect-bereke`
 
 ## Adding New Features
 
 ### Adding a New Application Module
 
-1. Create a new module file in `modules/home/{app}.nix` or
-   `modules/core/{app}.nix`
-2. Add a corresponding `{app}Enable` variable to
-   `hosts/{hostname}/variables.nix`
-3. Add conditional import to `modules/home/default.nix` or unconditional import
-   to `modules/core/default.nix`
-4. Run `nix flake check` to validate syntax
-5. Run `dot rebuild` to build and test
+1. Create a new module file in `modules/home/{category}/{app}.nix` or
+   `modules/core/{category}/{app}.nix`
+2. Add import to `modules/home/default.nix` or `modules/core/default.nix`
+3. Run `nix flake check` to validate syntax
+4. Run `dot rebuild` to build and test
 
-**Example home module** (`modules/home/myapp.nix`):
+**Example home module** (`modules/home/cli-tools/myapp.nix`):
 
 ```nix
 { pkgs, ... }:
@@ -474,38 +618,55 @@ If `dot rebuild` fails:
 }
 ```
 
+### Adding a New Secret
+
+1. Add the secret definition to `secrets/secrets.nix`:
+
+   ```nix
+   "new-secret.age".publicKeys = [ user1 ];
+   ```
+
+2. Create the encrypted secret:
+
+   ```bash
+   agenix -e secrets/new-secret.age
+   ```
+
+3. Reference in modules via `config.age.secrets.new-secret.path`
+
 ### Adding a New GPU Profile
 
 1. Create `profiles/{profile}/default.nix` with imports structure
 2. Create driver module in `modules/drivers/{driver}-drivers.nix` with enable
    option
 3. Enable the driver in the profile: `drivers.{driver}.enable = true`
-4. Add `nixosConfiguration.{profile} = mkNixosConfig "{profile}"` to `flake.nix`
-5. Update `dot update-host` GPU detection logic in
-   `modules/home/scripts/dot.nix`
+4. Add host to `flake.nix` with `mkNixosConfig "{profile}" "{hostname}"`
+5. Update `dot add-host` GPU detection logic in `modules/home/scripts/dot.nix`
 
 ## Important Conventions
 
-1. **KDE Plasma 6** - This configuration uses KDE Plasma 6 as the desktop
-   environment
-2. **No Stylix** - Stylix theming system has been removed; theming is done
-   through KDE System Settings
-3. **Unconditional imports** - All modules are imported unconditionally; there
-   are no `{app}Enable` toggles
+1. **KDE Plasma 6** - This configuration uses KDE Plasma 6 with plasma-manager
+2. **Plasma-manager** - Declarative KDE configuration in
+   `modules/home/desktop/kde/`
+3. **Unconditional imports** - All modules are imported unconditionally
 4. **Host-specific settings** - Minimal customization in
-   `hosts/{hostname}/variables.nix` (git config, keyboard, print)
-5. **GPU profiles** - Match the profile to hardware or use `dot update-host`
-   auto-detection
+   `hosts/{hostname}/variables.nix`
+5. **GPU profiles** - Match the profile to hardware or use auto-detection
 6. **Backup cleanup** - Home-manager backup files are automatically cleaned by
    `dot rebuild`
-7. **Terminal** - Ghostty is the configured terminal emulator (replaced Kitty)
+7. **Terminal** - Ghostty is the configured terminal emulator
 8. **Module organization** - System-level config in `modules/core/`, user config
    in `modules/home/`
-9. **Variables pattern** - Only minimal variables are used; import with
-   `inherit (import ../../hosts/${host}/variables.nix)`
+9. **Secrets** - All sensitive data encrypted with agenix in `secrets/`
 10. **Pre-commit validation** - ALWAYS run `nix flake check` before creating any
-    git commit to ensure configuration validity
+    git commit
 11. **Git commit messages** - Do not include "Generated with Claude Code" or
     "Co-Authored-By: Claude" signatures in commit messages
+12. **Package search** - Use `nh search` to find packages
 
-- search packages using nh search
+### Current Hosts
+
+| Hostname     | GPU Profile | Hardware                       |
+| ------------ | ----------- | ------------------------------ |
+| laptop-82sn  | amd         | AMD Ryzen 6800H + Radeon 680M  |
+| probook-450  | intel       | Intel integrated graphics      |
