@@ -9,30 +9,35 @@
     Service = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "generate-ssh-secrets" ''
-        mkdir -p ~/.ssh/config.d
+      ExecStart =
+        let
+          script = pkgs.writeShellApplication {
+            name = "generate-ssh-secrets";
+            runtimeInputs = with pkgs; [ coreutils ];
+            text = ''
+              mkdir -p ~/.ssh/config.d
 
-        # Wait for agenix secrets to be available (system service, so we poll)
-        MAX_WAIT=60
-        WAITED=0
-        while [ ! -f /run/agenix/bereke-gitlab-hostname ] && [ $WAITED -lt $MAX_WAIT ]; do
-          sleep 1
-          WAITED=$((WAITED + 1))
-        done
+              # Wait for agenix secrets to be available (system service, so we poll)
+              MAX_WAIT=60
+              WAITED=0
+              while [ ! -f /run/agenix/bereke-gitlab-hostname ] && [ $WAITED -lt $MAX_WAIT ]; do
+                sleep 1
+                WAITED=$((WAITED + 1))
+              done
 
-        if [ ! -f /run/agenix/bereke-gitlab-hostname ]; then
-          echo "Timeout waiting for agenix secrets" >&2
-          exit 1
-        fi
+              if [ ! -f /run/agenix/bereke-gitlab-hostname ]; then
+                echo "Timeout waiting for agenix secrets" >&2
+                exit 1
+              fi
 
-        # Read secrets
-        GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
-        HOME_IP=$(cat /run/agenix/ssh-host-home-ip)
-        AQ_IP=$(cat /run/agenix/ssh-host-aq-ip)
-        AQ_USERNAME=$(cat /run/agenix/ssh-aq-username)
+              # Read secrets
+              GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
+              HOME_IP=$(cat /run/agenix/ssh-host-home-ip)
+              AQ_IP=$(cat /run/agenix/ssh-host-aq-ip)
+              AQ_USERNAME=$(cat /run/agenix/ssh-aq-username)
 
-        # Generate SSH config for sensitive hosts
-        cat > ~/.ssh/config.d/secrets << EOF
+              # Generate SSH config for sensitive hosts
+              cat > ~/.ssh/config.d/secrets << EOF
 # Automatically generated from encrypted secrets
 # Do not edit manually - changes will be overwritten
 
@@ -51,8 +56,11 @@ Host aq
     PreferredAuthentications publickey
 EOF
 
-        chmod 600 ~/.ssh/config.d/secrets
-      '';
+              chmod 600 ~/.ssh/config.d/secrets
+            '';
+          };
+        in
+        "${script}/bin/generate-ssh-secrets";
     };
 
     Install = {
