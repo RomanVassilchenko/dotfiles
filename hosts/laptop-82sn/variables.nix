@@ -4,6 +4,10 @@
   keyboardLayout = "us,ru";
   consoleKeyMap = "us";
 
+  # Device type: "laptop" or "server"
+  # Controls whether GUI/desktop modules are loaded
+  deviceType = "laptop";
+
   # Enable Printing Support
   printEnable = false;
 
