@@ -106,7 +106,7 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 5. **Setup git hooks** (for clean commits)
 
    ```bash
-   ln -sf ../../git-hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
+   ln -sf ../../.github/git-hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
    ```
 
 After the first rebuild, use the `dot` command for all subsequent operations!
@@ -299,8 +299,9 @@ dotfiles/
 │   ├── secrets.nix
 │   └── *.age
 │
-├── git-hooks/            # Git hooks for commit quality
-│   └── prepare-commit-msg
+├── .github/
+│   └── git-hooks/        # Git hooks for commit quality
+│       └── prepare-commit-msg
 │
 └── CLAUDE.md             # Developer documentation
 ```

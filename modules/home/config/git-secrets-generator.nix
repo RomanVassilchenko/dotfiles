@@ -1,5 +1,15 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../../hosts/${host}/variables.nix;
+  workEnable = vars.workEnable or false;
+in
+lib.mkIf workEnable {
   # Generate git config with secret email and GitLab hostname
   systemd.user.services.git-secrets-config-generator = {
     Unit = {

@@ -27,7 +27,7 @@ Run this script when setting up a new device (before the first rebuild):
 After cloning the repository, set up git hooks to ensure commit message quality:
 
 ```bash
-ln -sf ../../git-hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
+ln -sf ../../.github/git-hooks/prepare-commit-msg .git/hooks/prepare-commit-msg
 ```
 
 This installs a `prepare-commit-msg` hook that automatically strips `bat`
@@ -35,7 +35,7 @@ formatting artifacts from commit messages. This is necessary because `cat` is
 aliased to `bat` on this system, which can add formatting when using heredocs
 for commit messages.
 
-The hook is stored in the version-controlled `git-hooks/` directory and removes:
+The hook is stored in the version-controlled `.github/git-hooks/` directory and removes:
 
 - Border characters (─────)
 - Line numbers and separators (e.g., " 1 │")
@@ -132,8 +132,9 @@ The system is managed through the `dot` command (defined in
 ├── secrets/                  # Agenix encrypted secrets
 │   ├── secrets.nix           # Secret definitions
 │   └── *.age                 # Encrypted secret files
-└── git-hooks/                # Git hooks for commit quality
-    └── prepare-commit-msg
+└── .github/
+    └── git-hooks/            # Git hooks for commit quality
+        └── prepare-commit-msg
 ```
 
 ### Configuration Flow

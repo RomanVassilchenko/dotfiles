@@ -1,5 +1,15 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../../hosts/${host}/variables.nix;
+  workEnable = vars.workEnable or false;
+in
+lib.mkIf workEnable {
   # Generate SSH config with secrets
   systemd.user.services.ssh-secrets-config-generator = {
     Unit = {

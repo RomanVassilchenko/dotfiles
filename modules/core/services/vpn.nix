@@ -1,5 +1,16 @@
-{ pkgs, config, username, ... }:
 {
+  pkgs,
+  lib,
+  config,
+  username,
+  host,
+  ...
+}:
+let
+  vars = import ../../../hosts/${host}/variables.nix;
+  workEnable = vars.workEnable or false;
+in
+lib.mkIf workEnable {
   # Allow user to control VPN service without sudo password
   security.sudo.extraRules = [
     {

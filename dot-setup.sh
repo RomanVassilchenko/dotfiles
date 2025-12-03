@@ -215,11 +215,11 @@ fi
 # --- Set up git hooks ---
 echo ""
 echo "Setting up git hooks..."
-if [ -f "$SCRIPT_DIR/git-hooks/prepare-commit-msg" ]; then
-  ln -sf ../../git-hooks/prepare-commit-msg "$SCRIPT_DIR/.git/hooks/prepare-commit-msg"
+if [ -f "$SCRIPT_DIR/.github/git-hooks/prepare-commit-msg" ]; then
+  ln -sf ../../.github/git-hooks/prepare-commit-msg "$SCRIPT_DIR/.git/hooks/prepare-commit-msg"
   echo "✓ Git hooks installed (commit message cleanup)"
 else
-  echo "⚠ Warning: git-hooks/prepare-commit-msg not found, skipping hook setup"
+  echo "⚠ Warning: .github/git-hooks/prepare-commit-msg not found, skipping hook setup"
 fi
 
 echo ""

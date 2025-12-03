@@ -1,4 +1,13 @@
 {
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../../hosts/${host}/variables.nix;
+  workEnable = vars.workEnable or false;
+in
+{
   programs.fastfetch = {
     enable = true;
 
@@ -145,6 +154,7 @@
           '';
           format = "System age — {result}";
         }
+      ] ++ lib.optionals workEnable [
         {
           type = "command";
           key = " ├ 󰙴 ";

@@ -1,5 +1,13 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  host,
+  ...
+}:
 let
+  vars = import ../../../hosts/${host}/variables.nix;
+  workEnable = vars.workEnable or false;
+
   python = pkgs.python3.withPackages (ps: [ ps.pyqt6 ]);
 
   vpnTrayScript = pkgs.writeScriptBin "vpn-tray" ''
@@ -157,7 +165,7 @@ let
     comment = "BerekeBank VPN status indicator";
   };
 in
-{
+lib.mkIf workEnable {
   home.packages = [
     vpnTrayScript
     vpnTrayDesktop
