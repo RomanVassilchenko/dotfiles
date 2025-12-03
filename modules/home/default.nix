@@ -1,46 +1,59 @@
-{ ... }:
 {
-  imports = [
-    # Configuration
-    ./config/git.nix
-    ./config/git-secrets-generator.nix
-    ./config/ssh.nix
-    ./config/ssh-secrets-generator.nix
-    ./config/xdg.nix
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../hosts/${host}/variables.nix;
+  deviceType = vars.deviceType or "laptop";
+  isServer = deviceType == "server";
+in
+{
+  imports =
+    [
+      # Configuration (always loaded)
+      ./config/git.nix
+      ./config/git-secrets-generator.nix
+      ./config/ssh.nix
+      ./config/ssh-secrets-generator.nix
+      ./config/xdg.nix
 
-    # Shell
-    ./shell/zsh
+      # Shell (always loaded)
+      ./shell/zsh
 
-    # Scripts
-    ./scripts
+      # Scripts (always loaded)
+      ./scripts
 
-    # CLI tools
-    ./cli-tools/bat.nix
-    ./cli-tools/btop.nix
-    ./cli-tools/eza.nix
-    ./cli-tools/fzf.nix
-    ./cli-tools/lazygit.nix
-    ./cli-tools/tealdeer.nix
-    ./cli-tools/zoxide.nix
+      # CLI tools (always loaded)
+      ./cli-tools/bat.nix
+      ./cli-tools/btop.nix
+      ./cli-tools/eza.nix
+      ./cli-tools/fzf.nix
+      ./cli-tools/lazygit.nix
+      ./cli-tools/tealdeer.nix
+      ./cli-tools/zoxide.nix
 
-    # Editors
-    ./editors/nvf.nix
-    ./editors/vscode.nix
-    ./editors/zed.nix
+      # Editors - nvf is TUI-based (always loaded)
+      ./editors/nvf.nix
+    ]
+    ++ lib.optionals (!isServer) [
+      # GUI Editors (laptop/desktop only)
+      ./editors/vscode.nix
+      ./editors/zed.nix
 
-    # Fastfetch
-    ./fastfetch
+      # Fastfetch (laptop/desktop only - uses kitty image protocol)
+      ./fastfetch
 
-    # Apps
-    ./apps/obs-studio.nix
-    ./apps/virtmanager.nix
+      # GUI Apps (laptop/desktop only)
+      ./apps/obs-studio.nix
+      ./apps/virtmanager.nix
 
-    # Desktop
-    ./desktop/kde
+      # Desktop (laptop/desktop only)
+      ./desktop/kde
 
-    # Terminal
-    ./terminal/ghostty.nix
-  ];
+      # Terminal (laptop/desktop only - GUI terminal emulator)
+      ./terminal/ghostty.nix
+    ];
 
   systemd.user.startServices = "sd-switch";
 }

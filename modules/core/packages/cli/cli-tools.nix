@@ -15,5 +15,12 @@
     onefetch
     pandoc
     xdg-ninja
+
+    # CLI tools useful on both desktop and server
+    bitwarden-cli
+    claude-code
+    codex
+    distrobox
+    docker-compose
   ];
 }

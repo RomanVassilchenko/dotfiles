@@ -1,5 +1,6 @@
 { pkgs, ... }:
 {
+  # GUI applications - only loaded on desktop/laptop (not server)
   environment.systemPackages = with pkgs; [
     brave
     discord
@@ -8,16 +9,11 @@
     zoom-us
     libreoffice
     joplin-desktop
-    bitwarden-cli # Bitwarden CLI
-    bitwarden-desktop # Bitwarden GUI
-    claude-code
-    codex
+    bitwarden-desktop
     camunda-modeler
     solaar
     thunderbird
     xdg-utils
-    distrobox
-    docker-compose
     appimage-run
   ];
 }

@@ -82,7 +82,7 @@ The system is managed through the `dot` command (defined in
 │       └── ...
 ├── modules/
 │   ├── core/                 # System-level modules
-│   │   ├── default.nix       # Unconditionally imports all core modules
+│   │   ├── default.nix       # Conditionally imports core modules based on deviceType
 │   │   ├── boot/             # Bootloader configuration
 │   │   ├── desktop/
 │   │   │   ├── environments/
@@ -101,7 +101,7 @@ The system is managed through the `dot` command (defined in
 │   │   ├── user/             # User account configuration
 │   │   └── virtualisation/   # Docker, libvirt/QEMU
 │   ├── home/                 # Home-manager modules
-│   │   ├── default.nix       # Unconditionally imports home modules
+│   │   ├── default.nix       # Conditionally imports home modules based on deviceType
 │   │   ├── apps/             # GUI applications (OBS, virt-manager)
 │   │   ├── cli-tools/        # CLI utilities (bat, btop, eza, fzf, htop, etc.)
 │   │   ├── config/           # Git, SSH, XDG configuration
@@ -177,19 +177,19 @@ The system is managed through the `dot` command (defined in
    - Profiles enable specific drivers via `drivers.{driver}.enable = true`
 
 5. **Core Modules** (`modules/core/default.nix`):
-   - Unconditionally imports all system-level modules (boot, network, services,
-     etc.)
-   - Individual modules may use variables for conditional behavior
+   - Conditionally imports modules based on `deviceType`
+   - Server-compatible modules (boot, network, services, CLI tools) always loaded
+   - Desktop modules (KDE, SDDM, Flatpak, Steam) only loaded when
+     `deviceType != "server"`
    - Handles system-level configuration (services, security, virtualization,
      etc.)
 
 6. **Home-Manager Modules** (`modules/home/default.nix`):
-   - Unconditionally imports all home modules
-   - KDE configuration via plasma-manager (`desktop/kde/`)
-   - Terminal emulator (ghostty) is directly imported
-   - Editors (vscode, nvf, zed) are directly imported
-   - Core modules (git, zsh, scripts, cli-tools) are always imported
-   - No conditional imports - all modules are active
+   - Conditionally imports modules based on `deviceType`
+   - Core modules (git, zsh, scripts, cli-tools, nvf) are always imported
+   - Desktop modules (KDE, GUI editors, Ghostty) only loaded when
+     `deviceType != "server"`
+   - Uses `lib.optionals (!isServer)` for conditional imports
 
 ### Variables System
 
@@ -203,10 +203,22 @@ essential settings:
 
 **System Settings:**
 
+- `deviceType` - Device type: `"laptop"` or `"server"` (controls GUI module
+  loading)
 - `keyboardLayout` - Keyboard layout (e.g., "us,ru" for US + Russian)
 - `consoleKeyMap` - Console keyboard mapping
 - `printEnable` - Enable printing support (true/false)
+- `workEnable` - Enable work features (VPN, work email, GitLab SSH)
 - `sshKeyPath` - Path to SSH private key for agenix secrets decryption
+
+**Device Type System:**
+
+The `deviceType` variable controls which modules are loaded:
+
+- **`"laptop"`** (default): Full desktop environment with KDE Plasma 6, GUI
+  applications, gaming support, desktop apps, audio (pipewire), etc.
+- **`"server"`**: Minimal server configuration with only CLI tools, development
+  packages, Docker, SSH, and essential services. No GUI, no audio, no gaming.
 
 ### Secrets Management (Agenix)
 
@@ -245,53 +257,54 @@ agenix -e secrets/work-email.age
 
 ### Module Import Pattern
 
-The codebase uses unconditional imports for a streamlined configuration:
+The codebase uses conditional imports based on `deviceType`:
 
 ```nix
 # In modules/home/default.nix
 {
-  imports = [
-    # Configuration
-    ./config/git.nix
-    ./config/ssh.nix
-    ./config/xdg.nix
-
-    # Shell and scripts
-    ./shell/zsh
-    ./scripts
-
-    # Terminal and editors
-    ./terminal/ghostty.nix
-    ./editors/nvf.nix
-    ./editors/vscode.nix
-    ./editors/zed.nix
-
-    # CLI tools
-    ./cli-tools/bat.nix
-    ./cli-tools/btop.nix
-    ./cli-tools/eza.nix
-    ./cli-tools/fzf.nix
-    ./cli-tools/htop.nix
-    # ... and more
-
-    # KDE Plasma configuration
-    ./desktop/kde
-  ];
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../hosts/${host}/variables.nix;
+  deviceType = vars.deviceType or "laptop";
+  isServer = deviceType == "server";
+in
+{
+  imports =
+    [
+      # Always loaded (server-compatible)
+      ./config/git.nix
+      ./config/ssh.nix
+      ./shell/zsh
+      ./scripts
+      ./cli-tools/bat.nix
+      ./editors/nvf.nix  # TUI editor
+      # ... more CLI tools
+    ]
+    ++ lib.optionals (!isServer) [
+      # Desktop/laptop only
+      ./editors/vscode.nix
+      ./editors/zed.nix
+      ./terminal/ghostty.nix
+      ./desktop/kde
+      ./apps/obs-studio.nix
+    ];
 }
 ```
 
 **Key points:**
 
-- All modules are imported directly without conditionals
-- Individual modules may still reference variables for internal configuration
-- This approach provides a consistent, fully-featured environment across all
-  hosts
-- Host-specific customization happens through `variables.nix` values, not module
-  selection
+- Core modules (CLI tools, shell, config) are always imported
+- Desktop modules (KDE, GUI editors, terminal) are conditional on `deviceType`
+- Server deployments get a minimal, efficient configuration
+- Laptop/desktop deployments get the full-featured environment
+- The pattern uses `lib.optionals (!isServer)` for conditional imports
 
-### Desktop Configuration
+### Desktop Configuration (deviceType = "laptop")
 
-The system is configured for desktop/laptop use with:
+The following features are enabled when `deviceType = "laptop"` (default):
 
 **Desktop Environment:**
 
@@ -345,8 +358,31 @@ Automatic window placement per desktop:
 - Git, SSH, and ZSH configuration
 - Custom scripts including `dot` management tool
 
-Note: This configuration does not currently support server-only deployments. All
-modules are oriented toward desktop/laptop use.
+### Server Configuration (deviceType = "server")
+
+When `deviceType = "server"`, the following modules are **excluded**:
+
+- KDE Plasma 6 and all GUI desktop components
+- SDDM display manager
+- Flatpak, Steam, and gaming packages
+- GUI applications (browsers, Discord, Telegram, etc.)
+- Audio (Pipewire)
+- GUI editors (VSCode, Zed)
+- Ghostty terminal emulator
+- OBS Studio, virt-manager GUI
+- VPN tray indicator (CLI VPN still works)
+
+**Modules always available on server:**
+
+- SSH server with post-quantum key exchange
+- Docker and libvirt/QEMU virtualization
+- Development tools (Go, protobuf, databases)
+- CLI tools (bat, btop, eza, fzf, lazygit, etc.)
+- Neovim (nvf) TUI editor
+- ZSH shell configuration
+- Git and SSH configuration
+- Agenix secrets management
+- System monitoring tools
 
 ### KDE Plasma 6 Configuration
 
@@ -646,28 +682,30 @@ If `dot rebuild` fails:
 
 ## Important Conventions
 
-1. **KDE Plasma 6** - This configuration uses KDE Plasma 6 with plasma-manager
-2. **Plasma-manager** - Declarative KDE configuration in
+1. **Device types** - Set `deviceType = "laptop"` or `"server"` in variables.nix
+2. **KDE Plasma 6** - Desktop configuration uses KDE Plasma 6 with plasma-manager
+3. **Plasma-manager** - Declarative KDE configuration in
    `modules/home/desktop/kde/`
-3. **Unconditional imports** - All modules are imported unconditionally
-4. **Host-specific settings** - Minimal customization in
+4. **Conditional imports** - Desktop modules are conditionally loaded based on
+   `deviceType`
+5. **Host-specific settings** - Minimal customization in
    `hosts/{hostname}/variables.nix`
-5. **GPU profiles** - Match the profile to hardware or use auto-detection
-6. **Backup cleanup** - Home-manager backup files are automatically cleaned by
+6. **GPU profiles** - Match the profile to hardware or use auto-detection
+7. **Backup cleanup** - Home-manager backup files are automatically cleaned by
    `dot rebuild`
-7. **Terminal** - Ghostty is the configured terminal emulator
-8. **Module organization** - System-level config in `modules/core/`, user config
+8. **Terminal** - Ghostty is the configured terminal emulator (laptop only)
+9. **Module organization** - System-level config in `modules/core/`, user config
    in `modules/home/`
-9. **Secrets** - All sensitive data encrypted with agenix in `secrets/`
-10. **Pre-commit validation** - ALWAYS run `nix flake check` before creating any
+10. **Secrets** - All sensitive data encrypted with agenix in `secrets/`
+11. **Pre-commit validation** - ALWAYS run `nix flake check` before creating any
     git commit
-11. **Git commit messages** - Do not include "Generated with Claude Code" or
+12. **Git commit messages** - Do not include "Generated with Claude Code" or
     "Co-Authored-By: Claude" signatures in commit messages
-12. **Package search** - Use `nh search` to find packages
+13. **Package search** - Use `nh search` to find packages
 
 ### Current Hosts
 
-| Hostname     | GPU Profile | Hardware                       |
-| ------------ | ----------- | ------------------------------ |
-| laptop-82sn  | amd         | AMD Ryzen 6800H + Radeon 680M  |
-| probook-450  | intel       | Intel integrated graphics      |
+| Hostname    | Device Type | GPU Profile | Hardware                      |
+| ----------- | ----------- | ----------- | ----------------------------- |
+| laptop-82sn | laptop      | amd         | AMD Ryzen 6800H + Radeon 680M |
+| probook-450 | laptop      | intel       | Intel integrated graphics     |

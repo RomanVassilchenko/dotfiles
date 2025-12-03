@@ -7,6 +7,8 @@
 let
   vars = import ../../../hosts/${host}/variables.nix;
   workEnable = vars.workEnable or false;
+  deviceType = vars.deviceType or "laptop";
+  isServer = deviceType == "server";
 
   python = pkgs.python3.withPackages (ps: [ ps.pyqt6 ]);
 
@@ -165,7 +167,8 @@ let
     comment = "BerekeBank VPN status indicator";
   };
 in
-lib.mkIf workEnable {
+# VPN tray is a GUI app, only enable on desktop/laptop with workEnable
+lib.mkIf (workEnable && !isServer) {
   home.packages = [
     vpnTrayScript
     vpnTrayDesktop

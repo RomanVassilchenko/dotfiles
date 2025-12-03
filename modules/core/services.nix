@@ -1,11 +1,19 @@
-{ profile, ... }:
+{
+  profile,
+  lib,
+  host,
+  ...
+}:
+let
+  vars = import ../../hosts/${host}/variables.nix;
+  deviceType = vars.deviceType or "laptop";
+  isServer = deviceType == "server";
+in
 {
   # Services to start
   services = {
-    libinput.enable = true; # Input Handling
+    # Server-compatible services (always enabled)
     fstrim.enable = true; # SSD Optimizer
-    gvfs.enable = true; # For Mounting USB & More
-    power-profiles-daemon.enable = true; # Power profile management (powerprofilesctl)
     openssh = {
       enable = true; # Enable SSH
       settings = {
@@ -27,17 +35,23 @@
       ports = [ 22 ];
     };
 
-    logind.settings.Login = {
+    smartd = {
+      enable = if profile == "vm" then false else true;
+      autodetect = true;
+    };
+
+    # Desktop/laptop-specific services
+    libinput.enable = !isServer; # Input Handling (GUI only)
+    gvfs.enable = !isServer; # For Mounting USB & More (GUI only)
+    power-profiles-daemon.enable = !isServer; # Power profile management (laptop only)
+
+    logind.settings.Login = lib.mkIf (!isServer) {
       HandleLidSwitch = "suspend";
       HandleLidSwitchExternalPower = "suspend";
       HandleLidSwitchDocked = "ignore";
     };
 
-    smartd = {
-      enable = if profile == "vm" then false else true;
-      autodetect = true;
-    };
-    pipewire = {
+    pipewire = lib.mkIf (!isServer) {
       enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;
