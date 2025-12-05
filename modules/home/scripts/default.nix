@@ -7,6 +7,7 @@
 {
   imports = [
     ./vpn-tray.nix
+    ./service-monitor.nix
   ];
 
   home.packages = [
