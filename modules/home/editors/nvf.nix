@@ -227,6 +227,10 @@
       };
 
       luaConfigPost = ''
+        -- Russian keyboard layout support for normal mode commands
+        -- Maps Russian characters to their English equivalents so commands work in both layouts
+        vim.opt.langmap = "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
+
         -- Suppress null_ls deprecation messages by disabling the source
         vim.diagnostic.config({
           virtual_text = {

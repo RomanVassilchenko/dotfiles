@@ -52,6 +52,38 @@ in
       # URL remapping for SSH access
       url."git@github.com:".insteadOf = "https://github.com/";
 
+      # Git maintenance - automatic repository optimization
+      maintenance = {
+        auto = true;
+        strategy = "incremental";
+      };
+
+      # Rerere - Reuse recorded resolution of conflicted merges
+      rerere = {
+        enabled = true;
+        autoupdate = true;
+      };
+
+      # Better branch display
+      branch.sort = "-committerdate";
+      column.ui = "auto";
+
+      # Fetch improvements
+      fetch = {
+        prune = true; # Remove deleted remote branches
+        pruneTags = true; # Remove deleted remote tags
+        parallel = 0; # Auto-detect parallelism
+      };
+
+      # Pull settings
+      pull.rebase = true; # Rebase by default instead of merge
+
+      # Rebase improvements
+      rebase = {
+        autoStash = true; # Automatically stash before rebase
+        autoSquash = true; # Auto-squash fixup commits
+      };
+
       # Delta configuration for better diffs
       core.pager = "delta";
       interactive.diffFilter = "delta --color-only";
@@ -70,21 +102,16 @@ in
       };
       diff.colorMoved = "default";
 
-      # Git aliases
+      # Git aliases (shell aliases are in zsh config, these are for git subcommands)
       alias = {
-        br = "branch --sort=-committerdate";
-        co = "checkout";
-        df = "diff";
-        dfs = "diff --staged";
-        com = "commit -a";
-        gs = "stash";
-        gp = "pull";
-        lg = "log --graph --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %C(green)(%cr)%C(bold blue) <%an>%Creset' --abbrev-commit";
-        lg2 = "log --graph --oneline --decorate --all";
-        st = "status";
+        # Useful as git subcommands
+        fixup = "commit --fixup";
         unstage = "reset HEAD --";
+        undo = "reset --soft HEAD~1";
         last = "log -1 HEAD";
-        visual = "!gitk";
+        conflicts = "diff --name-only --diff-filter=U";
+        recent = "for-each-ref --sort=-committerdate --count=10 --format='%(refname:short)' refs/heads/";
+        cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d";
       };
     };
   };

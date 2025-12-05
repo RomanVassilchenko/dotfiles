@@ -33,8 +33,12 @@ in
 
       # Services
       ./services/printing.nix
-      ./services/syncthing.nix
       ./services/vpn.nix
+      ./services/logiops.nix
+      ./services/fail2ban.nix
+      ./services/firewall.nix
+      ./services/performance.nix
+      ./services/kdeconnect.nix
 
       # Development packages (always loaded)
       ./packages/development/golang.nix

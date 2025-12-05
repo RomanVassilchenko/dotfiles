@@ -32,6 +32,9 @@ in
       ./cli-tools/lazygit.nix
       ./cli-tools/tealdeer.nix
       ./cli-tools/zoxide.nix
+      ./cli-tools/direnv.nix
+      ./cli-tools/atuin.nix
+      ./cli-tools/nix-index.nix
 
       # Editors - nvf is TUI-based (always loaded)
       ./editors/nvf.nix

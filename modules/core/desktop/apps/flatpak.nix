@@ -2,8 +2,8 @@
 {
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-    configPackages = [ pkgs.hyprland ];
+    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    configPackages = [ pkgs.kdePackages.plasma-desktop ];
   };
   services = {
     flatpak = {
