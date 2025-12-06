@@ -154,7 +154,8 @@ in
           '';
           format = "System age — {result}";
         }
-      ] ++ lib.optionals workEnable [
+      ]
+      ++ lib.optionals workEnable [
         {
           type = "command";
           key = " ├ 󰙴 ";

@@ -25,46 +25,46 @@ lib.mkIf workEnable {
             name = "generate-git-secrets";
             runtimeInputs = with pkgs; [ coreutils ];
             text = ''
-              mkdir -p ~/.config/git
+                            mkdir -p ~/.config/git
 
-              # Wait for agenix secrets to be available (system service, so we poll)
-              MAX_WAIT=60
-              WAITED=0
-              while [ ! -f /run/agenix/work-email ] && [ $WAITED -lt $MAX_WAIT ]; do
-                sleep 1
-                WAITED=$((WAITED + 1))
-              done
+                            # Wait for agenix secrets to be available (system service, so we poll)
+                            MAX_WAIT=60
+                            WAITED=0
+                            while [ ! -f /run/agenix/work-email ] && [ $WAITED -lt $MAX_WAIT ]; do
+                              sleep 1
+                              WAITED=$((WAITED + 1))
+                            done
 
-              if [ ! -f /run/agenix/work-email ]; then
-                echo "Timeout waiting for agenix secrets" >&2
-                exit 1
-              fi
+                            if [ ! -f /run/agenix/work-email ]; then
+                              echo "Timeout waiting for agenix secrets" >&2
+                              exit 1
+                            fi
 
-              # Read secrets
-              WORK_EMAIL=$(cat /run/agenix/work-email)
-              GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
+                            # Read secrets
+                            WORK_EMAIL=$(cat /run/agenix/work-email)
+                            GITLAB_HOSTNAME=$(cat /run/agenix/bereke-gitlab-hostname)
 
-              # Generate git config with secrets
-              cat > ~/.config/git/secrets << EOF
-# Automatically generated from encrypted secrets
-# Do not edit manually - changes will be overwritten
+                            # Generate git config with secrets
+                            cat > ~/.config/git/secrets << EOF
+              # Automatically generated from encrypted secrets
+              # Do not edit manually - changes will be overwritten
 
-[user]
-    email = $WORK_EMAIL
+              [user]
+                  email = $WORK_EMAIL
 
-# URL remapping for GitLab SSH access
-[url "ssh://git@$GITLAB_HOSTNAME/"]
-    insteadOf = https://$GITLAB_HOSTNAME/
+              # URL remapping for GitLab SSH access
+              [url "ssh://git@$GITLAB_HOSTNAME/"]
+                  insteadOf = https://$GITLAB_HOSTNAME/
 
-[url "git@$GITLAB_HOSTNAME:"]
-    insteadOf = https://$GITLAB_HOSTNAME/
+              [url "git@$GITLAB_HOSTNAME:"]
+                  insteadOf = https://$GITLAB_HOSTNAME/
 
-# SSL settings for company GitLab
-[http "https://$GITLAB_HOSTNAME"]
-    sslVerify = false
-EOF
+              # SSL settings for company GitLab
+              [http "https://$GITLAB_HOSTNAME"]
+                  sslVerify = false
+              EOF
 
-              chmod 600 ~/.config/git/secrets
+                            chmod 600 ~/.config/git/secrets
             '';
           };
         in
