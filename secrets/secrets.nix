@@ -12,7 +12,10 @@ let
   xiaoxinpro = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMAcIlwANtn26rwkJfUfZKMSfGScbtKIUSBOR4iIl3EV";
 
   # All user keys (for secrets that should be accessible from any machine)
-  allUsers = [ personal xiaoxinpro ];
+  allUsers = [
+    personal
+    xiaoxinpro
+  ];
 in
 {
   # Work-related secrets

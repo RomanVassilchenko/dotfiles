@@ -163,7 +163,10 @@ let
     desktopName = "VPN Tray Indicator";
     exec = "${vpnTrayScript}/bin/vpn-tray";
     icon = "network-vpn";
-    categories = [ "Network" "System" ];
+    categories = [
+      "Network"
+      "System"
+    ];
     comment = "BerekeBank VPN status indicator";
   };
 in

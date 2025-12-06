@@ -125,11 +125,18 @@ lib.mkIf workEnable {
   # OpenConnect VPN service for BerekeBank with automatic TOTP
   systemd.services.openconnect-berekebank = {
     description = "OpenConnect VPN - BerekeBank";
-    after = [ "network-online.target" "agenix.service" ];
+    after = [
+      "network-online.target"
+      "agenix.service"
+    ];
     wants = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
 
-    path = [ pkgs.openconnect pkgs.oath-toolkit pkgs.coreutils ];
+    path = [
+      pkgs.openconnect
+      pkgs.oath-toolkit
+      pkgs.coreutils
+    ];
 
     serviceConfig = {
       Type = "simple";
