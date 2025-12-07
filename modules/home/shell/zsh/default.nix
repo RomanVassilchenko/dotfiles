@@ -63,9 +63,8 @@
       autoload -U compinit
       compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
 
-      # zsh-you-should-use: just show hints after command, don't block
+      # zsh-you-should-use: show hints after command
       export YSU_MESSAGE_POSITION="after"
-      export YSU_HARDCORE=0
 
       bindkey "\eh" backward-word
       bindkey "\ej" down-line-or-history
