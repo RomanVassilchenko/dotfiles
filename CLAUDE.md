@@ -84,3 +84,4 @@ Host customization in `hosts/{hostname}/variables.nix`:
 | ----------- | ------ | ----- | ----------------------------- |
 | laptop-82sn | laptop | amd   | AMD Ryzen 6800H + Radeon 680M |
 | probook-450 | laptop | intel | Intel integrated graphics     |
+| ninkear     | server | amd   | AMD server                    |
