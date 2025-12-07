@@ -34,7 +34,8 @@ in
           dependsOn = [ "joplin-db" ];
           environment = {
             APP_PORT = "22300";
-            APP_BASE_URL = "http://localhost:22300";
+            APP_BASE_URL = "https://joplin.romanv.dev";
+            MAILER_ENABLED = "0";
             DB_CLIENT = "pg";
             POSTGRES_HOST = "joplin-db";
             POSTGRES_PORT = "5432";
@@ -56,9 +57,13 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.docker}/bin/docker network create joplin-network || true";
-        ExecStop = "${pkgs.docker}/bin/docker network rm joplin-network || true";
       };
+      script = ''
+        ${pkgs.docker}/bin/docker network create joplin-network || true
+      '';
+      preStop = ''
+        ${pkgs.docker}/bin/docker network rm joplin-network || true
+      '';
     };
 
     # Ensure containers start after network

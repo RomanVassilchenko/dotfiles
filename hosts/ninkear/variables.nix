@@ -15,5 +15,5 @@
   workEnable = false;
 
   # SSH key for agenix secrets decryption
-  sshKeyPath = "/home/romanv/.ssh/id_ninkear";
+  sshKeyPath = "/home/romanv/.ssh/id_personal";
 }

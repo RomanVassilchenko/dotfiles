@@ -14,7 +14,7 @@ in
       enable = true;
       backupDir = "/var/backup/vaultwarden";
       config = {
-        DOMAIN = "http://localhost:8222";
+        DOMAIN = "https://bitwarden.romanv.dev";
         SIGNUPS_ALLOWED = false;
         ROCKET_ADDRESS = "0.0.0.0";
         ROCKET_PORT = 8222;

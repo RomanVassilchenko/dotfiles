@@ -40,6 +40,7 @@ in
     ./services/kdeconnect.nix
     ./services/joplin-server.nix
     ./services/vaultwarden.nix
+    ./services/cloudflared.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix

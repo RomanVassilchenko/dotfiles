@@ -39,4 +39,7 @@ in
   "vpn-dahua-host.age".publicKeys = allUsers;
   "vpn-dahua-password.age".publicKeys = allUsers;
   "vpn-dahua-cert.age".publicKeys = allUsers;
+
+  # Cloudflare Tunnel
+  "cloudflared-tunnel-token.age".publicKeys = allUsers;
 }
