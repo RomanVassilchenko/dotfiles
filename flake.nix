@@ -69,6 +69,10 @@
           gpuProfile = "intel";
           host = "probook-450";
         };
+        ninkear = mkNixosConfig {
+          gpuProfile = "amd";
+          host = "ninkear";
+        };
       };
     };
 }
