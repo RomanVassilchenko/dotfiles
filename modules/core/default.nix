@@ -38,6 +38,8 @@ in
     ./services/firewall.nix
     ./services/performance.nix
     ./services/kdeconnect.nix
+    ./services/joplin-server.nix
+    ./services/vaultwarden.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix
