@@ -49,6 +49,7 @@ in
     # GUI Apps (laptop/desktop only)
     ./apps/obs-studio.nix
     ./apps/virtmanager.nix
+    ./apps/camunda-modeler.nix
 
     # Desktop (laptop/desktop only)
     ./desktop/kde
