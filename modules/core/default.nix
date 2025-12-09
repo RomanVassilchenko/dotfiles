@@ -62,6 +62,7 @@ in
     # Desktop environments (laptop/desktop only)
     ./desktop/environments/xserver.nix
     ./desktop/environments/plasma.nix
+    ./desktop/environments/plasma-xdg-fix.nix
     ./desktop/display-managers/sddm.nix
 
     # Desktop packages (laptop/desktop only)
