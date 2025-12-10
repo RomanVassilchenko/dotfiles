@@ -102,16 +102,48 @@ in
       };
       diff.colorMoved = "default";
 
-      # Git aliases (shell aliases are in zsh config, these are for git subcommands)
+      # Git subcommand aliases
       alias = {
-        # Useful as git subcommands
-        fixup = "commit --fixup";
-        unstage = "reset HEAD --";
+        # Undo operations
         undo = "reset --soft HEAD~1";
-        last = "log -1 HEAD";
+        unstage = "reset HEAD --";
+        discard = "checkout --";
+        nuke = "!git reset --hard HEAD && git clean -fd";
+
+        # Quick commits
+        fixup = "commit --fixup";
+        wip = "commit -am 'WIP'";
+        amend = "commit --amend --no-edit";
+
+        # Info & inspection
+        last = "log -1 HEAD --stat";
+        graph = "log --graph --oneline --decorate --all";
+        who = "shortlog -sn --no-merges";
+        today = "log --since='midnight' --oneline --author";
+        recent = "branch --sort=-committerdate --format='%(refname:short) (%(committerdate:relative))'";
+
+        # Branch management
+        branches = "branch -vv";
+        gone = "!git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}'";
+        cleanup = "!git gone | xargs -r git branch -D";
+        default = "!git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'";
+        sync = "!git fetch --all --prune && git rebase origin/$(git default)";
+
+        # Diff helpers
+        staged = "diff --staged";
         conflicts = "diff --name-only --diff-filter=U";
-        recent = "for-each-ref --sort=-committerdate --count=10 --format='%(refname:short)' refs/heads/";
-        cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d";
+        changed = "diff --name-only";
+
+        # Stash helpers
+        stash-all = "stash push --include-untracked";
+        snapshot = "!git stash push -m \"snapshot: $(date)\" && git stash apply";
+
+        # Root of repo
+        root = "rev-parse --show-toplevel";
+        exec = "!exec ";
+
+        # Meta
+        aliases = "!git config --list | grep ^alias | sed 's/alias\\.//'";
       };
     };
   };
