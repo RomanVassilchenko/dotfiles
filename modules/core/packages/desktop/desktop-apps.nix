@@ -1,19 +1,13 @@
 { pkgs, ... }:
 {
   # GUI applications - only loaded on desktop/laptop (not server)
+  # Apps with autostart are defined in modules/home/apps/*.nix
   environment.systemPackages = with pkgs; [
-    brave
+    appimage-run
+    camunda-modeler
     discord
     droidcam
-    telegram-desktop
-    zoom-us
     libreoffice
-    joplin-desktop
-    bitwarden-desktop
-    camunda-modeler
-    solaar
-    thunderbird
     xdg-utils
-    appimage-run
   ];
 }
