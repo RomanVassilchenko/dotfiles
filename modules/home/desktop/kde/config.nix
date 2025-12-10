@@ -346,6 +346,7 @@
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-6 = "Meta+^";
       "services/plasma-manager-commands.desktop".shortcuts-cheatsheet = [ ];
       "services/postman.desktop"._launch = "Meta+Shift+P";
+      "services/dev.zed.Zed.desktop"._launch = "Meta+Shift+Z";
     };
     configFile = {
       baloofilerc.General.dbVersion = 2;

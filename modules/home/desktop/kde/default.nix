@@ -9,7 +9,6 @@
 {
   imports = [
     inputs.plasma-manager.homeModules.plasma-manager
-    ./autostart.nix
     ./config.nix
     ./panels.nix
     ./wallpaper.nix

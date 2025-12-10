@@ -47,9 +47,17 @@ in
     ./fastfetch
 
     # GUI Apps (laptop/desktop only)
-    ./apps/obs-studio.nix
-    ./apps/virtmanager.nix
+    ./apps/bitwarden.nix
+    ./apps/brave.nix
     ./apps/camunda-modeler.nix
+    ./apps/joplin.nix
+    ./apps/obs-studio.nix
+    ./apps/solaar.nix
+    ./apps/telegram.nix
+    ./apps/thunderbird.nix
+    ./apps/virtmanager.nix
+    ./apps/zapzap.nix
+    ./apps/zoom.nix
 
     # Desktop (laptop/desktop only)
     ./desktop/kde
