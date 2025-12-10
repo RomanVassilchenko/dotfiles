@@ -83,31 +83,6 @@
       aq-vpn = "sudo systemctl start openfortivpn-dahua.service";
       aq-vpn-stop = "sudo systemctl stop openfortivpn-dahua.service";
       aq-vpn-status = "systemctl status openfortivpn-dahua.service";
-
-      # Git shortcuts (no 'git' prefix needed)
-      g = "git";
-      ga = "git add";
-      gaa = "git add --all";
-      gb = "git branch --sort=-committerdate";
-      gc = "git commit";
-      gcm = "git commit -m";
-      gca = "git commit --amend";
-      gco = "git checkout";
-      gd = "git diff";
-      gds = "git diff --staged";
-      gf = "git fetch --all --prune";
-      gl = "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
-      glo = "git log --oneline --decorate --all --graph";
-      gp = "git pull";
-      gpu = "git push";
-      gpuf = "git push --force-with-lease";
-      gr = "git restore";
-      grs = "git restore --staged";
-      gs = "git status";
-      gst = "git stash";
-      gstp = "git stash pop";
-      gw = "git switch";
-      gwc = "git switch -c";
     };
   };
 }
