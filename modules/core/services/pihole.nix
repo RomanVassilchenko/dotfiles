@@ -27,6 +27,8 @@ in
             REV_SERVER_DOMAIN = "local";
             REV_SERVER_TARGET = "192.168.1.1";
             REV_SERVER_CIDR = "192.168.1.0/24";
+            # Allow queries from LAN
+            DNSMASQ_LISTENING = "all";
           };
           ports = [
             "53:53/tcp"
