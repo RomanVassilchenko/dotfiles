@@ -40,6 +40,7 @@ in
     ./services/joplin-server.nix
     ./services/vaultwarden.nix
     ./services/cloudflared.nix
+    ./services/pihole.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix
