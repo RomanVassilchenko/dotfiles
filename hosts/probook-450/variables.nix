@@ -20,9 +20,9 @@
   bitwarden = { enable = true; autostart = true; };
   brave = { enable = true; autostart = true; };
   joplin = { enable = true; autostart = true; };
-  solaar = { enable = true; autostart = true; };
+  solaar = { enable = true; autostart = false; };
   telegram = { enable = true; autostart = true; };
   thunderbird = { enable = true; autostart = true; };
   zapzap = { enable = true; autostart = true; };
-  zoom = { enable = true; autostart = true; };
+  zoom = { enable = true; autostart = false; };
 }
