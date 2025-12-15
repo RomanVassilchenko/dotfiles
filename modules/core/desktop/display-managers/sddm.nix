@@ -43,7 +43,7 @@
   # Uses custom wallpaper from dotfiles
   environment.etc."sddm/themes/breeze/theme.conf.user".text = ''
     [General]
-    background=/home/romanv/dotfiles/wallpapers/kurzgesagt-galaxies.jpg
+    background=/home/romanv/Documents/dotfiles/wallpapers/kurzgesagt-galaxies.jpg
     type=image
   '';
 

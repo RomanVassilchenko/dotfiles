@@ -1,4 +1,4 @@
 --verbose=1
 --target=$HOME
---dir=/home/romanv/dotfiles/stow
+--dir=/home/romanv/Documents/dotfiles/stow
 --no-folding

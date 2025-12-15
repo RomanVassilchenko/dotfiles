@@ -13,7 +13,6 @@
     cowsay
     lolcat
     onefetch
-    pandoc
     xdg-ninja
 
     # Terminal info for SSH connections from Ghostty

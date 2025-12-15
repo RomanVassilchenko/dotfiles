@@ -10,7 +10,7 @@ let
   deviceType = vars.deviceType or "laptop";
   isServer = deviceType == "server";
 
-  dotfilesPath = "/home/romanv/dotfiles";
+  dotfilesPath = "/home/romanv/Documents/dotfiles";
 in
 lib.mkIf (workEnable && !isServer) {
   xdg.configFile."camunda-modeler/resources/plugins/camunda-modeler-dark-theme-plugin".source =

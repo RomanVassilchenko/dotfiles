@@ -74,8 +74,8 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
-   cd ~/dotfiles
+   git clone https://github.com/yourusername/dotfiles.git ~/Documents/dotfiles
+   cd ~/Documents/dotfiles
    ```
 
 2. **Run the setup script**

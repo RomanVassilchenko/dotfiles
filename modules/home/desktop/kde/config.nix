@@ -266,9 +266,19 @@
       mediacontrol.playpausemedia = "Media Play";
       mediacontrol.previousmedia = "Media Previous";
       mediacontrol.stopmedia = "Media Stop";
+      "org.chromium.Chromium"."296194E7A891216EC81299577E90A3F9-autofill_card" = [ ];
+      "org.chromium.Chromium"."296194E7A891216EC81299577E90A3F9-autofill_identity" = [ ];
+      "org.chromium.Chromium"."296194E7A891216EC81299577E90A3F9-autofill_login" = "Ctrl+Shift+L";
+      "org.chromium.Chromium"."296194E7A891216EC81299577E90A3F9-generate_password" = [ ];
+      "org.chromium.Chromium"."296194E7A891216EC81299577E90A3F9-lock_vault" = [ ];
+      "org.chromium.Chromium"."95DF2C62165856882B09E1298583660B-autofill_card" = [ ];
+      "org.chromium.Chromium"."95DF2C62165856882B09E1298583660B-autofill_identity" = [ ];
+      "org.chromium.Chromium"."95DF2C62165856882B09E1298583660B-autofill_login" = [ ];
+      "org.chromium.Chromium"."95DF2C62165856882B09E1298583660B-generate_password" = [ ];
+      "org.chromium.Chromium"."95DF2C62165856882B09E1298583660B-lock_vault" = [ ];
       "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-autofill_card" = [ ];
       "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-autofill_identity" = [ ];
-      "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-autofill_login" = "Ctrl+Shift+L";
+      "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-autofill_login" = [ ];
       "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-generate_password" = [ ];
       "org.chromium.Chromium"."9800E27D3750FD9825A65123A73BD47E-lock_vault" = [ ];
       org_kde_powerdevil."Decrease Keyboard Brightness" = "Keyboard Brightness Down";
@@ -288,7 +298,7 @@
         "Meta+B"
       ];
       plasmashell."Slideshow Wallpaper Next Image" = [ ];
-      plasmashell."activate application launcher" = "Alt+Space"; # Quick app launcher (Krunner)
+      plasmashell."activate application launcher" = [ ];
       plasmashell."activate task manager entry 1" = [ ];
       plasmashell."activate task manager entry 10" = [ ];
       plasmashell."activate task manager entry 2" = [ ];
@@ -306,8 +316,8 @@
       plasmashell.cyclePrevAction = [ ];
       plasmashell.edit_clipboard = [ ];
       plasmashell."manage activities" = [ ];
-      plasmashell."next activity" = [ ]; # Disabled - not using activities
-      plasmashell."previous activity" = [ ]; # Disabled - not using activities
+      plasmashell."next activity" = [ ];
+      plasmashell."previous activity" = [ ];
       plasmashell.repeat_action = [ ];
       plasmashell."show dashboard" = "Ctrl+F12";
       plasmashell.show-barcode = [ ];
@@ -324,8 +334,13 @@
       "services/dev.zed.Zed.desktop"._launch = "Meta+Shift+Z";
       "services/discord.desktop"._launch = "Meta+Shift+D";
       "services/joplin.desktop"._launch = "Meta+Shift+J";
+      "services/kitty.desktop"._launch = "Meta+Return";
       "services/org.kde.dolphin.desktop"._launch = "Meta+Shift+F";
       "services/org.kde.krdc.desktop"._launch = "Meta+Shift+K";
+      "services/org.kde.krunner.desktop"._launch = [
+        "Alt+Space"
+        "Meta+R"
+      ];
       "services/org.kde.spectacle.desktop".RecordRegion = [ ];
       "services/org.kde.spectacle.desktop".RectangularRegionScreenShot = [
         "Meta+S"
@@ -431,10 +446,10 @@
       kdeglobals.WM.inactiveBlend = "161,169,177";
       kdeglobals.WM.inactiveForeground = "161,169,177";
       kiorc.Confirmations.ConfirmEmptyTrash = false;
-      klipperrc.General.IgnoreImages = true; # Prevent clipboard filling with screenshots
+      klipperrc.General.IgnoreImages = true;
       klipperrc.General.MaxClipItems = 100;
+      krunnerrc.General.ActivateWhenTypingOnDesktop = true;
       krunnerrc.General.FreeFloating = true;
-      krunnerrc.General.ActivateWhenTypingOnDesktop = true; # Start typing to open Krunner
       kscreenlockerrc."Greeter/Wallpaper/org.kde.image/General".Image =
         "file:///nix/store/vsvlbrhb7cn965a46wdng83dk7sakzrl-plasma-workspace-wallpapers-6.5.3/share/wallpapers/MilkyWay/";
       kscreenlockerrc."Greeter/Wallpaper/org.kde.image/General".PreviewImage =
@@ -456,7 +471,7 @@
       kwinrc.Desktops.Number = 6;
       kwinrc.Desktops.Rows = 1;
       kwinrc.NightColor.Active = true;
-      kwinrc.NightColor.NightTemperature = 4500; # Warmer for better sleep
+      kwinrc.NightColor.NightTemperature = 4500;
       kwinrc.Plugins.desktop-cursor-moveEnabled = true;
       kwinrc.Plugins.krohnkiteEnabled = true;
       kwinrc.Plugins.move-windows-to-desktopsEnabled = true;
@@ -490,7 +505,7 @@
       kwinrc.Script-krohnkite.screenGapTop = 6;
       kwinrc.Tiling.padding = 4;
       kwinrc."Tiling/0a24f2ef-db42-5216-91cb-8c3b6e17b197".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/171ef0b9-6dc4-4cb4-8c67-dae453e656e3/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/171ef0b9-6dc4-4cb4-8c67-dae453e656e3/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
@@ -498,13 +513,13 @@
       kwinrc."Tiling/Desktop_1/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_1/77dcb499-4e6d-4c9c-95d6-551c1df07781".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_1/87b1d31a-f62f-41d2-8bb5-ab0e2c2c12e8".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_1/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_1/d3b3b36b-2f9e-46c2-97cb-4099fa7ffa69".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_1/d6874544-1b1a-4e7b-8c28-7206974eeee1".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_1/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
@@ -512,13 +527,13 @@
       kwinrc."Tiling/Desktop_2/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_2/77dcb499-4e6d-4c9c-95d6-551c1df07781".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_2/87b1d31a-f62f-41d2-8bb5-ab0e2c2c12e8".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_2/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_2/d3b3b36b-2f9e-46c2-97cb-4099fa7ffa69".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_2/d6874544-1b1a-4e7b-8c28-7206974eeee1".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_2/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
@@ -526,13 +541,13 @@
       kwinrc."Tiling/Desktop_3/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_3/77dcb499-4e6d-4c9c-95d6-551c1df07781".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_3/87b1d31a-f62f-41d2-8bb5-ab0e2c2c12e8".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_3/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_3/d3b3b36b-2f9e-46c2-97cb-4099fa7ffa69".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_3/d6874544-1b1a-4e7b-8c28-7206974eeee1".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_3/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
@@ -540,13 +555,13 @@
       kwinrc."Tiling/Desktop_4/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_4/77dcb499-4e6d-4c9c-95d6-551c1df07781".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_4/87b1d31a-f62f-41d2-8bb5-ab0e2c2c12e8".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_4/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_4/d3b3b36b-2f9e-46c2-97cb-4099fa7ffa69".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_4/d6874544-1b1a-4e7b-8c28-7206974eeee1".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_4/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
@@ -554,24 +569,24 @@
       kwinrc."Tiling/Desktop_5/26166689-cdc3-4c3a-8a52-5ed29f68f548".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_5/77dcb499-4e6d-4c9c-95d6-551c1df07781".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_5/87b1d31a-f62f-41d2-8bb5-ab0e2c2c12e8".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_5/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_5/d3b3b36b-2f9e-46c2-97cb-4099fa7ffa69".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/Desktop_5/d6874544-1b1a-4e7b-8c28-7206974eeee1".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_5/e3a7845f-756c-4160-8a96-e7ee5efb4306".tiles =
         "{\"layoutDirection\":\"horizontal\",\"tiles\":x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}x5d}";
       kwinrc."Tiling/Desktop_6/abab790a-b14f-45db-a910-a7f7407ef029".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/c346a8d6-b53a-5b78-961e-cfcd2ebbb2d9".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
       kwinrc."Tiling/eff5e547-9499-512b-8a5d-110e8e8fac86".tiles =
-        "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
-      kwinrc.Windows.DelayFocusInterval = 150; # Small delay to prevent accidental focus changes
+        "{\"layoutDirection\":\"horizontal\",\"tiles\":\x5b{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}\x5d}";
+      kwinrc.Windows.DelayFocusInterval = 150;
       kwinrc.Windows.FocusPolicy = "FocusFollowsMouse";
       kwinrc.Xwayland.Scale = 1.25;
       kwinrulesrc."1".Description = "Hide titlebar by default";

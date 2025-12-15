@@ -50,6 +50,7 @@ in
     ./cli-tools/direnv.nix
     ./cli-tools/atuin.nix
     ./cli-tools/nix-index.nix
+    ./cli-tools/doc-tools.nix
 
     # Editors - nvf is TUI-based (always loaded)
     ./editors/nvf.nix

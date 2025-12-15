@@ -58,7 +58,7 @@ pkgs.writeShellScriptBin "dot" ''
 
 
   # --- Configuration ---
-  PROJECT="dotfiles"   #ddubos or dotfiles
+  PROJECT="Documents/dotfiles"
   PROFILE="${profile}"
   BACKUP_FILES_STR="${backupFilesString}"
   VERSION="1.1.0"
