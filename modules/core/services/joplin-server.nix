@@ -1,14 +1,9 @@
 {
   pkgs,
   lib,
-  host,
+  isServer,
   ...
 }:
-let
-  vars = import ../../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 {
   config = lib.mkIf isServer {
     # Joplin Server via Docker containers

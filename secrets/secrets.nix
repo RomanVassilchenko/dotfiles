@@ -42,4 +42,7 @@ in
 
   # Cloudflare Tunnel
   "cloudflared-tunnel-token.age".publicKeys = allUsers;
+
+  # Pi-hole
+  "pihole-webpassword.age".publicKeys = allUsers;
 }

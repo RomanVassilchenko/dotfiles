@@ -1,10 +1,9 @@
 {
   lib,
-  host,
+  vars,
   ...
 }:
 let
-  vars = import ../../../hosts/${host}/variables.nix;
   workEnable = vars.workEnable or false;
 in
 {
@@ -13,34 +12,21 @@ in
 
     settings = {
       display = {
-        color = {
-          keys = "cyan";
-          output = "white";
-        };
-        separator = " ➜  ";
+        separator = "  ";
       };
-
-      # logo = {
-      #   source = ./nixos.png;
-      #   type = "kitty-direct";
-      #   height = 10;
-      #   width = 20;
-      #   padding = {
-      #     top = 2;
-      #     left = 2;
-      #   };
-      # };
 
       modules = [
         "break"
+        # OS Section - Blue
         {
           type = "os";
-          key = "OS";
+          key = " 󱄅 ";
           keyColor = "blue";
+          format = "{3} {12}";
         }
         {
           type = "kernel";
-          key = " ├  ";
+          key = " ├ 󰌽 ";
           keyColor = "blue";
         }
         {
@@ -50,13 +36,18 @@ in
         }
         {
           type = "shell";
-          key = " └  ";
+          key = " └ 󰆍 ";
           keyColor = "blue";
         }
-        "break"
+        # Desktop Section - Cyan
+        {
+          type = "de";
+          key = " 󰧨 ";
+          keyColor = "cyan";
+        }
         {
           type = "wm";
-          key = "WM   ";
+          key = " ├ 󱂬 ";
           keyColor = "cyan";
         }
         {
@@ -71,41 +62,40 @@ in
         }
         {
           type = "cursor";
-          key = " ├  ";
+          key = " ├ 󰇀 ";
           keyColor = "cyan";
         }
         {
           type = "terminal";
-          key = " ├  ";
+          key = " ├ 󰞷 ";
           keyColor = "cyan";
         }
         {
           type = "terminalfont";
-          key = " └  ";
+          key = " └ 󰛖 ";
           keyColor = "cyan";
         }
-        "break"
+        # Hardware Section - Magenta
         {
           type = "host";
-          format = "{5} {1} Type {2}";
-          key = "PC   ";
+          key = " 󰌢 ";
           keyColor = "magenta";
+          format = "{5} {1} ({2})";
         }
         {
           type = "cpu";
-          format = "{1} ({3}) @ {7} GHz";
-          key = " ├  ";
+          key = " ├ 󰻠 ";
           keyColor = "magenta";
         }
         {
           type = "gpu";
-          format = "{1} {2} @ {12} GHz";
           key = " ├ 󰢮 ";
           keyColor = "magenta";
+          format = "{1} {2}";
         }
         {
           type = "memory";
-          key = " ├  ";
+          key = " ├ 󰍛 ";
           keyColor = "magenta";
         }
         {
@@ -114,25 +104,49 @@ in
           keyColor = "magenta";
         }
         {
-          type = "monitor";
-          key = " ├  ";
+          type = "battery";
+          key = " ├ 󰁹 ";
           keyColor = "magenta";
+        }
+        {
+          type = "display";
+          key = " └ 󰍹 ";
+          keyColor = "magenta";
+        }
+        # Network Section - Green
+        {
+          type = "localip";
+          key = " 󰛳 ";
+          keyColor = "green";
+          format = "{1}";
+        }
+        {
+          type = "wifi";
+          key = " ├ 󰖩 ";
+          keyColor = "green";
+          format = "{4} ({6})";
         }
         {
           type = "player";
           key = " ├ 󰥠 ";
-          keyColor = "magenta";
+          keyColor = "green";
         }
         {
           type = "media";
           key = " └ 󰝚 ";
-          keyColor = "magenta";
+          keyColor = "green";
         }
-        "break"
+        # Time Section - Yellow
         {
           type = "uptime";
-          key = "TIME";
+          key = " 󰅐 ";
           keyColor = "yellow";
+        }
+        {
+          type = "datetime";
+          key = " ├ 󰃭 ";
+          keyColor = "yellow";
+          format = "{1}-{4}-{11} {14}:{18}:{20}";
         }
         {
           type = "command";
@@ -155,86 +169,99 @@ in
           format = "System age — {result}";
         }
       ]
-      ++ lib.optionals workEnable [
-        {
-          type = "command";
-          key = " ├ 󰙴 ";
-          keyColor = "yellow";
-          text = ''
-            career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            now=$(date -d '09:00 +0500' +%s)
-            days=$(( (now - career_start) / 86400 ))
-            printf "since Dec 11 2023 — %s days" "$days"
-          '';
-          format = "Career — {result}";
-        }
-        {
-          type = "command";
-          key = " ├ 󰏫 ";
-          keyColor = "yellow";
-          text = ''
-            career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
-            bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
-            now=$(date -d '09:00 +0500' +%s)
-            matrix_days=$(( (staff_start - matrix_start) / 86400 ))
-            staff_days=$(( (bereke_start - staff_start) / 86400 ))
-            ozon_days=$(( matrix_days + staff_days ))
-            career_days=$(( (now - career_start) / 86400 ))
-            percent=$(awk -v a=$ozon_days -v b=$career_days 'BEGIN{printf "%.1f", 100*a/b}')
-            printf "%s days (%s%% of career)" "$ozon_days" "$percent"
-          '';
-          format = "Ozon — {result}";
-        }
-        {
-          type = "command";
-          key = " │  ├ 󱊈 ";
-          keyColor = "yellow";
-          text = ''
-            matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
-            bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
-            matrix_days=$(( (staff_start - matrix_start) / 86400 ))
-            staff_days=$(( (bereke_start - staff_start) / 86400 ))
-            ozon_days=$(( matrix_days + staff_days ))
-            percent=$(awk -v a=$matrix_days -v b=$ozon_days 'BEGIN{printf "%.1f", 100*a/b}')
-            printf "%s days (%s%% of Ozon)" "$matrix_days" "$percent"
-          '';
-          format = "Matrix — {result}";
-        }
-        {
-          type = "command";
-          key = " │  └ 󱊈 ";
-          keyColor = "yellow";
-          text = ''
-            matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
-            bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
-            matrix_days=$(( (staff_start - matrix_start) / 86400 ))
-            staff_days=$(( (bereke_start - staff_start) / 86400 ))
-            ozon_days=$(( matrix_days + staff_days ))
-            percent=$(awk -v a=$staff_days -v b=$ozon_days 'BEGIN{printf "%.1f", 100*a/b}')
-            printf "%s days (%s%% of Ozon)" "$staff_days" "$percent"
-          '';
-          format = "Staff — {result}";
-        }
-        {
-          type = "command";
-          key = " └ 󰳼 ";
-          keyColor = "yellow";
-          text = ''
-            career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
-            bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
-            now=$(date -d '09:00 +0500' +%s)
-            bereke_days=$(( (now - bereke_start) / 86400 ))
-            career_days=$(( (now - career_start) / 86400 ))
-            percent=$(awk -v a=$bereke_days -v b=$career_days 'BEGIN{printf "%.1f", 100*a/b}')
-            printf "%s days (%s%% of career)" "$bereke_days" "$percent"
-          '';
-          format = "Bereke Bank — {result}";
-        }
-      ];
+      ++ (
+        if workEnable then
+          [
+            {
+              type = "command";
+              key = " ├ 󰙴 ";
+              keyColor = "yellow";
+              text = ''
+                career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                now=$(date -d '09:00 +0500' +%s)
+                days=$(( (now - career_start) / 86400 ))
+                printf "since Dec 11 2023 — %s days" "$days"
+              '';
+              format = "Career — {result}";
+            }
+            {
+              type = "command";
+              key = " ├ 󰏫 ";
+              keyColor = "yellow";
+              text = ''
+                career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
+                bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
+                now=$(date -d '09:00 +0500' +%s)
+                matrix_days=$(( (staff_start - matrix_start) / 86400 ))
+                staff_days=$(( (bereke_start - staff_start) / 86400 ))
+                ozon_days=$(( matrix_days + staff_days ))
+                career_days=$(( (now - career_start) / 86400 ))
+                percent=$(awk -v a=$ozon_days -v b=$career_days 'BEGIN{printf "%.1f", 100*a/b}')
+                printf "%s days (%s%% of career)" "$ozon_days" "$percent"
+              '';
+              format = "Ozon — {result}";
+            }
+            {
+              type = "command";
+              key = " │  ├ 󱊈 ";
+              keyColor = "yellow";
+              text = ''
+                matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
+                bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
+                matrix_days=$(( (staff_start - matrix_start) / 86400 ))
+                staff_days=$(( (bereke_start - staff_start) / 86400 ))
+                ozon_days=$(( matrix_days + staff_days ))
+                percent=$(awk -v a=$matrix_days -v b=$ozon_days 'BEGIN{printf "%.1f", 100*a/b}')
+                printf "%s days (%s%% of Ozon)" "$matrix_days" "$percent"
+              '';
+              format = "Matrix — {result}";
+            }
+            {
+              type = "command";
+              key = " │  └ 󱊈 ";
+              keyColor = "yellow";
+              text = ''
+                matrix_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                staff_start=$(date -d '2024-08-11 09:00 +0500' +%s)
+                bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
+                matrix_days=$(( (staff_start - matrix_start) / 86400 ))
+                staff_days=$(( (bereke_start - staff_start) / 86400 ))
+                ozon_days=$(( matrix_days + staff_days ))
+                percent=$(awk -v a=$staff_days -v b=$ozon_days 'BEGIN{printf "%.1f", 100*a/b}')
+                printf "%s days (%s%% of Ozon)" "$staff_days" "$percent"
+              '';
+              format = "Staff — {result}";
+            }
+            {
+              type = "command";
+              key = " └ 󰳼 ";
+              keyColor = "yellow";
+              text = ''
+                career_start=$(date -d '2023-12-11 09:00 +0500' +%s)
+                bereke_start=$(date -d '2025-09-19 09:00 +0500' +%s)
+                now=$(date -d '09:00 +0500' +%s)
+                bereke_days=$(( (now - bereke_start) / 86400 ))
+                career_days=$(( (now - career_start) / 86400 ))
+                percent=$(awk -v a=$bereke_days -v b=$career_days 'BEGIN{printf "%.1f", 100*a/b}')
+                printf "%s days (%s%% of career)" "$bereke_days" "$percent"
+              '';
+              format = "Bereke Bank — {result}";
+            }
+            "colors"
+          ]
+        else
+          [
+            {
+              type = "colors";
+              key = " └   ";
+              keyColor = "yellow";
+              paddingLeft = 0;
+            }
+          ]
+      );
     };
   };
 }

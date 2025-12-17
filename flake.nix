@@ -38,6 +38,11 @@
       # Helper to build host-specific configurations
       mkNixosConfig =
         { gpuProfile, host }:
+        let
+          vars = import ./hosts/${host}/variables.nix;
+          deviceType = vars.deviceType or "laptop";
+          isServer = deviceType == "server";
+        in
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
@@ -45,6 +50,8 @@
               inputs
               username
               host
+              vars
+              isServer
               ;
             profile = gpuProfile;
             pkgs-pinned = import nixpkgs-pinned {

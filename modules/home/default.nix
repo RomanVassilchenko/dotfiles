@@ -1,13 +1,10 @@
 {
   lib,
-  host,
+  vars,
+  isServer,
   ...
 }:
 let
-  vars = import ../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-
   # App config defaults
   defaultApp = { enable = false; autostart = false; };
   bitwarden = vars.bitwarden or defaultApp;

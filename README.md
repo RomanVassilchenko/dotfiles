@@ -10,6 +10,8 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 [![KDE Plasma](https://img.shields.io/badge/DE-KDE%20Plasma%206-1d99f3.svg?style=flat&logo=kde&logoColor=white)](https://kde.org/plasma-desktop/)
 [![Home Manager](https://img.shields.io/badge/Home-Manager-blue.svg?style=flat)](https://github.com/nix-community/home-manager)
 
+![Desktop Screenshot](.github/desktop-screenshot.png)
+
 </div>
 
 ## Features

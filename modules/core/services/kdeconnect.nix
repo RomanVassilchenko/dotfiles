@@ -1,13 +1,8 @@
 {
   lib,
-  host,
+  isServer,
   ...
 }:
-let
-  vars = import ../../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 lib.mkIf (!isServer) {
   # KDE Connect - Connect your phone to your desktop
   # Features: File sharing, clipboard sync, notifications, remote control, and more

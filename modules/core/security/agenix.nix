@@ -1,12 +1,11 @@
 {
   inputs,
   lib,
-  host,
+  vars,
   config,
   ...
 }:
 let
-  vars = import ../../../hosts/${host}/variables.nix;
   workEnable = vars.workEnable or false;
 in
 {

@@ -1,15 +1,12 @@
 {
   lib,
   config,
-  host,
+  vars,
+  isServer,
   ...
 }:
 let
-  vars = import ../../../hosts/${host}/variables.nix;
   workEnable = vars.workEnable or false;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-
   dotfilesPath = "/home/romanv/Documents/dotfiles";
 in
 lib.mkIf (workEnable && !isServer) {

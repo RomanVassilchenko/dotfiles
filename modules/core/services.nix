@@ -1,14 +1,9 @@
 {
   profile,
   lib,
-  host,
+  isServer,
   ...
 }:
-let
-  vars = import ../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 {
   # Services to start
   services = {

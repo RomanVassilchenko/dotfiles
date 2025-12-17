@@ -1,14 +1,9 @@
 {
   inputs,
   lib,
-  host,
+  isServer,
   ...
 }:
-let
-  vars = import ../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 {
   imports = [
     # Core system configuration (always loaded)

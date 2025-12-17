@@ -1,25 +1,46 @@
 {
   pkgs,
   lib,
-  host,
+  config,
+  isServer,
   ...
 }:
-let
-  vars = import ../../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 {
   config = lib.mkIf isServer {
+    # Pi-hole web password secret
+    age.secrets.pihole-webpassword = {
+      file = ../../../secrets/pihole-webpassword.age;
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    };
+
+    # Generate Pi-hole env file with secret password
+    systemd.services.pihole-env-generator = {
+      description = "Generate Pi-hole environment file with secrets";
+      after = [ "agenix.service" ];
+      before = [ "docker-pihole.service" ];
+      requiredBy = [ "docker-pihole.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        mkdir -p /run/pihole
+        echo "WEBPASSWORD=$(cat ${config.age.secrets.pihole-webpassword.path})" > /run/pihole/env
+        chmod 0400 /run/pihole/env
+      '';
+    };
+
     # Pi-hole DNS server via Docker container
     virtualisation.oci-containers = {
       backend = "docker";
       containers = {
         pihole = {
           image = "pihole/pihole:latest";
+          environmentFiles = [ "/run/pihole/env" ];
           environment = {
             TZ = "Asia/Almaty";
-            WEBPASSWORD = "admin";
             # Upstream DNS: Cloudflare primary, Google fallback
             PIHOLE_DNS_ = "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4";
             DNSSEC = "true";

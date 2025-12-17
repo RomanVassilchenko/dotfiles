@@ -1,13 +1,4 @@
-{
-  lib,
-  host,
-  ...
-}:
-let
-  vars = import ../../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
+{ ... }:
 {
   # Fail2ban - Intrusion prevention (ban IPs after failed login attempts)
   services.fail2ban = {

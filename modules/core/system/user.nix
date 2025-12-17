@@ -4,11 +4,10 @@
   username,
   host,
   profile,
+  vars,
+  isServer,
   ...
 }:
-let
-  inherit (import ../../../hosts/${host}/variables.nix) gitUsername;
-in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
   home-manager = {
@@ -21,6 +20,8 @@ in
         username
         host
         profile
+        vars
+        isServer
         ;
     };
     users.${username} = {
@@ -35,7 +36,7 @@ in
   users.mutableUsers = true;
   users.users.${username} = {
     isNormalUser = true;
-    description = "${gitUsername}";
+    description = vars.gitUsername;
     extraGroups = [
       "adbusers"
       "docker" # access to docker as non-root

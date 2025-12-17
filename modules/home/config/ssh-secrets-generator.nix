@@ -2,11 +2,10 @@
   config,
   pkgs,
   lib,
-  host,
+  vars,
   ...
 }:
 let
-  vars = import ../../../hosts/${host}/variables.nix;
   workEnable = vars.workEnable or false;
 in
 lib.mkIf workEnable {

@@ -2,14 +2,9 @@
   pkgs,
   lib,
   config,
-  host,
+  isServer,
   ...
 }:
-let
-  vars = import ../../../hosts/${host}/variables.nix;
-  deviceType = vars.deviceType or "laptop";
-  isServer = deviceType == "server";
-in
 {
   config = lib.mkIf isServer {
     # Cloudflared tunnel token secret
