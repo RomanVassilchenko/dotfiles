@@ -22,20 +22,18 @@ in
         "flakes"
       ];
       # Substituters: add ninkear cache for laptops when on local network
-      substituters =
-        [
-          "https://nix-community.cachix.org"
-        ]
-        ++ lib.optionals (!isServer) [
-          "http://192.168.1.80:5000" # ninkear local cache
-        ];
-      trusted-public-keys =
-        [
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        ]
-        ++ lib.optionals (!isServer) [
-          "ninkear-cache:sNCVuzpn+Ku3BRQZztAMz2fhDL4/0PkE7+IGYwIn+90="
-        ];
+      substituters = [
+        "https://nix-community.cachix.org"
+      ]
+      ++ lib.optionals (!isServer) [
+        "http://192.168.1.80:5000" # ninkear local cache
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ]
+      ++ lib.optionals (!isServer) [
+        "ninkear-cache:sNCVuzpn+Ku3BRQZztAMz2fhDL4/0PkE7+IGYwIn+90="
+      ];
       # Build optimization
       max-jobs = 12;
       cores = 0; # Auto-detect and use all cores per build job

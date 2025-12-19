@@ -18,12 +18,36 @@
   sshKeyPath = "/home/romanv/.ssh/id_xiaoxinpro_work";
 
   # App toggles (package + autostart)
-  bitwarden = { enable = true; autostart = true; };
-  brave = { enable = true; autostart = true; };
-  joplin = { enable = true; autostart = true; };
-  solaar = { enable = true; autostart = true; };
-  telegram = { enable = true; autostart = true; };
-  thunderbird = { enable = true; autostart = true; };
-  zapzap = { enable = true; autostart = true; };
-  zoom = { enable = true; autostart = true; };
+  bitwarden = {
+    enable = true;
+    autostart = true;
+  };
+  brave = {
+    enable = true;
+    autostart = true;
+  };
+  joplin = {
+    enable = true;
+    autostart = true;
+  };
+  solaar = {
+    enable = true;
+    autostart = true;
+  };
+  telegram = {
+    enable = true;
+    autostart = true;
+  };
+  thunderbird = {
+    enable = true;
+    autostart = true;
+  };
+  zapzap = {
+    enable = true;
+    autostart = true;
+  };
+  zoom = {
+    enable = true;
+    autostart = true;
+  };
 }

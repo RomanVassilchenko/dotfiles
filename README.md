@@ -28,7 +28,8 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 - **Custom CLI** - Powerful `dot` command for system management
 - **Host-Specific** - Multiple machines with independent configurations
 - **Performance Tuning** - Zram, CPU governor, and kernel optimizations
-- **Self-Hosted Services** - Vaultwarden (Bitwarden) and Joplin Server for servers
+- **Self-Hosted Services** - Vaultwarden (Bitwarden) and Joplin Server for
+  servers
 
 ## Tech Stack
 
@@ -509,27 +510,29 @@ When `deviceType = "server"`, the following services are automatically enabled:
 
 Self-hosted password manager compatible with Bitwarden clients.
 
-| Setting          | Value                    |
-| ---------------- | ------------------------ |
-| Port             | 8222                     |
-| URL              | `http://localhost:8222`  |
-| Signups          | Disabled                 |
-| Backup Directory | `/var/backup/vaultwarden`|
+| Setting          | Value                     |
+| ---------------- | ------------------------- |
+| Port             | 8222                      |
+| URL              | `http://localhost:8222`   |
+| Signups          | Disabled                  |
+| Backup Directory | `/var/backup/vaultwarden` |
 
-Access the web vault at the configured URL. Use any Bitwarden client (mobile, desktop, browser extension) by pointing it to your server's address.
+Access the web vault at the configured URL. Use any Bitwarden client (mobile,
+desktop, browser extension) by pointing it to your server's address.
 
 ### Joplin Server
 
 Self-hosted sync server for Joplin note-taking application, running via Docker.
 
-| Component       | Details                          |
-| --------------- | -------------------------------- |
-| Port            | 22300                            |
-| URL             | `http://localhost:22300`         |
-| Database        | PostgreSQL 16                    |
-| Docker Network  | `joplin-network`                 |
+| Component      | Details                  |
+| -------------- | ------------------------ |
+| Port           | 22300                    |
+| URL            | `http://localhost:22300` |
+| Database       | PostgreSQL 16            |
+| Docker Network | `joplin-network`         |
 
 **Containers:**
+
 - `joplin-db` - PostgreSQL database for Joplin
 - `joplin-server` - Joplin sync server
 

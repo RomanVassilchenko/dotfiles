@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Brave - Web browser
   home.packages = [ pkgs.brave ];

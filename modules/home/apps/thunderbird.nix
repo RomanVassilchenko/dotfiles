@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Thunderbird - Email client
   home.packages = [ pkgs.thunderbird ];

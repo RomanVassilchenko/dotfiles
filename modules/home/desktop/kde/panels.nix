@@ -7,6 +7,7 @@
         floating = false;
         hiding = "none";
         screen = "all";
+        opacity = "translucent";
 
         widgets = [
           # Left side - Desktop pager (show names, fixed width)
@@ -15,6 +16,7 @@
             config = {
               General = {
                 displayedText = "Name";
+                showOnlyCurrentScreen = false;
                 showWindowOutlines = false;
                 wrapPage = true;
               };

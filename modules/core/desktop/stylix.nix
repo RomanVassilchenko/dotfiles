@@ -43,10 +43,10 @@
       };
     };
 
-    # Cursor theme
+    # Cursor theme - white Bibata cursor
     cursor = {
-      package = pkgs.catppuccin-cursors.mochaMauve;
-      name = "catppuccin-mocha-mauve-cursors";
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
       size = 24;
     };
 

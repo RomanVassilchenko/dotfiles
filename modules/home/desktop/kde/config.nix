@@ -297,7 +297,7 @@
         "Battery"
         "Meta+B"
       ];
-      plasmashell."Slideshow Wallpaper Next Image" = [ ];
+      plasmashell."Slideshow Wallpaper Next Image" = "Meta+N";
       plasmashell."activate application launcher" = [ ];
       plasmashell."activate task manager entry 1" = [ ];
       plasmashell."activate task manager entry 10" = [ ];
@@ -454,7 +454,7 @@
         "file:///nix/store/vsvlbrhb7cn965a46wdng83dk7sakzrl-plasma-workspace-wallpapers-6.5.3/share/wallpapers/MilkyWay/";
       kscreenlockerrc."Greeter/Wallpaper/org.kde.image/General".PreviewImage =
         "file:///nix/store/vsvlbrhb7cn965a46wdng83dk7sakzrl-plasma-workspace-wallpapers-6.5.3/share/wallpapers/MilkyWay/";
-      ksplashrc.KSplash.Theme = "a2n.kuro";
+      ksplashrc.KSplash.Theme = "Catppuccin-Mocha-Mauve";
       kwalletrc.Wallet."First Use" = false;
       kwinrc.Desktops.Id_1 = "Desktop_1";
       kwinrc.Desktops.Id_2 = "Desktop_2";
@@ -462,7 +462,7 @@
       kwinrc.Desktops.Id_4 = "Desktop_4";
       kwinrc.Desktops.Id_5 = "Desktop_5";
       kwinrc.Desktops.Id_6 = "Desktop_6";
-      kwinrc.Desktops.Name_1 = "Browse";
+      kwinrc.Desktops.Name_1 = "Web";
       kwinrc.Desktops.Name_2 = "Code";
       kwinrc.Desktops.Name_3 = "Chat";
       kwinrc.Desktops.Name_4 = "Mail";
@@ -474,6 +474,8 @@
       # Blur effect configuration
       kwinrc.Plugins.blurEnabled = true;
       kwinrc.Plugins.contrastEnabled = true;
+      kwinrc.Effect-blur.BlurStrength = 12;
+      kwinrc.Effect-blur.NoiseStrength = 0;
 
       kwinrc.NightColor.Active = true;
       kwinrc.NightColor.NightTemperature = 4500;

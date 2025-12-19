@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Zoom - Video conferencing
   home.packages = [ pkgs.zoom-us ];

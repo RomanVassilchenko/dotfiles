@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Telegram - Messaging app
   home.packages = [ pkgs.telegram-desktop ];

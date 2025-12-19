@@ -106,8 +106,8 @@
     # Open firewall ports for DNS
     networking.firewall = {
       allowedTCPPorts = [
-        53    # DNS
-        8053  # Pi-hole web interface
+        53 # DNS
+        8053 # Pi-hole web interface
       ];
       allowedUDPPorts = [
         53 # DNS

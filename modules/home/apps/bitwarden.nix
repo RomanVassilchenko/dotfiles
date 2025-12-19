@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Bitwarden - Password manager
   home.packages = [ pkgs.bitwarden-desktop ];

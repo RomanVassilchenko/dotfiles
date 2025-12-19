@@ -17,12 +17,36 @@
   sshKeyPath = "/home/romanv/.ssh/id_personal";
 
   # App toggles (package + autostart)
-  bitwarden = { enable = true; autostart = true; };
-  brave = { enable = true; autostart = true; };
-  joplin = { enable = true; autostart = true; };
-  solaar = { enable = true; autostart = false; };
-  telegram = { enable = true; autostart = true; };
-  thunderbird = { enable = true; autostart = true; };
-  zapzap = { enable = true; autostart = true; };
-  zoom = { enable = true; autostart = false; };
+  bitwarden = {
+    enable = true;
+    autostart = true;
+  };
+  brave = {
+    enable = true;
+    autostart = false;
+  };
+  joplin = {
+    enable = true;
+    autostart = true;
+  };
+  solaar = {
+    enable = true;
+    autostart = false;
+  };
+  telegram = {
+    enable = true;
+    autostart = true;
+  };
+  thunderbird = {
+    enable = true;
+    autostart = true;
+  };
+  zapzap = {
+    enable = true;
+    autostart = true;
+  };
+  zoom = {
+    enable = true;
+    autostart = false;
+  };
 }

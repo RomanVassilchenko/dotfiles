@@ -43,17 +43,21 @@
     enable = true;
     theme = {
       name = lib.mkForce "catppuccin-mocha-mauve-standard";
-      package = lib.mkForce (pkgs.catppuccin-gtk.override {
-        variant = "mocha";
-        accents = [ "mauve" ];
-      });
+      package = lib.mkForce (
+        pkgs.catppuccin-gtk.override {
+          variant = "mocha";
+          accents = [ "mauve" ];
+        }
+      );
     };
     iconTheme = {
       name = lib.mkForce "Papirus-Dark";
-      package = lib.mkForce (pkgs.catppuccin-papirus-folders.override {
-        flavor = "mocha";
-        accent = "mauve";
-      });
+      package = lib.mkForce (
+        pkgs.catppuccin-papirus-folders.override {
+          flavor = "mocha";
+          accent = "mauve";
+        }
+      );
     };
   };
 

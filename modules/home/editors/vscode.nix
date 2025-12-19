@@ -1,10 +1,19 @@
 { pkgs, ... }:
 {
+  home.packages = [ pkgs.nixd ];
+
   programs.vscode = {
     enable = true;
     package = pkgs.vscode;
 
     profiles.default = {
+      keybindings = [
+        {
+          key = "ctrl+shift+g";
+          command = "workbench.view.scm";
+        }
+      ];
+
       extensions = with pkgs.vscode-extensions; [
         # === Nix ===
         jnoortheen.nix-ide
@@ -160,7 +169,10 @@
         "editor.padding.bottom" = 20;
         "editor.renderControlCharacters" = false;
         "editor.renderLineHighlight" = "none";
-        "editor.rulers" = [ 80 120 ];
+        "editor.rulers" = [
+          80
+          120
+        ];
         "editor.scrollbar.horizontal" = "auto";
         "editor.scrollbar.vertical" = "auto";
         "editor.selectionHighlight" = false;
@@ -313,7 +325,10 @@
         "security.workspace.trust.enabled" = false;
 
         # Spell checker
-        "spellright.language" = [ "en" "ru" ];
+        "spellright.language" = [
+          "en"
+          "ru"
+        ];
 
         # Telemetry
         "telemetry.telemetryLevel" = "off";

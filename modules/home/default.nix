@@ -6,7 +6,10 @@
 }:
 let
   # App config defaults
-  defaultApp = { enable = false; autostart = false; };
+  defaultApp = {
+    enable = false;
+    autostart = false;
+  };
   bitwarden = vars.bitwarden or defaultApp;
   brave = vars.brave or defaultApp;
   joplin = vars.joplin or defaultApp;
@@ -19,7 +22,18 @@ in
 {
   _module.args = {
     # Pass app configs to modules
-    appConfig = { inherit bitwarden brave joplin solaar telegram thunderbird zapzap zoom; };
+    appConfig = {
+      inherit
+        bitwarden
+        brave
+        joplin
+        solaar
+        telegram
+        thunderbird
+        zapzap
+        zoom
+        ;
+    };
   };
 
   imports = [

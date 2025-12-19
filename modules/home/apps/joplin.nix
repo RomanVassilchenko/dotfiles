@@ -1,4 +1,9 @@
-{ pkgs, lib, appConfig, ... }:
+{
+  pkgs,
+  lib,
+  appConfig,
+  ...
+}:
 {
   # Joplin - Note-taking app
   home.packages = [ pkgs.joplin-desktop ];
