@@ -60,12 +60,12 @@
       '';
     };
 
-    # Timer for Sunday 23:50 UTC+5
+    # Timer for Sunday 18:00 UTC+5
     systemd.timers.weekly-cleanup = {
       description = "Weekly NixOS cleanup timer";
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "Sun 23:50:00"; # Local time (Asia/Almaty = UTC+5)
+        OnCalendar = "Sun 18:00:00"; # Local time (Asia/Almaty = UTC+5)
         Persistent = false; # Don't run if missed - only run on schedule
       };
     };
