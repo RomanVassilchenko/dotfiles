@@ -7,6 +7,7 @@
       cudaSupport = true;
     };
     settings = {
+      # Theme is managed by Stylix (catppuccin-mocha via base16)
       vim_keys = true;
       rounded_corners = true;
       proc_tree = true;

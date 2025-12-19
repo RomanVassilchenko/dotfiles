@@ -13,7 +13,8 @@
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
-    backupFileExtension = "backup";
+    # Use hm-bak extension and clean old backups automatically
+    backupFileExtension = "hm-bak";
     extraSpecialArgs = {
       inherit
         inputs

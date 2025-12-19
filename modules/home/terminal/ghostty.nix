@@ -5,6 +5,9 @@
     package = pkgs.ghostty;
 
     settings = {
+      # Theme - Catppuccin Mocha
+      theme = "Catppuccin Mocha";
+
       # Font
       font-size = 12;
 
@@ -13,8 +16,8 @@
       window-padding-y = 4;
       window-decoration = true;
 
-      # Transparency
-      background-opacity = 0.95;
+      # Transparency (for blur effect)
+      background-opacity = 0.92;
 
       # Scrollback
       scrollback-limit = 10000;

@@ -9,13 +9,14 @@
         screen = "all";
 
         widgets = [
-          # Left side - Desktop pager
+          # Left side - Desktop pager (show names, fixed width)
           {
             name = "org.kde.plasma.pager";
             config = {
               General = {
-                displayedText = "Number";
+                displayedText = "Name";
                 showWindowOutlines = false;
+                wrapPage = true;
               };
             };
           }

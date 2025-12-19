@@ -113,29 +113,6 @@ in
           key = " └ 󰍹 ";
           keyColor = "magenta";
         }
-        # Network Section - Green
-        {
-          type = "localip";
-          key = " 󰛳 ";
-          keyColor = "green";
-          format = "{1}";
-        }
-        {
-          type = "wifi";
-          key = " ├ 󰖩 ";
-          keyColor = "green";
-          format = "{4} ({6})";
-        }
-        {
-          type = "player";
-          key = " ├ 󰥠 ";
-          keyColor = "green";
-        }
-        {
-          type = "media";
-          key = " └ 󰝚 ";
-          keyColor = "green";
-        }
         # Time Section - Yellow
         {
           type = "uptime";

@@ -21,7 +21,8 @@
         };
         Theme = {
           Current = "breeze";
-          CursorTheme = "Breeze_Light";
+          CursorTheme = "Bibata-Modern-Ice";
+          CursorSize = 24;
           Font = "Inter Variable,11";
           EnableAvatars = true;
           DisableAvatarsThreshold = 7;
@@ -34,13 +35,13 @@
   environment.etc."sddm.conf.d/kde_settings.conf".text = ''
     [Theme]
     Current=breeze
-    CursorTheme=Breeze_Light
+    CursorTheme=Bibata-Modern-Ice
+    CursorSize=24
     Font=Inter Variable,11
     ThemeDir=/run/current-system/sw/share/sddm/themes
   '';
 
   # Configure Breeze theme background
-  # Uses custom wallpaper from dotfiles
   environment.etc."sddm/themes/breeze/theme.conf.user".text = ''
     [General]
     background=/home/romanv/Documents/dotfiles/wallpapers/kurzgesagt-galaxies.jpg
@@ -51,7 +52,8 @@
   environment.systemPackages = with pkgs; [
     kdePackages.breeze
     kdePackages.breeze-icons
-    kdePackages.sddm-kcm # KDE System Settings module for SDDM configuration
-    kdePackages.plasma-workspace-wallpapers # Additional KDE wallpapers
+    bibata-cursors
+    kdePackages.sddm-kcm
+    kdePackages.plasma-workspace-wallpapers
   ];
 }

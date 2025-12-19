@@ -20,6 +20,10 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -63,6 +67,7 @@
             ./profiles/${gpuProfile}
             nix-flatpak.nixosModules.nix-flatpak
             agenix.nixosModules.default
+            inputs.stylix.nixosModules.stylix
           ];
         };
     in

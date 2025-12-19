@@ -54,6 +54,9 @@
     ./packages/cli/network-tools.nix
   ]
   ++ lib.optionals (!isServer) [
+    # Theming (laptop/desktop only)
+    ./desktop/stylix.nix
+
     # Desktop apps (laptop/desktop only)
     ./desktop/apps/flatpak.nix
     ./desktop/apps/fonts.nix

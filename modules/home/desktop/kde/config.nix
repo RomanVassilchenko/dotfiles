@@ -408,7 +408,7 @@
       katerc.lspclient.SymbolTree = true;
       katerc.lspclient.TypeFormatting = false;
       kcminputrc."Libinput/1267/12868/ELAN079C:00 04F3:3244 Touchpad".NaturalScroll = true;
-      kcminputrc.Mouse.cursorTheme = "Breeze_Light";
+      kcminputrc.Mouse.cursorTheme = "Bibata-Modern-Ice";
       kded5rc.Module-browserintegrationreminder.autoload = false;
       kded5rc.Module-device_automounter.autoload = false;
       kdeglobals.General.BrowserApplication = "brave-browser.desktop";
@@ -462,14 +462,19 @@
       kwinrc.Desktops.Id_4 = "Desktop_4";
       kwinrc.Desktops.Id_5 = "Desktop_5";
       kwinrc.Desktops.Id_6 = "Desktop_6";
-      kwinrc.Desktops.Name_1 = "Desktop_1";
-      kwinrc.Desktops.Name_2 = "Desktop_2";
-      kwinrc.Desktops.Name_3 = "Desktop_3";
-      kwinrc.Desktops.Name_4 = "Desktop_4";
-      kwinrc.Desktops.Name_5 = "Desktop_5";
-      kwinrc.Desktops.Name_6 = "Desktop_6";
+      kwinrc.Desktops.Name_1 = "Browse";
+      kwinrc.Desktops.Name_2 = "Code";
+      kwinrc.Desktops.Name_3 = "Chat";
+      kwinrc.Desktops.Name_4 = "Mail";
+      kwinrc.Desktops.Name_5 = "Meet";
+      kwinrc.Desktops.Name_6 = "Tools";
       kwinrc.Desktops.Number = 6;
       kwinrc.Desktops.Rows = 1;
+
+      # Blur effect configuration
+      kwinrc.Plugins.blurEnabled = true;
+      kwinrc.Plugins.contrastEnabled = true;
+
       kwinrc.NightColor.Active = true;
       kwinrc.NightColor.NightTemperature = 4500;
       kwinrc.Plugins.desktop-cursor-moveEnabled = true;

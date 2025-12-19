@@ -52,6 +52,8 @@
 
         # === Theme ===
         pkief.material-icon-theme
+        catppuccin.catppuccin-vsc
+        catppuccin.catppuccin-vsc-icons
       ];
 
       userSettings = {
@@ -373,7 +375,8 @@
         "workbench.editor.revealIfOpen" = true;
         "workbench.editor.showTabs" = "multiple";
         "workbench.editor.tabSizing" = "fit";
-        "workbench.iconTheme" = "material-icon-theme";
+        "workbench.colorTheme" = "Catppuccin Mocha";
+        "workbench.iconTheme" = "catppuccin-mocha";
         "workbench.layoutControl.enabled" = false;
         "workbench.list.smoothScrolling" = true;
         "workbench.navigationControl.enabled" = false;

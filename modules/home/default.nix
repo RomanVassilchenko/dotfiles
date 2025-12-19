@@ -53,6 +53,9 @@ in
     ./editors/nvf.nix
   ]
   ++ lib.optionals (!isServer) [
+    # Stylix home-manager target overrides (only on systems with Stylix)
+    ./config/stylix.nix
+
     # GUI Editors (laptop/desktop only)
     ./editors/vscode.nix
     ./editors/zed.nix

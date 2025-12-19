@@ -11,8 +11,8 @@
       # Other styles available and can be combined:
       # style = "numbers,changes,headers,rule,grid";
       style = "full";
-      # Other themes: ansi, Catppuccin, base16, base16-256, GitHub, Nord, etc.
-      theme = lib.mkForce "Dracula";
+      # Theme - Catppuccin Mocha
+      theme = lib.mkForce "Catppuccin Mocha";
     };
     extraPackages = with pkgs.bat-extras; [
       batman

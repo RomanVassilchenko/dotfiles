@@ -184,19 +184,19 @@
   typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
 
   #################################[ os_icon: os identifier ]##################################
-  # OS identifier color.
-  typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=232
-  typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND=7
+  # OS identifier color - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND='#11111b'  # crust
+  typeset -g POWERLEVEL9K_OS_ICON_BACKGROUND='#cba6f7'  # mauve
   # Custom icon.
   # typeset -g POWERLEVEL9K_OS_ICON_CONTENT_EXPANSION='⭐'
 
   ################################[ prompt_char: prompt symbol ]################################
   # Transparent background.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_BACKGROUND=
-  # Green prompt symbol if the last command succeeded.
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=76
-  # Red prompt symbol if the last command failed.
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=196
+  # Green prompt symbol if the last command succeeded - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#a6e3a1'  # green
+  # Red prompt symbol if the last command failed - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#f38ba8'  # red
   # Default prompt symbol.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='❯'
   # Prompt symbol in command vi mode.
@@ -214,20 +214,20 @@
   typeset -g POWERLEVEL9K_PROMPT_CHAR_LEFT_{LEFT,RIGHT}_WHITESPACE=
 
   ##################################[ dir: current directory ]##################################
-  # Current directory background color.
-  typeset -g POWERLEVEL9K_DIR_BACKGROUND=4
-  # Default current directory foreground color.
-  typeset -g POWERLEVEL9K_DIR_FOREGROUND=254
+  # Current directory background color - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_DIR_BACKGROUND='#89b4fa'  # blue
+  # Default current directory foreground color - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND='#11111b'  # crust
   # If directory is too long, shorten some of its segments to the shortest possible unique
   # prefix. The shortened directory can be tab-completed to the original.
   typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
   # Replace removed segment suffixes with this symbol.
   typeset -g POWERLEVEL9K_SHORTEN_DELIMITER=
-  # Color of the shortened directory segments.
-  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=250
+  # Color of the shortened directory segments - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND='#313244'  # surface0
   # Color of the anchor directory segments. Anchor segments are never shortened. The first
-  # segment is always an anchor.
-  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=255
+  # segment is always an anchor - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND='#11111b'  # crust
   # Display anchor directory segments in bold.
   typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
   # Don't shorten directories that contain any of these files. They are anchors.
@@ -353,12 +353,18 @@
   # typeset -g POWERLEVEL9K_DIR_PREFIX='in '
 
   #####################################[ vcs: git status ]######################################
-  # Version control background colors.
-  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND=3
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND=2
-  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND=3
-  typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND=8
+  # Version control background colors - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND='#a6e3a1'     # green
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='#f9e2af'  # yellow
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='#fab387' # peach
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_BACKGROUND='#f38ba8' # red
+  typeset -g POWERLEVEL9K_VCS_LOADING_BACKGROUND='#6c7086'   # overlay0
+  # VCS foreground color
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND='#11111b'     # crust
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='#11111b'  # crust
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='#11111b' # crust
+  typeset -g POWERLEVEL9K_VCS_CONFLICTED_FOREGROUND='#11111b' # crust
+  typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND='#cdd6f4'   # text
 
   # Branch icon. Set this parameter to '\UE0A0 ' for the popular Powerline branch icon.
   typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\uF126 '
@@ -508,46 +514,41 @@
   # style them independently from the regular OK and ERROR state.
   typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
 
-  # Status on success. No content, just an icon. No need to show it if prompt_char is enabled as
-  # it will signify success by turning green.
+  # Status on success - Catppuccin Mocha
   typeset -g POWERLEVEL9K_STATUS_OK=true
   typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✔'
-  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=2
-  typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND=0
+  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND='#a6e3a1'     # green
+  typeset -g POWERLEVEL9K_STATUS_OK_BACKGROUND='#313244'     # surface0
 
-  # Status when some part of a pipe command fails but the overall exit status is zero. It may look
-  # like this: 1|0.
+  # Status when some part of a pipe command fails but the overall exit status is zero.
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION='✔'
-  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=2
-  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND=0
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND='#a6e3a1'  # green
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_BACKGROUND='#313244'  # surface0
 
-  # Status when it's just an error code (e.g., '1'). No need to show it if prompt_char is enabled as
-  # it will signify error by turning red.
+  # Status when it's just an error code - Catppuccin Mocha
   typeset -g POWERLEVEL9K_STATUS_ERROR=true
   typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✘'
-  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=3
-  typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND='#11111b'    # crust
+  typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND='#f38ba8'    # red
 
   # Status when the last command was terminated by a signal.
   typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL=true
-  # Use terse signal names: "INT" instead of "SIGINT(2)".
   typeset -g POWERLEVEL9K_STATUS_VERBOSE_SIGNAME=false
   typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_VISUAL_IDENTIFIER_EXPANSION='✘'
-  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND=3
-  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND='#11111b'  # crust
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_BACKGROUND='#f38ba8'  # red
 
   # Status when some part of a pipe command fails and the overall exit status is also non-zero.
-  # It may look like this: 1|0.
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION='✘'
-  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=3
-  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND=1
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND='#11111b'  # crust
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_BACKGROUND='#f38ba8'  # red
 
   ###################[ command_execution_time: duration of the last command ]###################
-  # Execution time color.
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=0
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=3
+  # Execution time color - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#11111b'  # crust
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='#f9e2af'  # yellow
   # Show duration of the last command if takes at least this many seconds.
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
   # Show this many fractional digits. Zero means round to seconds.
@@ -560,9 +561,9 @@
   # typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PREFIX='took '
 
   #######################[ background_jobs: presence of background jobs ]#######################
-  # Background jobs color.
-  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=6
-  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=0
+  # Background jobs color - Catppuccin Mocha
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND='#94e2d5'  # teal
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND='#313244'  # surface0
   # Don't show the number of background jobs.
   typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
   # Custom icon.

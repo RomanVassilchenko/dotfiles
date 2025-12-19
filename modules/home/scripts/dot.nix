@@ -127,17 +127,20 @@ pkgs.writeShellScriptBin "dot" ''
   }
 
   handle_backups() {
-    if [ ''${#BACKUP_FILES[@]} -eq 0 ]; then
-      echo "No backup files configured to check."
-      return
-    fi
-
     echo "Checking for backup files to remove..."
+
+    # Clean up all .hm-bak files in config directories (home-manager backups)
+    ${pkgs.findutils}/bin/find "$HOME/.config" "$HOME" -maxdepth 3 -name "*.hm-bak" -type f 2>/dev/null | while read -r file; do
+      echo "Removing stale backup: $file"
+      rm -f "$file"
+    done
+
+    # Clean up specific backup files from the configured list
     for file_path in "''${BACKUP_FILES[@]}"; do
       full_path="$HOME/$file_path"
       if [ -f "$full_path" ]; then
         echo "Removing stale backup file: $full_path"
-        rm "$full_path"
+        rm -f "$full_path"
       fi
     done
   }
