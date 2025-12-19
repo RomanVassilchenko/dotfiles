@@ -129,7 +129,8 @@ lib.mkIf workEnable {
       "agenix.service"
     ];
     wants = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
+    # Don't auto-start at boot - use vpn-tray or `systemctl start` manually
+    wantedBy = [ ];
 
     path = [
       pkgs.openconnect

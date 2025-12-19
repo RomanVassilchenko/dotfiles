@@ -36,6 +36,7 @@
     ./services/vaultwarden.nix
     ./services/cloudflared.nix
     ./services/pihole.nix
+    ./services/samba.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix

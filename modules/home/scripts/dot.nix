@@ -98,6 +98,7 @@ pkgs.writeShellScriptBin "dot" ''
     echo "Usage: dot [command] [options]"
     echo ""
     echo "Commands:"
+    echo "  backup          - Backup dotfiles to ninkear server (requires SSH access to 192.168.1.80)."
     echo "  cleanup [all]   - Clean up old system generations. Use 'all' to remove all but current."
     echo "                    (Usage: dot cleanup or dot cleanup all)"
     echo "  diag            - Create a system diagnostic report."
@@ -183,6 +184,8 @@ pkgs.writeShellScriptBin "dot" ''
   }
 
   # --- Helper function to parse additional arguments ---
+  # Sets NIX_BUILD_CORES if --cores is specified
+  NIX_BUILD_CORES=""
   parse_nh_args() {
     local args_string=""
     local options_selected=()
@@ -202,7 +205,7 @@ pkgs.writeShellScriptBin "dot" ''
           ;;
         --cores)
           if [[ -n $2 && $2 =~ ^[0-9]+$ ]]; then
-            args_string="$args_string -- --cores $2"
+            NIX_BUILD_CORES="$2"
             options_selected+=("limited to $2 CPU cores")
             shift 2
           else
@@ -260,6 +263,39 @@ pkgs.writeShellScriptBin "dot" ''
   fi
 
   case "$1" in
+    backup)
+      BACKUP_SERVER="192.168.1.80"
+      BACKUP_PATH="/home/romanv/backup/dotfiles"
+
+      echo "Checking SSH connectivity to $BACKUP_SERVER..."
+
+      # Check if SSH is accessible (timeout after 5 seconds)
+      if ! ${pkgs.openssh}/bin/ssh -o ConnectTimeout=5 -o BatchMode=yes "$BACKUP_SERVER" "exit" 2>/dev/null; then
+        echo "Error: Cannot connect to backup server at $BACKUP_SERVER" >&2
+        echo "Make sure:" >&2
+        echo "  1. You are on the same network as the server" >&2
+        echo "  2. SSH key is configured correctly" >&2
+        echo "  3. The server is running" >&2
+        exit 1
+      fi
+
+      echo "SSH connection successful!"
+      echo ""
+      echo "Backing up dotfiles to $BACKUP_SERVER:$BACKUP_PATH..."
+
+      # Create backup directory on server if it doesn't exist
+      ${pkgs.openssh}/bin/ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
+
+      # Use rsync to sync dotfiles to backup server
+      # --delete removes files on destination that don't exist on source
+      ${pkgs.rsync}/bin/rsync -avz --delete \
+        "$HOME/$PROJECT/" \
+        "$BACKUP_SERVER:$BACKUP_PATH/"
+
+      echo ""
+      echo "Backup completed successfully!"
+      echo "Location: $BACKUP_SERVER:$BACKUP_PATH"
+      ;;
     cleanup)
       # Check if 'all' argument is provided to skip prompts
       if [ "$#" -ge 2 ] && [ "$2" == "all" ]; then
@@ -317,7 +353,9 @@ pkgs.writeShellScriptBin "dot" ''
 
       current_hostname=$(${pkgs.nettools}/bin/hostname)
       echo "Starting NixOS rebuild for host: $current_hostname"
-      if eval "${pkgs.nh}/bin/nh os switch --hostname '$current_hostname' $extra_args"; then
+      # Use parallel builds for faster rebuilds
+      nix_jobs="''${NIX_BUILD_CORES:-auto}"
+      if eval "${pkgs.nh}/bin/nh os switch --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs"; then
         echo "Rebuild finished successfully"
       else
         echo "Rebuild Failed" >&2
@@ -334,7 +372,9 @@ pkgs.writeShellScriptBin "dot" ''
       current_hostname=$(${pkgs.nettools}/bin/hostname)
       echo "Starting NixOS rebuild (boot) for host: $current_hostname"
       echo "Note: Configuration will be activated on next reboot"
-      if eval "${pkgs.nh}/bin/nh os boot --hostname '$current_hostname' $extra_args"; then
+      # Use parallel builds for faster rebuilds
+      nix_jobs="''${NIX_BUILD_CORES:-auto}"
+      if eval "${pkgs.nh}/bin/nh os boot --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs"; then
         echo "Rebuild-boot finished successfully"
         echo "New configuration set as boot default - restart to activate"
       else
@@ -363,8 +403,18 @@ pkgs.writeShellScriptBin "dot" ''
 
       current_hostname=$(${pkgs.nettools}/bin/hostname)
       echo "Updating flake and rebuilding system for host: $current_hostname"
-      if eval "${pkgs.nh}/bin/nh os switch --hostname '$current_hostname' --update $extra_args"; then
+      # Use parallel builds for faster rebuilds
+      nix_jobs="''${NIX_BUILD_CORES:-auto}"
+      if eval "${pkgs.nh}/bin/nh os switch --hostname '$current_hostname' --update $extra_args -- --max-jobs $nix_jobs"; then
         echo "Update and rebuild finished successfully"
+
+        # Update flatpak packages if flatpak is available
+        if command -v flatpak &> /dev/null; then
+          echo ""
+          echo "Updating Flatpak packages..."
+          ${pkgs.flatpak}/bin/flatpak update -y
+          echo "Flatpak update complete"
+        fi
       else
         echo "Update and rebuild Failed" >&2
         exit 1

@@ -26,8 +26,9 @@
         # Add other Flatpak IDs here, e.g., "org.mozilla.firefox"
       ];
 
-      # Optional: Automatically update Flatpaks when you run nixos-rebuild swit ch
-      update.onActivation = true;
+      # Don't update flatpaks during boot - it blocks for 50+ minutes
+      # Run `flatpak update` manually or set up a timer
+      update.onActivation = false;
     };
   };
 }
