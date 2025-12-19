@@ -137,13 +137,13 @@
         ts = {
           enable = true;
           lsp.enable = true;
-          format.type = "prettierd";
+          format.type = [ "prettierd" ];
         };
         html.enable = true;
         lua.enable = true;
         css = {
           enable = true;
-          format.type = "prettierd";
+          format.type = [ "prettierd" ];
         };
         typst.enable = true;
         rust.enable = true;
