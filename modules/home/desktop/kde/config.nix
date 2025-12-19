@@ -678,6 +678,7 @@
       plasmanotifyrc."Applications/com.rtosta.zapzap".Seen = true;
       plasmanotifyrc."Applications/org.telegram.desktop".Seen = true;
       plasmanotifyrc."Applications/thunderbird".Seen = true;
+      plasmanotifyrc.DoNotDisturb.WhenScreensMirrored = false;
       plasmanotifyrc.Notifications.PopupPosition = "TopRight";
       plasmanotifyrc.Notifications.PopupTimeout = 7000;
       plasmarc.OSD.Enabled = true;
