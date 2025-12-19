@@ -138,7 +138,6 @@
           enable = true;
           lsp.enable = true;
           format.type = "prettierd";
-          extensions.ts-error-translator.enable = true;
         };
         html.enable = true;
         lua.enable = true;
@@ -147,10 +146,7 @@
           format.type = "prettierd";
         };
         typst.enable = true;
-        rust = {
-          enable = true;
-          crates.enable = true;
-        };
+        rust.enable = true;
       };
       visuals = {
         nvim-web-devicons.enable = true;

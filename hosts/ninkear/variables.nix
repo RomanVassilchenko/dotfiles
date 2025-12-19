@@ -15,5 +15,6 @@
   workEnable = false;
 
   # SSH key for agenix secrets decryption
-  sshKeyPath = "/home/romanv/.ssh/id_personal";
+  # Servers use the system SSH host key since secrets are decrypted during system activation
+  sshKeyPath = "/etc/ssh/ssh_host_ed25519_key";
 }

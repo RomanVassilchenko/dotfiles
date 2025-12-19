@@ -11,11 +11,17 @@ let
   personal = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInNKbTTbxK433xEXs5A3az+j7z9bBxdgPQn6BhiOgnq";
   xiaoxinpro = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMAcIlwANtn26rwkJfUfZKMSfGScbtKIUSBOR4iIl3EV";
 
+  # Server SSH host keys (for secrets needed by servers)
+  ninkear = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAskiNEKBGA7/nnqCzo+Reo+yA2zdRCGLze1mRrTK74u";
+
   # All user keys (for secrets that should be accessible from any machine)
   allUsers = [
     personal
     xiaoxinpro
   ];
+
+  # Server keys for server-specific secrets
+  serverKeys = [ ninkear ];
 in
 {
   # Work-related secrets
@@ -40,9 +46,9 @@ in
   "vpn-dahua-password.age".publicKeys = allUsers;
   "vpn-dahua-cert.age".publicKeys = allUsers;
 
-  # Cloudflare Tunnel
-  "cloudflared-tunnel-token.age".publicKeys = allUsers;
+  # Cloudflare Tunnel (server needs access)
+  "cloudflared-tunnel-token.age".publicKeys = allUsers ++ serverKeys;
 
-  # Pi-hole
-  "pihole-webpassword.age".publicKeys = allUsers;
+  # Pi-hole (server needs access)
+  "pihole-webpassword.age".publicKeys = allUsers ++ serverKeys;
 }
