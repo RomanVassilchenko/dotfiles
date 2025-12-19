@@ -1,22 +1,12 @@
-{ pkgs, inputs, ... }:
-let
-  # nix-vscode-extensions provides latest versions from marketplace
-  # Updates automatically when you run: nix flake update
-  vscode-ext = inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system};
-  marketplace = vscode-ext.vscode-marketplace;
-in
+{ pkgs, ... }:
 {
   programs.vscode = {
     enable = true;
     package = pkgs.vscode;
 
-    # Allows VSCode to install/update extensions not managed by Nix
-    mutableExtensionsDir = true;
-
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
         # === Nix ===
-        bbenoist.nix
         jnoortheen.nix-ide
 
         # === Go ===
@@ -27,92 +17,46 @@ in
         ms-python.vscode-pylance
         ms-python.debugpy
 
-        # === JavaScript/TypeScript ===
+        # === Web (JS/TS) ===
         dbaeumer.vscode-eslint
         esbenp.prettier-vscode
-
-        # === Web Development ===
-        bradlc.vscode-tailwindcss
 
         # === Data/Config ===
         redhat.vscode-yaml
         tamasfe.even-better-toml
+        zxh404.vscode-proto3
 
-        # === Containers ===
+        # === Containers & Remote ===
         ms-azuretools.vscode-docker
-
-        # === Remote Development ===
         ms-vscode-remote.remote-ssh
 
-        # === Git ===
+        # === Git & GitHub ===
         eamodio.gitlens
         github.copilot
         github.copilot-chat
         github.vscode-pull-request-github
-        mhutchie.git-graph
 
         # === Markdown ===
         yzhang.markdown-all-in-one
+        davidanson.vscode-markdownlint
 
         # === Utilities ===
         usernamehw.errorlens
         gruntfuggly.todo-tree
         editorconfig.editorconfig
+        mechatroner.rainbow-csv
+        naumovs.color-highlight
+        streetsidesoftware.code-spell-checker
 
-        # === From marketplace (auto-updated) ===
-      ] ++ [
-        # Extensions not in nixpkgs - from marketplace
-        marketplace.alefragnani.bookmarks
-        marketplace.alexcvzz.vscode-sqlite
-        marketplace.bierner.markdown-mermaid
-        marketplace.catppuccin.catppuccin-vsc
-        marketplace.catppuccin.catppuccin-vsc-icons
-        marketplace.csstools.postcss
-        marketplace.charliermarsh.ruff
-        marketplace.christian-kohler.path-intellisense
-        marketplace.cweijan.vscode-database-client2
-        marketplace.davidanson.vscode-markdownlint
-        marketplace.donjayamanne.python-environment-manager
-        marketplace.dotenv.dotenv-vscode
-        marketplace.earshinov.permute-lines
-        marketplace.exodiusstudios.comment-anchors
-        marketplace.fill-labs.dependi
-        marketplace.hbenl.vscode-test-explorer
-        marketplace.jock.svg
-        marketplace.mechatroner.rainbow-csv
-        marketplace.ms-python.black-formatter
-        marketplace.ms-python.flake8
-        marketplace.ms-python.isort
-        marketplace.ms-vscode.test-adapter-converter
-        marketplace.mtxr.sqltools
-        marketplace.mtxr.sqltools-driver-pg
-        marketplace.naumovs.color-highlight
-        marketplace.netcorext.uuid-generator
-        marketplace.nicolasvuillamy.vscode-groovy-lint
-        marketplace.oderwat.indent-rainbow
-        marketplace.pflannery.vscode-versionlens
-        marketplace.redhat.java
-        marketplace.sourcery.sourcery
-        marketplace.streetsidesoftware.code-spell-checker
-        marketplace.timonwong.shellcheck
-        marketplace.visualstudioexptteam.intellicode-api-usage-examples
-        marketplace.visualstudioexptteam.vscodeintellicode
-        marketplace.vscjava.vscode-gradle
-        marketplace.vscjava.vscode-java-debug
-        marketplace.vscjava.vscode-java-dependency
-        marketplace.vscjava.vscode-java-pack
-        marketplace.vscjava.vscode-java-test
-        marketplace.vscjava.vscode-maven
-        marketplace.wakatime.vscode-wakatime
-        marketplace.wholroyd.jinja
-        marketplace.wix.vscode-import-cost
-        marketplace.zxh404.vscode-proto3
+        # === Theme ===
+        catppuccin.catppuccin-vsc
+        catppuccin.catppuccin-vsc-icons
       ];
 
       userSettings = {
         # Editor
         "editor.fontSize" = 13;
-        "editor.fontFamily" = "'JetBrainsMono Nerd Font Mono', 'Droid Sans Mono', 'monospace'";
+        "editor.fontFamily" = "'JetBrainsMono Nerd Font Mono', 'Droid Sans Mono', monospace";
         "editor.fontLigatures" = true;
         "editor.tabSize" = 2;
         "editor.formatOnSave" = true;
@@ -133,12 +77,10 @@ in
         "workbench.iconTheme" = "catppuccin-mocha";
         "workbench.startupEditor" = "none";
         "workbench.editor.enablePreview" = false;
-        "workbench.tree.indent" = 16;
 
         # Terminal
         "terminal.integrated.fontSize" = 13;
         "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font Mono'";
-        "terminal.integrated.cursorBlinking" = true;
         "terminal.integrated.smoothScrolling" = true;
 
         # Files
@@ -150,68 +92,40 @@ in
         # Explorer
         "explorer.confirmDelete" = false;
         "explorer.confirmDragAndDrop" = false;
-        "explorer.compactFolders" = false;
 
         # Git
         "git.autofetch" = true;
         "git.confirmSync" = false;
         "git.enableSmartCommit" = true;
 
-        # Language-specific
+        # Language-specific formatters
+        "[nix]"."editor.defaultFormatter" = "jnoortheen.nix-ide";
+        "[go]"."editor.defaultFormatter" = "golang.go";
         "[python]" = {
-          "editor.defaultFormatter" = "charliermarsh.ruff";
-          "editor.formatOnSave" = true;
-          "editor.codeActionsOnSave" = {
-            "source.fixAll" = "explicit";
-            "source.organizeImports" = "explicit";
-          };
+          "editor.defaultFormatter" = "ms-python.python";
+          "editor.codeActionsOnSave"."source.organizeImports" = "explicit";
         };
-        "[javascript]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[typescript]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[json]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[jsonc]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[html]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[css]" = {
-          "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
+        "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[json]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[jsonc]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[yaml]"."editor.defaultFormatter" = "redhat.vscode-yaml";
         "[markdown]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
           "editor.wordWrap" = "on";
         };
-        "[nix]" = {
-          "editor.defaultFormatter" = "jnoortheen.nix-ide";
-        };
-        "[go]" = {
-          "editor.defaultFormatter" = "golang.go";
-        };
-        "[yaml]" = {
-          "editor.defaultFormatter" = "redhat.vscode-yaml";
-        };
 
-        # Extensions
+        # Nix
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nixd";
-        "nix.serverSettings" = {
-          "nixd" = {
-            "formatting" = {
-              "command" = [ "nixfmt" ];
-            };
-          };
-        };
+        "nix.serverSettings".nixd.formatting.command = [ "nixfmt" ];
+
+        # Go
         "go.formatTool" = "goimports";
         "go.lintTool" = "golangci-lint";
+
+        # Extensions
         "errorLens.enabledDiagnosticLevels" = [ "error" "warning" ];
-        "gitlens.hovers.currentLine.over" = "line";
         "todo-tree.general.tags" = [ "BUG" "HACK" "FIXME" "TODO" "XXX" ];
 
         # Copilot
@@ -222,7 +136,7 @@ in
           "scminput" = false;
         };
 
-        # Telemetry
+        # Telemetry off
         "telemetry.telemetryLevel" = "off";
         "redhat.telemetry.enabled" = false;
       };
