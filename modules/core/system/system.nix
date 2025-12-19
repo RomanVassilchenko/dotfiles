@@ -1,4 +1,9 @@
-{ host, ... }:
+{
+  host,
+  lib,
+  isServer,
+  ...
+}:
 let
   inherit (import ../../../hosts/${host}/variables.nix) consoleKeyMap;
 in
@@ -16,12 +21,21 @@ in
         "nix-command"
         "flakes"
       ];
-      substituters = [
-        "https://nix-community.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
+      # Substituters: add ninkear cache for laptops when on local network
+      substituters =
+        [
+          "https://nix-community.cachix.org"
+        ]
+        ++ lib.optionals (!isServer) [
+          "http://192.168.1.80:5000" # ninkear local cache
+        ];
+      trusted-public-keys =
+        [
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        ]
+        ++ lib.optionals (!isServer) [
+          "ninkear-cache:sNCVuzpn+Ku3BRQZztAMz2fhDL4/0PkE7+IGYwIn+90="
+        ];
       # Build optimization
       max-jobs = 12;
       cores = 0; # Auto-detect and use all cores per build job
@@ -33,6 +47,10 @@ in
       max-substitution-jobs = 128;
       # Warn on dirty git trees but don't fail
       warn-dirty = false;
+      # Allow falling back to building if cache is unreachable
+      fallback = true;
+      # Don't fail if ninkear cache is unreachable
+      connect-timeout = 5;
     };
   };
   time.timeZone = "Asia/Almaty";

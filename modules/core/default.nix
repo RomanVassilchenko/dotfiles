@@ -37,6 +37,9 @@
     ./services/cloudflared.nix
     ./services/pihole.nix
     ./services/samba.nix
+    ./services/harmonia.nix
+    ./services/weekly-update.nix
+    ./services/weekly-cleanup.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix
