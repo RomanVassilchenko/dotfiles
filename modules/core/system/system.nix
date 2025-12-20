@@ -26,7 +26,7 @@ in
         "https://nix-community.cachix.org"
       ]
       ++ lib.optionals (!isServer) [
-        "http://ninkear.mesh.romanv.dev:5000" # ninkear via Tailscale P2P (fastest)
+        "http://100.64.0.1:5000" # ninkear via Tailscale P2P (fastest)
         "https://nix-cache.romanv.dev" # ninkear via Cloudflare Tunnel (fallback)
       ];
       trusted-public-keys = [
