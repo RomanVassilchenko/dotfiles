@@ -6,8 +6,7 @@
 }:
 {
   imports = [
-    ./vpn-tray.nix
-    ./tailscale-tray.nix
+    ./vpn-manager-tray.nix # Unified VPN manager (Bereke, AQ, Ninkear)
     ./service-monitor.nix
   ];
 

@@ -84,9 +84,9 @@
       aq-vpn-stop = "sudo systemctl stop openfortivpn-dahua.service";
       aq-vpn-status = "systemctl status openfortivpn-dahua.service";
 
-      # Tailscale - Ninkear P2P
-      ninkear = "sudo tailscale up --login-server=https://headscale.romanv.dev --accept-routes";
-      ninkear-stop = "sudo tailscale down";
+      # Tailscale - Ninkear P2P (via cloudflared TCP tunnel)
+      ninkear = "cloudflared access tcp --hostname headscale.romanv.dev --url 127.0.0.1:18085 & sleep 2 && sudo tailscale up --login-server=http://127.0.0.1:18085 --accept-routes";
+      ninkear-stop = "sudo tailscale down; pkill -f 'cloudflared access tcp.*headscale'";
       ninkear-status = "tailscale status";
     };
   };

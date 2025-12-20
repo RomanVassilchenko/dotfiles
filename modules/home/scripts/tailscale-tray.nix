@@ -135,10 +135,22 @@ let
             """Toggle Tailscale connection"""
             if self.is_connected():
                 subprocess.run(["sudo", "tailscale", "down"])
+                # Kill cloudflared tunnel
+                subprocess.run(["pkill", "-f", "cloudflared access tcp.*headscale"])
             else:
+                # Start cloudflared TCP tunnel in background
+                subprocess.Popen([
+                    "cloudflared", "access", "tcp",
+                    "--hostname", "headscale.romanv.dev",
+                    "--url", "127.0.0.1:18085"
+                ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                # Wait for tunnel to start
+                import time
+                time.sleep(2)
+                # Connect via local tunnel
                 subprocess.run([
                     "sudo", "tailscale", "up",
-                    "--login-server=https://headscale.romanv.dev",
+                    "--login-server=http://127.0.0.1:18085",
                     "--accept-routes"
                 ])
             # Update status after a short delay
