@@ -32,17 +32,13 @@
             v6 = "fd7a:115c:a1e0::/48";
           };
 
-          # DERP (relay) configuration
+          # DERP (relay) configuration - use Tailscale's public DERP servers
           derp = {
             server = {
-              enabled = true;
-              region_id = 999;
-              region_code = "ninkear";
-              region_name = "Ninkear Home";
-              stun_listen_addr = "0.0.0.0:3478";
+              enabled = false; # Disable self-hosted DERP, use public servers
             };
-            urls = [ ];
-            auto_update_enabled = false;
+            urls = [ "https://controlplane.tailscale.com/derpmap/default" ];
+            auto_update_enabled = true;
           };
 
           # DNS configuration
