@@ -14,7 +14,6 @@
   # Enable work features (VPN, work email, GitLab SSH, career tracking)
   workEnable = false;
 
-  # SSH key for agenix secrets decryption
-  # Using user's personal key (same across all systems)
-  sshKeyPath = "/home/romanv/.ssh/id_personal";
+  # SSH key for agenix secrets decryption (real file, not symlink)
+  sshKeyPath = "/home/romanv/.ssh/id_personal_real";
 }

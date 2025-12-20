@@ -21,6 +21,13 @@
         };
       };
 
+      # Ninkear via Tailscale P2P (direct connection, no tunnel)
+      "ninkear" = {
+        hostname = "100.64.0.1";
+        user = "romanv";
+        identityFile = "~/.ssh/id_personal";
+      };
+
       "*" = {
         identityFile = "~/.ssh/id_personal";
         identitiesOnly = true;

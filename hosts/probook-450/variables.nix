@@ -13,8 +13,8 @@
   # Enable work features (VPN, work email, GitLab SSH, career tracking)
   workEnable = true;
 
-  # SSH key for agenix secrets decryption
-  sshKeyPath = "/home/romanv/.ssh/id_personal";
+  # SSH key for agenix secrets decryption (use real file, not symlink)
+  sshKeyPath = "/home/romanv/.ssh/id_personal_real";
 
   # App toggles (package + autostart)
   bitwarden = {
