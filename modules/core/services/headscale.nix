@@ -14,7 +14,7 @@
     (lib.mkIf isServer {
       services.headscale = {
         enable = true;
-        address = "0.0.0.0";
+        address = "127.0.0.1"; # Listen on localhost, Caddy will proxy
         port = 8085;
 
         settings = {
@@ -65,9 +65,26 @@
         };
       };
 
+      # Caddy reverse proxy for Headscale (handles WebSocket upgrades properly)
+      services.caddy = {
+        enable = true;
+        virtualHosts."http://localhost:8086" = {
+          extraConfig = ''
+            reverse_proxy http://127.0.0.1:8085 {
+              header_up Host {host}
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-For {remote_host}
+              header_up X-Forwarded-Proto {scheme}
+              # Flush immediately for WebSocket-like connections
+              flush_interval -1
+            }
+          '';
+        };
+      };
+
       # Open firewall ports for Headscale
       networking.firewall = {
-        allowedTCPPorts = [ 8085 ];
+        allowedTCPPorts = [ 8086 ]; # Caddy proxy port
         allowedUDPPorts = [ 3478 ]; # STUN
       };
 
