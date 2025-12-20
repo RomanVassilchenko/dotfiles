@@ -68,18 +68,19 @@
       # Caddy reverse proxy for Headscale (handles WebSocket upgrades properly)
       services.caddy = {
         enable = true;
-        virtualHosts."http://localhost:8086" = {
-          extraConfig = ''
-            reverse_proxy http://127.0.0.1:8085 {
-              header_up Host {host}
-              header_up X-Real-IP {remote_host}
-              header_up X-Forwarded-For {remote_host}
-              header_up X-Forwarded-Proto {scheme}
-              # Flush immediately for WebSocket-like connections
+        globalConfig = ''
+          auto_https off
+        '';
+        extraConfig = ''
+          :8086 {
+            reverse_proxy 127.0.0.1:8085 {
               flush_interval -1
+              transport http {
+                keepalive off
+              }
             }
-          '';
-        };
+          }
+        '';
       };
 
       # Open firewall ports for Headscale
