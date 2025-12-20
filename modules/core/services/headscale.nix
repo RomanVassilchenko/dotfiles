@@ -14,7 +14,7 @@
     (lib.mkIf isServer {
       services.headscale = {
         enable = true;
-        address = "127.0.0.1"; # Listen on localhost, Caddy will proxy
+        address = "0.0.0.0"; # Listen on all interfaces for direct LAN access
         port = 8085;
 
         settings = {
@@ -85,7 +85,7 @@
 
       # Open firewall ports for Headscale
       networking.firewall = {
-        allowedTCPPorts = [ 8086 ]; # Caddy proxy port
+        allowedTCPPorts = [ 8085 8086 ]; # Headscale + Caddy proxy
         allowedUDPPorts = [ 3478 ]; # STUN
       };
 
