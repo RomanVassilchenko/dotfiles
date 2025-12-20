@@ -51,6 +51,10 @@
     ];
     shell = pkgs.zsh;
     ignoreShellProgramCheck = true;
+    # SSH authorized keys for remote access
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInNKbTTbxK433xEXs5A3az+j7z9bBxdgPQn6BhiOgnq roman.vassilchenko.work@gmail.com"
+    ];
   };
   nix.settings.allowed-users = [ "${username}" ];
 }

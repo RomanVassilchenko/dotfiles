@@ -14,7 +14,7 @@
       };
 
       "ssh.romanv.dev" = {
-        user = "rovasilchenko";
+        user = "romanv";
         identityFile = "~/.ssh/id_personal";
         extraOptions = {
           ProxyCommand = "cloudflared access ssh --hostname %h";

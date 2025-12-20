@@ -1,5 +1,11 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
 
+let
+  # Catppuccin Plymouth theme
+  catppuccin-plymouth = pkgs.catppuccin-plymouth.override {
+    variant = "mocha";
+  };
+in
 {
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
@@ -23,7 +29,13 @@
       mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
       magicOrExtension = ''\x7fELF....AI\x02'';
     };
-    plymouth.enable = true;
+
+    # Plymouth boot splash with Catppuccin Mocha theme
+    plymouth = {
+      enable = true;
+      theme = lib.mkForce "catppuccin-mocha";
+      themePackages = [ catppuccin-plymouth ];
+    };
   };
 
   # Disable systemd services that are affecting the boot time

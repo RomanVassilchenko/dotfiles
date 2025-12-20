@@ -7,6 +7,7 @@
 {
   imports = [
     ./vpn-tray.nix
+    ./tailscale-tray.nix
     ./service-monitor.nix
   ];
 

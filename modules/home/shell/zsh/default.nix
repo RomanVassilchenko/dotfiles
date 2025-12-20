@@ -79,10 +79,15 @@
       c = "clear";
       man = "batman";
 
-      # VPN
+      # VPN - AQ/Dahua
       aq-vpn = "sudo systemctl start openfortivpn-dahua.service";
       aq-vpn-stop = "sudo systemctl stop openfortivpn-dahua.service";
       aq-vpn-status = "systemctl status openfortivpn-dahua.service";
+
+      # Tailscale - Ninkear P2P
+      ninkear = "sudo tailscale up --login-server=https://headscale.romanv.dev --accept-routes";
+      ninkear-stop = "sudo tailscale down";
+      ninkear-status = "tailscale status";
     };
   };
 }

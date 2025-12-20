@@ -40,6 +40,7 @@
     ./services/harmonia.nix
     ./services/weekly-update.nix
     ./services/weekly-cleanup.nix
+    ./services/headscale.nix
 
     # Development packages (always loaded)
     ./packages/development/golang.nix

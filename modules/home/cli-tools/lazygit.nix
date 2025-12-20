@@ -1,8 +1,11 @@
 # Lazygit is a simple terminal UI for git commands.
 { lib, ... }:
 let
-  accent = "#89b4fa"; # Blue accent
-  muted = "#6c7086"; # Muted gray
+  # Catppuccin Mocha colors - using mauve for consistency
+  mauve = "#cba6f7"; # Primary accent (matches system theme)
+  overlay0 = "#6c7086"; # Muted text
+  surface0 = "#313244"; # Background highlight
+  text = "#cdd6f4"; # Main text
 in
 {
   programs.lazygit = {
@@ -19,10 +22,12 @@ in
       gui = {
         theme = {
           activeBorderColor = [
-            accent
+            mauve
             "bold"
           ];
-          inactiveBorderColor = [ muted ];
+          inactiveBorderColor = [ overlay0 ];
+          selectedLineBgColor = [ surface0 ];
+          optionsTextColor = [ mauve ];
         };
         showListFooter = false;
         showRandomTip = false;

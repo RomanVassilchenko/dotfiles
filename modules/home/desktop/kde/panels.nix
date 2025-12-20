@@ -3,32 +3,50 @@
     panels = [
       {
         location = "top";
-        height = 28;
+        height = 32;
         floating = false;
         hiding = "none";
         screen = "all";
         opacity = "translucent";
 
         widgets = [
-          # Left side - Desktop pager (show names, fixed width)
+          # Panel Colorizer - must be first for proper styling
           {
-            name = "org.kde.plasma.pager";
+            name = "luisbocanegra.panel.colorizer";
             config = {
               General = {
-                displayedText = "Name";
-                showOnlyCurrentScreen = false;
-                showWindowOutlines = false;
-                wrapPage = true;
+                # Catppuccin Mocha base colors
+                bgColor = "#1e1e2e"; # Base
+                bgColorEnabled = true;
+                bgContrastFixEnabled = false;
+                bgOpacity = 0.75;
+                blurBehindEnabled = true;
+
+                # Foreground styling
+                fgColorEnabled = true;
+                fgColor = "#cdd6f4"; # Text color
+
+                # Rounded corners for floating look
+                cornerRadius = 12;
+                enableCustomRadius = true;
+
+                # Margins and spacing
+                marginRules = "0,6,0,6";
+                panelOutlineColorEnabled = false;
+
+                # Panel spacing
+                panelSpacing = 4;
+                widgetBgEnabled = false;
+
+                # Shadow for depth
+                shadowColorEnabled = true;
+                shadowColor = "#11111b";
+                shadowSize = 2;
               };
             };
           }
 
-          # First spacer (expands to push center widgets)
-          {
-            name = "org.kde.plasma.panelspacer";
-          }
-
-          # Center - Weather and Clock
+          # Left side - Weather and Clock (contextual info)
           {
             name = "org.kde.plasma.weather";
             config = {
@@ -54,9 +72,44 @@
             name = "org.kde.plasma.digitalclock";
             config = {
               Appearance = {
-                customDateFormat = "| ddd dd MMM yyyy |";
+                customDateFormat = "ddd d MMM";
                 dateDisplayFormat = "BesideTime";
                 dateFormat = "custom";
+                use24hFormat = 2;
+              };
+            };
+          }
+
+          # Window title - shows active window
+          {
+            name = "org.kde.windowtitle";
+            config = {
+              General = {
+                capitalFont = false;
+                boldFont = false;
+                filterActivityInfo = true;
+                showIcon = true;
+                iconSize = 16;
+                spacing = 6;
+                style = 1;
+              };
+            };
+          }
+
+          # First spacer (expands to push center widgets)
+          {
+            name = "org.kde.plasma.panelspacer";
+          }
+
+          # Center - Desktop pager (focal navigation)
+          {
+            name = "org.kde.plasma.pager";
+            config = {
+              General = {
+                displayedText = "Name";
+                showOnlyCurrentScreen = false;
+                showWindowOutlines = false;
+                wrapPage = true;
               };
             };
           }

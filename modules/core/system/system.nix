@@ -21,12 +21,13 @@ in
         "nix-command"
         "flakes"
       ];
-      # Substituters: add ninkear cache for laptops when on local network
+      # Substituters: ninkear cache via Tailscale P2P (fastest) or Cloudflare (fallback)
       substituters = [
         "https://nix-community.cachix.org"
       ]
       ++ lib.optionals (!isServer) [
-        "http://192.168.1.80:5000" # ninkear local cache
+        "http://ninkear.mesh.romanv.dev:5000" # ninkear via Tailscale P2P (fastest)
+        "https://nix-cache.romanv.dev" # ninkear via Cloudflare Tunnel (fallback)
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
