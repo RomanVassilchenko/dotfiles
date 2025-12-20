@@ -98,7 +98,7 @@ pkgs.writeShellScriptBin "dot" ''
     echo "Usage: dot [command] [options]"
     echo ""
     echo "Commands:"
-    echo "  backup          - Backup dotfiles to ninkear server (requires SSH access to 192.168.1.80)."
+    echo "  backup          - Backup dotfiles to ninkear server via Tailscale."
     echo "  cleanup [all]   - Clean up old system generations. Use 'all' to remove all but current."
     echo "                    (Usage: dot cleanup or dot cleanup all)"
     echo "  diag            - Create a system diagnostic report."
@@ -267,16 +267,16 @@ pkgs.writeShellScriptBin "dot" ''
 
   case "$1" in
     backup)
-      BACKUP_SERVER="192.168.1.80"
+      BACKUP_SERVER="100.64.0.1"
       BACKUP_PATH="/home/romanv/backup/dotfiles"
 
-      echo "Checking SSH connectivity to $BACKUP_SERVER..."
+      echo "Checking SSH connectivity to $BACKUP_SERVER (via Tailscale)..."
 
       # Check if SSH is accessible (timeout after 5 seconds)
       if ! ${pkgs.openssh}/bin/ssh -o ConnectTimeout=5 -o BatchMode=yes "$BACKUP_SERVER" "exit" 2>/dev/null; then
         echo "Error: Cannot connect to backup server at $BACKUP_SERVER" >&2
         echo "Make sure:" >&2
-        echo "  1. You are on the same network as the server" >&2
+        echo "  1. Tailscale is connected" >&2
         echo "  2. SSH key is configured correctly" >&2
         echo "  3. The server is running" >&2
         exit 1

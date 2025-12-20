@@ -108,6 +108,10 @@
       services.tailscale = {
         enable = true;
         useRoutingFeatures = lib.mkIf (!isServer) "client";
+        extraUpFlags = lib.mkIf (!isServer) [
+          "--login-server=https://headscale.romanv.dev"
+          "--accept-routes"
+        ];
       };
 
       # Open Tailscale port

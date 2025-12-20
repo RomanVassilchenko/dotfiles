@@ -21,13 +21,12 @@ in
         "nix-command"
         "flakes"
       ];
-      # Substituters: ninkear cache via Tailscale P2P (fastest) or Cloudflare (fallback)
+      # Substituters: ninkear cache via Tailscale P2P only (falls back to building if unavailable)
       substituters = [
         "https://nix-community.cachix.org"
       ]
       ++ lib.optionals (!isServer) [
-        "http://100.64.0.1:5000" # ninkear via Tailscale P2P (fastest)
-        "https://nix-cache.romanv.dev" # ninkear via Cloudflare Tunnel (fallback)
+        "http://100.64.0.1:5000" # ninkear via Tailscale P2P
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="

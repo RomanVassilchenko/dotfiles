@@ -35,7 +35,6 @@
     ./services/joplin-server.nix
     ./services/vaultwarden.nix
     ./services/cloudflared.nix
-    ./services/pihole.nix
     ./services/samba.nix
     ./services/harmonia.nix
     ./services/weekly-update.nix

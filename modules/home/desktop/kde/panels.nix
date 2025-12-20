@@ -53,6 +53,7 @@
               Appearance = {
                 showPressureInTooltip = true;
                 showTemperatureInCompactMode = true;
+                autoFontAndSize = false;
               };
               Units = {
                 pressureUnit = 5008;
@@ -72,6 +73,7 @@
             name = "org.kde.plasma.digitalclock";
             config = {
               Appearance = {
+                autoFontAndSize = false;
                 customDateFormat = "ddd d MMM";
                 dateDisplayFormat = "BesideTime";
                 dateFormat = "custom";
