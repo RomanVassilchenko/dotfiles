@@ -67,6 +67,33 @@ pkgs.writeShellScriptBin "dot" ''
   read -r -a BACKUP_FILES <<< "$BACKUP_FILES_STR"
 
   # --- Helper Functions ---
+  ensure_ninkear_connected() {
+    # Check if Tailscale is running and connected to ninkear for binary cache
+    echo "Checking ninkear P2P connection for binary cache..."
+
+    # Check if tailscale is running
+    if ! tailscale status --json 2>/dev/null | ${pkgs.jq}/bin/jq -e '.BackendState == "Running"' >/dev/null 2>&1; then
+      echo "Tailscale not connected. Connecting to ninkear P2P..."
+
+      # Start cloudflared tunnel
+      ${pkgs.cloudflared}/bin/cloudflared access tcp \
+        --hostname headscale.romanv.dev \
+        --url 127.0.0.1:18085 &
+      CLOUDFLARED_PID=$!
+      sleep 2
+
+      # Connect to tailscale
+      if sudo tailscale up --login-server http://127.0.0.1:18085 --accept-routes; then
+        echo "Connected to ninkear P2P successfully"
+      else
+        echo "Warning: Failed to connect to ninkear P2P - build may be slower without binary cache" >&2
+        kill $CLOUDFLARED_PID 2>/dev/null || true
+      fi
+    else
+      echo "Ninkear P2P already connected"
+    fi
+  }
+
   verify_hostname() {
     local current_hostname
     current_hostname="$(hostname)"
@@ -350,6 +377,7 @@ pkgs.writeShellScriptBin "dot" ''
     rebuild)
       verify_hostname
       handle_backups
+      ensure_ninkear_connected
 
       # Parse additional arguments
       extra_args=$(parse_nh_args "$@")
@@ -368,6 +396,7 @@ pkgs.writeShellScriptBin "dot" ''
     rebuild-boot)
       verify_hostname
       handle_backups
+      ensure_ninkear_connected
 
       # Parse additional arguments
       extra_args=$(parse_nh_args "$@")
@@ -400,6 +429,7 @@ pkgs.writeShellScriptBin "dot" ''
     update)
       verify_hostname
       handle_backups
+      ensure_ninkear_connected
 
       # Parse additional arguments
       extra_args=$(parse_nh_args "$@")

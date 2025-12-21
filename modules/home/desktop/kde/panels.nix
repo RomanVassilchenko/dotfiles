@@ -15,6 +15,9 @@
             name = "luisbocanegra.panel.colorizer";
             config = {
               General = {
+                # Hide widget icon from panel
+                hideWidget = true;
+
                 # Catppuccin Mocha base colors
                 bgColor = "#1e1e2e"; # Base
                 bgColorEnabled = true;
@@ -53,7 +56,7 @@
               Appearance = {
                 showPressureInTooltip = true;
                 showTemperatureInCompactMode = true;
-                autoFontAndSize = false;
+                autoFontAndSize = true;
               };
               Units = {
                 pressureUnit = 5008;
@@ -73,27 +76,11 @@
             name = "org.kde.plasma.digitalclock";
             config = {
               Appearance = {
-                autoFontAndSize = false;
+                autoFontAndSize = true;
                 customDateFormat = "ddd d MMM";
                 dateDisplayFormat = "BesideTime";
                 dateFormat = "custom";
                 use24hFormat = 2;
-              };
-            };
-          }
-
-          # Window title - shows active window
-          {
-            name = "org.kde.windowtitle";
-            config = {
-              General = {
-                capitalFont = false;
-                boldFont = false;
-                filterActivityInfo = true;
-                showIcon = true;
-                iconSize = 16;
-                spacing = 6;
-                style = 1;
               };
             };
           }
@@ -119,6 +106,11 @@
           # Second spacer (expands to push right widgets)
           {
             name = "org.kde.plasma.panelspacer";
+          }
+
+          # VPN Manager widget
+          {
+            name = "org.kde.plasma.vpnmanager";
           }
 
           # System tray - all system controls inside

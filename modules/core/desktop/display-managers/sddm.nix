@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
-  # Catppuccin SDDM theme with Mocha flavor and Mauve accent
+  # Catppuccin SDDM theme with Mocha flavor
   catppuccin-sddm-theme = pkgs.catppuccin-sddm.override {
     flavor = "mocha";
     font = "Inter";
@@ -10,35 +10,39 @@ let
   };
 in
 {
-  services.displayManager = {
-    sddm = {
-      enable = true;
-      wayland.enable = true;
-      theme = "catppuccin-mocha";
-      extraPackages = [ catppuccin-sddm-theme ];
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    theme = "catppuccin-mocha-mauve";
+    extraPackages = with pkgs.kdePackages; [
+      qtsvg
+      qtmultimedia
+      qtvirtualkeyboard
+      qt5compat
+    ];
 
-      settings = {
-        General = {
-          DisplayServer = "wayland";
-        };
-        Wayland = {
-          EnableHiDPI = true;
-          SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
-        };
-        X11 = {
-          EnableHiDPI = true;
-        };
-        Theme = {
-          CursorTheme = "Bibata-Modern-Ice";
-          CursorSize = 24;
-          Font = "Inter,11";
-        };
+    settings = {
+      General = {
+        DisplayServer = "wayland";
+      };
+      Wayland = {
+        EnableHiDPI = true;
+        SessionDir = "${pkgs.kdePackages.plasma-workspace}/share/wayland-sessions";
+      };
+      X11 = {
+        EnableHiDPI = true;
+      };
+      Theme = {
+        CursorTheme = "Bibata-Modern-Ice";
+        CursorSize = 24;
+        Font = "Inter,11";
+        ThemeDir = "${catppuccin-sddm-theme}/share/sddm/themes";
       };
     };
   };
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     catppuccin-sddm-theme
-    pkgs.bibata-cursors
+    bibata-cursors
   ];
 }

@@ -81,7 +81,10 @@
 
       # Open firewall ports for Headscale
       networking.firewall = {
-        allowedTCPPorts = [ 8085 8086 ]; # Headscale + Caddy proxy
+        allowedTCPPorts = [
+          8085
+          8086
+        ]; # Headscale + Caddy proxy
         allowedUDPPorts = [ 3478 ]; # STUN
       };
 

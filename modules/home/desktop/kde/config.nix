@@ -477,6 +477,16 @@
       kwinrc.Effect-blur.BlurStrength = 12;
       kwinrc.Effect-blur.NoiseStrength = 0;
 
+      # Inactive window translucency
+      kwinrc.Plugins.translucencyEnabled = true;
+      kwinrc."Effect-translucency".Inactive = 95;
+
+      # Window decoration - Catppuccin Mocha Modern
+      "kwinrc"."org.kde.kdecoration2".BorderSize = "None";
+      "kwinrc"."org.kde.kdecoration2".BorderSizeAuto = false;
+      "kwinrc"."org.kde.kdecoration2".library = "org.kde.kwin.aurorae";
+      "kwinrc"."org.kde.kdecoration2".theme = "__aurorae__svg__CatppuccinMocha-Modern";
+
       kwinrc.NightColor.Active = true;
       kwinrc.NightColor.NightTemperature = 4500;
       kwinrc.Plugins.desktop-cursor-moveEnabled = true;
