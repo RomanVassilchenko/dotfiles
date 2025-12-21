@@ -27,11 +27,3 @@ format-md:
 format-sh:
 	@echo "Formatting shell scripts..."
 	@find . -name "*.sh" -not -path "*/.*" -print0 | xargs -0 shfmt -w -i 2 -ci
-
-# Generate KDE config from current settings
-kde-config:
-	@echo "Generating KDE config..."
-	@rc2nix > modules/home/desktop/kde/config.nix
-	@echo "Formatting generated config..."
-	@nixfmt modules/home/desktop/kde/config.nix
-	@echo "KDE config generated and formatted at modules/home/desktop/kde/config.nix"

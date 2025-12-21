@@ -2,12 +2,12 @@
 
 <div align="center">
 
-A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
-6
+A modular, declarative NixOS configuration with multi-GPU support, KDE Plasma 6, and self-hosted infrastructure
 
 [![NixOS](https://img.shields.io/badge/NixOS-unstable-blue.svg?style=flat&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/Nix-Flakes-informational.svg?style=flat&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
 [![KDE Plasma](https://img.shields.io/badge/DE-KDE%20Plasma%206-1d99f3.svg?style=flat&logo=kde&logoColor=white)](https://kde.org/plasma-desktop/)
+[![Stylix](https://img.shields.io/badge/Theme-Catppuccin%20Mocha-cba6f7.svg?style=flat)](https://github.com/danth/stylix)
 [![Home Manager](https://img.shields.io/badge/Home-Manager-blue.svg?style=flat)](https://github.com/nix-community/home-manager)
 
 ![Desktop Screenshot](.github/desktop-screenshot.png)
@@ -21,15 +21,19 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 - **Multi-GPU Support** - Automatic GPU detection with profiles for AMD, Intel,
   NVIDIA, and hybrid setups
 - **KDE Plasma 6** - Declarative desktop configuration with plasma-manager
+- **Stylix Theming** - System-wide consistent theming with Catppuccin Mocha
 - **Home Manager** - Declarative dotfile and user environment management
 - **Secrets Management** - Age-encrypted secrets with agenix
-- **VPN Integration** - Enterprise VPN support with auto-TOTP and tray indicator
+- **Mesh Networking** - Self-hosted Headscale with Tailscale clients for P2P
+  connectivity
+- **VPN Integration** - Enterprise VPN support with auto-TOTP and system tray
+  widgets
 - **Flatpak Integration** - Declarative Flatpak package management
 - **Custom CLI** - Powerful `dot` command for system management
 - **Host-Specific** - Multiple machines with independent configurations
 - **Performance Tuning** - Zram, CPU governor, and kernel optimizations
-- **Self-Hosted Services** - Vaultwarden (Bitwarden) and Joplin Server for
-  servers
+- **Self-Hosted Services** - Vaultwarden, Joplin Server, Harmonia cache,
+  Cloudflare Tunnel, and Samba file sharing
 
 ## Tech Stack
 
@@ -38,8 +42,10 @@ A modular, declarative NixOS configuration with multi-GPU support and KDE Plasma
 - **OS**: NixOS (unstable channel)
 - **Desktop Environment**: KDE Plasma 6 with plasma-manager
 - **Display Manager**: SDDM (Wayland)
+- **Theming**: Stylix with Catppuccin Mocha, Bibata cursors
 - **Package Manager**: Nix Flakes + Flatpak
 - **Secrets**: Agenix
+- **Networking**: Tailscale mesh with self-hosted Headscale
 
 ### Development Tools
 
@@ -165,8 +171,8 @@ dotfiles/
 │   │   ├── variables.nix
 │   │   ├── host-packages.nix
 │   │   └── performance.nix
-│   └── probook-450/       # Intel integrated graphics
-│       └── ...
+│   ├── probook-450/       # Intel integrated graphics
+│   └── ninkear/           # AMD server (self-hosted services)
 │
 ├── profiles/              # GPU profile configurations
 │   ├── amd/
@@ -178,70 +184,58 @@ dotfiles/
 ├── modules/
 │   ├── core/              # System-level modules
 │   │   ├── default.nix    # Conditionally imports based on deviceType
-│   │   ├── boot/          # Bootloader configuration
+│   │   ├── system/        # Boot, hardware, network, security, user, virtualisation
 │   │   ├── desktop/
-│   │   │   ├── environments/
-│   │   │   │   ├── plasma.nix    # KDE Plasma 6 system config
-│   │   │   │   └── xserver.nix   # X11 server configuration
-│   │   │   └── display-managers/
-│   │   │       └── sddm.nix      # SDDM display manager
-│   │   ├── desktop-apps/  # Flatpak, fonts, Steam
-│   │   ├── hardware/      # Hardware configuration
-│   │   ├── network/       # Networking and firewall
-│   │   ├── packages/      # System packages
+│   │   │   ├── stylix.nix        # System-wide theming
+│   │   │   ├── environments/     # plasma.nix, xserver.nix
+│   │   │   ├── display-managers/ # sddm.nix
+│   │   │   └── apps/             # flatpak.nix, fonts.nix, steam.nix
+│   │   ├── packages/
+│   │   │   ├── cli/              # CLI tools, file management, network, monitoring
+│   │   │   ├── desktop/          # Desktop apps, gaming, media
+│   │   │   └── development/      # Golang, protobuf, databases
 │   │   ├── security/      # Agenix secrets management
-│   │   ├── services/      # System services (printing, syncthing, VPN)
-│   │   ├── system/        # System-level settings
-│   │   ├── tools/         # System tools (nh)
-│   │   ├── user/          # User account configuration
-│   │   └── virtualisation/ # Docker, libvirt/QEMU
+│   │   ├── services/      # VPN, Vaultwarden, Joplin, Headscale, Cloudflared,
+│   │   │                  # Harmonia, Samba, fail2ban, printing, etc.
+│   │   └── tools/         # nh, system packages
 │   │
 │   ├── home/              # Home-manager modules
 │   │   ├── default.nix    # Conditionally imports based on deviceType
-│   │   ├── apps/          # GUI applications (OBS, virt-manager)
-│   │   ├── cli-tools/     # CLI utilities (bat, btop, eza, fzf, htop, etc.)
-│   │   ├── config/        # Git, SSH, XDG configuration
-│   │   ├── desktop/kde/   # Plasma-manager KDE configuration
-│   │   │   ├── autostart.nix     # Application autostart
-│   │   │   ├── config.nix        # KDE settings
-│   │   │   ├── panels.nix        # Panel configuration
-│   │   │   ├── wallpaper.nix     # Wallpaper settings
-│   │   │   └── widgets.nix       # Desktop widgets
-│   │   ├── editors/       # Code editors (nvf, vscode, zed)
-│   │   ├── fastfetch/     # System info display
-│   │   ├── scripts/       # Custom scripts (dot, vpn-tray)
-│   │   ├── shell/zsh/     # ZSH configuration
+│   │   ├── apps/          # Bitwarden, Brave, Solaar, etc.
+│   │   ├── cli-tools/     # bat, btop, eza, fzf, htop, etc.
+│   │   ├── config/        # Git, SSH, XDG, Stylix
+│   │   ├── desktop/kde/   # Plasma-manager configuration
+│   │   ├── editors/       # nvf, vscode, zed
+│   │   ├── scripts/       # dot CLI, vpn-manager-tray, tailscale-tray
+│   │   ├── shell/zsh/     # ZSH with Powerlevel10k
 │   │   └── terminal/      # Ghostty terminal
 │   │
 │   └── drivers/           # GPU driver configurations
 │       ├── amd-drivers.nix
 │       ├── intel-drivers.nix
 │       ├── nvidia-drivers.nix
-│       ├── nvidia-prime-drivers.nix
-│       ├── nvidia-amd-hybrid.nix
-│       └── local-hardware-clock.nix
+│       └── nvidia-prime-drivers.nix
 │
 ├── secrets/               # Agenix encrypted secrets
 │   ├── secrets.nix        # Secret definitions
 │   └── *.age              # Encrypted secret files
 │
-├── .github/
-│   └── git-hooks/         # Git hooks for commit quality
-│       └── prepare-commit-msg
+├── wallpapers/            # Desktop wallpapers
 │
-└── CLAUDE.md              # Claude Code instructions
+└── .github/
+    └── git-hooks/         # Git hooks for commit quality
 ```
 
 ### Configuration Flow
 
 1. **`flake.nix`** defines:
-   - `system` and `username` variables (shared across all hosts)
+   - `username` variable (shared across all hosts)
    - Inputs: nixpkgs, nixpkgs-pinned, home-manager, nix-flatpak, nvf,
-     plasma-manager, agenix
+     plasma-manager, agenix, stylix
    - The `mkNixosConfig` helper function that takes `gpuProfile` and `host`
      parameters
-   - Passes `inputs`, `username`, `host`, and `profile` as `specialArgs` to all
-     modules
+   - Passes `inputs`, `username`, `host`, `vars`, `isServer`, and `profile` as
+     `specialArgs` to all modules
    - Exports configurations named by hostname (e.g.,
      `nixosConfigurations.laptop-82sn`)
 
@@ -375,13 +369,19 @@ Reference in modules: `config.age.secrets.secret-name.path`
 
 When `deviceType = "laptop"`:
 
+### Stylix Theming
+
+- **Color Scheme**: Catppuccin Mocha (system-wide)
+- **Cursor**: Bibata Modern Ice (24px)
+- **Fonts**: JetBrains Mono Nerd Font (terminal), Inter (UI)
+- **Terminal Opacity**: 92% with blur
+
 ### KDE Plasma 6 Features
 
 - 6 virtual desktops with window rules
 - Krohnkite tiling manager
 - Night Color at 5500K temperature
 - Round corners (8px)
-- BreezeDark color scheme
 
 ### Autostart Applications
 
@@ -400,7 +400,13 @@ When `deviceType = "laptop"`:
 | 5       | Zoom               |
 | 6       | Camunda Modeler    |
 
-## VPN Integration
+## VPN & Mesh Networking
+
+### Tailscale/Headscale (P2P Mesh)
+
+- Self-hosted Headscale control server on ninkear
+- Tailscale clients on all devices for secure P2P connectivity
+- Dedicated tray indicator for connection status
 
 ### OpenConnect (BerekeBank)
 
@@ -408,16 +414,16 @@ When `deviceType = "laptop"`:
 - Systemd service with automatic restart
 - Encrypted credentials via agenix
 
-### OpenFortiVPN (Dahua)
+### OpenFortiVPN (AQ)
 
 - Certificate-based authentication
 - Systemd service management
 
-### VPN Tray Indicator
+### VPN Manager Applet
 
-- PyQt6 system tray application
-- Connect/disconnect functionality
-- Real-time status display
+- Native KDE Plasma widget for managing all VPN connections
+- Supports Bereke, AQ, and Ninkear (Tailscale)
+- Real-time status display with connection IPs
 - Passwordless sudo for VPN services
 
 ## Performance Optimizations
@@ -496,11 +502,11 @@ Edit files in `modules/home/desktop/kde/`:
 
 ## Current Hosts
 
-| Hostname    | Type   | GPU   | Hardware                      |
-| ----------- | ------ | ----- | ----------------------------- |
-| laptop-82sn | laptop | amd   | AMD Ryzen 6800H + Radeon 680M |
-| probook-450 | laptop | intel | Intel integrated graphics     |
-| ninkear     | server | amd   | AMD server                    |
+| Hostname    | Type   | GPU   | Description                              |
+| ----------- | ------ | ----- | ---------------------------------------- |
+| laptop-82sn | laptop | amd   | AMD Ryzen 6800H + Radeon 680M            |
+| probook-450 | laptop | intel | Intel integrated graphics                |
+| ninkear     | server | amd   | Self-hosted services (Headscale, etc.)   |
 
 ## Self-Hosted Services
 
@@ -517,9 +523,6 @@ Self-hosted password manager compatible with Bitwarden clients.
 | Signups          | Disabled                  |
 | Backup Directory | `/var/backup/vaultwarden` |
 
-Access the web vault at the configured URL. Use any Bitwarden client (mobile,
-desktop, browser extension) by pointing it to your server's address.
-
 ### Joplin Server
 
 Self-hosted sync server for Joplin note-taking application, running via Docker.
@@ -531,12 +534,48 @@ Self-hosted sync server for Joplin note-taking application, running via Docker.
 | Database       | PostgreSQL 16            |
 | Docker Network | `joplin-network`         |
 
-**Containers:**
+### Headscale
 
-- `joplin-db` - PostgreSQL database for Joplin
-- `joplin-server` - Joplin sync server
+Self-hosted Tailscale control server for P2P mesh networking.
 
-Configure your Joplin desktop/mobile clients to sync with the server URL.
+| Setting    | Value                         |
+| ---------- | ----------------------------- |
+| Port       | 8085                          |
+| URL        | `https://headscale.romanv.dev`|
+| Database   | SQLite                        |
+
+### Harmonia (Nix Binary Cache)
+
+Binary cache server for faster Nix builds across devices.
+
+| Setting  | Value |
+| -------- | ----- |
+| Port     | 5000  |
+| Workers  | 4     |
+| Priority | 50    |
+
+### Cloudflare Tunnel
+
+Secure tunnel for exposing services without opening ports.
+
+- Token-based authentication
+- Dashboard-managed configuration
+- Automatic reconnection
+
+### Samba (File Sharing)
+
+Network file sharing for backup and media.
+
+| Share  | Path                   |
+| ------ | ---------------------- |
+| backup | `/home/romanv/backup`  |
+| media  | `/home/romanv/media`   |
+
+### Additional Server Services
+
+- **Fail2ban** - Intrusion prevention with progressive banning
+- **Weekly Update** - Automated flake updates and rebuilds
+- **Weekly Cleanup** - Garbage collection for old generations
 
 ---
 
