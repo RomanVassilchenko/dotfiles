@@ -8,3 +8,6 @@ stow/ssh/.ssh/known_hosts
 .sync_*.db-wal
 .sync_*.db-shm
 .nextcloudsync.log
+
+# Claude Code instructions
+CLAUDE.md
