@@ -1,5 +1,8 @@
 { pkgs, config, ... }:
 {
+  # Add /usr/local/bin to PATH for dot CLI and other local binaries
+  home.sessionPath = [ "/usr/local/bin" ];
+
   # XDG-compliant environment variables
   home.sessionVariables = {
     # dotnet
