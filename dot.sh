@@ -101,18 +101,20 @@ ensure_ninkear_connected() {
   if ! tailscale status --json 2>/dev/null | jq -e '.BackendState == "Running"' >/dev/null 2>&1; then
     print_info "Tailscale not connected. Connecting to ninkear P2P..."
 
-    # Start cloudflared tunnel
-    cloudflared access tcp \
-      --hostname headscale.romanv.dev \
-      --url 127.0.0.1:18085 &
-    CLOUDFLARED_PID=$!
-    sleep 2
+    # Start cloudflared tunnel only if not already running
+    if ! ss -tlnp 2>/dev/null | grep -q ':18085'; then
+      cloudflared access tcp \
+        --hostname headscale.romanv.dev \
+        --url 127.0.0.1:18085 &
+      CLOUDFLARED_PID=$!
+      sleep 2
+    fi
 
-    if sudo tailscale up --login-server http://127.0.0.1:18085 --accept-routes; then
+    if sudo tailscale up --login-server http://127.0.0.1:18085 --accept-routes --accept-dns=false; then
       print_success "Connected to ninkear P2P"
     else
       print_warn "Failed to connect to ninkear P2P - build may be slower without binary cache"
-      kill $CLOUDFLARED_PID 2>/dev/null || true
+      [[ -n "${CLOUDFLARED_PID:-}" ]] && kill $CLOUDFLARED_PID 2>/dev/null || true
     fi
   else
     print_success "Ninkear P2P already connected"
