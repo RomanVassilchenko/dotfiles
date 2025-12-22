@@ -59,7 +59,7 @@ let
           --hostname headscale.romanv.dev \
           --url 127.0.0.1:18085 &
         sleep 2
-        sudo tailscale up --login-server http://127.0.0.1:18085 --accept-routes
+        sudo tailscale up --login-server http://127.0.0.1:18085 --accept-routes --accept-dns=false
       else
         sudo systemctl start "''${VPN_SERVICE[$vpn]}"
       fi

@@ -293,7 +293,7 @@ do_backup() {
   ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
 
   # Sync dotfiles
-  rsync -avz --delete \
+  rsync -avz --delete --chmod=Du+w,Fu+w \
     "$PROJECT_DIR/" \
     "$BACKUP_SERVER:$BACKUP_PATH/"
 
@@ -649,7 +649,7 @@ cmd_backup() {
 
   ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
 
-  rsync -avz --delete \
+  rsync -avz --delete --chmod=Du+w,Fu+w \
     "$PROJECT_DIR/" \
     "$BACKUP_SERVER:$BACKUP_PATH/"
 

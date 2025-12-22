@@ -2,7 +2,8 @@
 
 # NixOS Dotfiles
 
-**Modular, declarative NixOS configuration with multi-GPU support and self-hosted infrastructure**
+**Modular, declarative NixOS configuration with multi-GPU support and
+self-hosted infrastructure**
 
 [![NixOS](https://img.shields.io/badge/NixOS-unstable-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/Nix-Flakes-7EBAE4?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
@@ -17,12 +18,12 @@
 
 ## Highlights
 
-| Feature | Description |
-|---------|-------------|
-| **Multi-GPU** | Auto-detect AMD, Intel, NVIDIA, and hybrid configurations |
-| **Device Types** | Laptop/desktop (KDE Plasma) or server (CLI-only) profiles |
-| **Self-Hosted** | Vaultwarden, Joplin, Headscale, Harmonia binary cache |
-| **One Command** | `dot` CLI for rebuilds, updates, formatting, and maintenance |
+| Feature          | Description                                                  |
+| ---------------- | ------------------------------------------------------------ |
+| **Multi-GPU**    | Auto-detect AMD, Intel, NVIDIA, and hybrid configurations    |
+| **Device Types** | Laptop/desktop (KDE Plasma) or server (CLI-only) profiles    |
+| **Self-Hosted**  | Vaultwarden, Joplin, Headscale, Harmonia binary cache        |
+| **One Command**  | `dot` CLI for rebuilds, updates, formatting, and maintenance |
 
 ## Quick Start
 
@@ -139,33 +140,33 @@ Each host has `variables.nix`:
 
 ### Device Types
 
-| Type | Features |
-|------|----------|
-| `laptop` | KDE Plasma 6, GUI apps, audio, gaming |
+| Type     | Features                               |
+| -------- | -------------------------------------- |
+| `laptop` | KDE Plasma 6, GUI apps, audio, gaming  |
 | `server` | CLI only, Docker, self-hosted services |
 
 ### GPU Profiles
 
-| Profile | Use Case |
-|---------|----------|
-| `amd` | AMD dedicated/integrated |
-| `intel` | Intel integrated |
-| `nvidia` | NVIDIA dedicated |
-| `nvidia-laptop` | NVIDIA + Intel hybrid |
-| `amd-hybrid` | NVIDIA + AMD hybrid |
+| Profile         | Use Case                 |
+| --------------- | ------------------------ |
+| `amd`           | AMD dedicated/integrated |
+| `intel`         | Intel integrated         |
+| `nvidia`        | NVIDIA dedicated         |
+| `nvidia-laptop` | NVIDIA + Intel hybrid    |
+| `amd-hybrid`    | NVIDIA + AMD hybrid      |
 
 ## Self-Hosted Services
 
 When `deviceType = "server"`:
 
-| Service | Port | Description |
-|---------|------|-------------|
-| Vaultwarden | 8222 | Bitwarden-compatible |
-| Joplin Server | 22300 | Note sync |
-| Headscale | 8085 | Tailscale control server |
-| Harmonia | 5000 | Nix binary cache |
-| Samba | - | File sharing |
-| Cloudflare Tunnel | - | Secure exposure |
+| Service           | Port  | Description              |
+| ----------------- | ----- | ------------------------ |
+| Vaultwarden       | 8222  | Bitwarden-compatible     |
+| Joplin Server     | 22300 | Note sync                |
+| Headscale         | 8085  | Tailscale control server |
+| Harmonia          | 5000  | Nix binary cache         |
+| Samba             | -     | File sharing             |
+| Cloudflare Tunnel | -     | Secure exposure          |
 
 ## Theming
 
@@ -188,11 +189,11 @@ config.age.secrets.my-secret.path
 
 ## Current Hosts
 
-| Host | Type | GPU | Description |
-|------|------|-----|-------------|
-| laptop-82sn | laptop | amd | Ryzen 6800H + Radeon 680M |
-| probook-450 | laptop | intel | Intel integrated |
-| ninkear | server | amd | Self-hosted services |
+| Host        | Type   | GPU   | Description               |
+| ----------- | ------ | ----- | ------------------------- |
+| laptop-82sn | laptop | amd   | Ryzen 6800H + Radeon 680M |
+| probook-450 | laptop | intel | Intel integrated          |
+| ninkear     | server | amd   | Self-hosted services      |
 
 ---
 

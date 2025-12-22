@@ -10,11 +10,12 @@ let
   workEnable = vars.workEnable or false;
 in
 lib.mkIf workEnable {
-  # Allow user to control VPN service without sudo password
+  # Allow user to control VPN services without sudo password
   security.sudo.extraRules = [
     {
       users = [ username ];
       commands = [
+        # OpenConnect (Bereke)
         {
           command = "/run/current-system/sw/bin/systemctl start openconnect-berekebank";
           options = [ "NOPASSWD" ];
@@ -29,6 +30,23 @@ lib.mkIf workEnable {
         }
         {
           command = "/run/current-system/sw/bin/systemctl status openconnect-berekebank";
+          options = [ "NOPASSWD" ];
+        }
+        # OpenFortiVPN (AQ/Dahua)
+        {
+          command = "/run/current-system/sw/bin/systemctl start openfortivpn-dahua";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl stop openfortivpn-dahua";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl restart openfortivpn-dahua";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl status openfortivpn-dahua";
           options = [ "NOPASSWD" ];
         }
       ];

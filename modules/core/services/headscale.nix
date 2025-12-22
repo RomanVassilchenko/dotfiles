@@ -96,6 +96,7 @@
           "--login-server=http://127.0.0.1:8085"
           "--accept-routes"
           "--advertise-exit-node"
+          "--accept-dns=false"
         ];
       };
 
@@ -114,6 +115,7 @@
         extraUpFlags = lib.mkIf (!isServer) [
           "--login-server=https://headscale.romanv.dev"
           "--accept-routes"
+          "--accept-dns=false" # Don't override system DNS (breaks VPN)
         ];
       };
 
@@ -129,7 +131,19 @@
           users = [ username ];
           commands = [
             {
-              command = "/run/current-system/sw/bin/tailscale *";
+              command = "/run/current-system/sw/bin/tailscale up *";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = "/run/current-system/sw/bin/tailscale down";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = "/run/current-system/sw/bin/tailscale status";
+              options = [ "NOPASSWD" ];
+            }
+            {
+              command = "/run/current-system/sw/bin/tailscale status *";
               options = [ "NOPASSWD" ];
             }
           ];

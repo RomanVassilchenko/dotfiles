@@ -25,36 +25,7 @@
           users = [ username ];
           commands = [
             {
-              command = "/run/current-system/sw/bin/openfortivpn";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/pkill";
-              options = [ "NOPASSWD" ];
-            }
-            # VPN service control without password
-            {
-              command = "/run/current-system/sw/bin/systemctl start openfortivpn-dahua";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/systemctl stop openfortivpn-dahua";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/systemctl restart openfortivpn-dahua";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/systemctl start openconnect-berekebank";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/systemctl stop openconnect-berekebank";
-              options = [ "NOPASSWD" ];
-            }
-            {
-              command = "/run/current-system/sw/bin/systemctl restart openconnect-berekebank";
+              command = "/run/current-system/sw/bin/pkill *";
               options = [ "NOPASSWD" ];
             }
           ];

@@ -51,20 +51,12 @@
         src = pkgs.zsh-completions;
         file = "share/zsh-completions/zsh-completions.plugin.zsh";
       }
-      {
-        name = "zsh-you-should-use";
-        src = pkgs.zsh-you-should-use;
-        file = "share/zsh/plugins/you-should-use/you-should-use.plugin.zsh";
-      }
     ];
 
     initContent = ''
       # XDG-compliant compinit directory
       autoload -U compinit
       compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
-
-      # zsh-you-should-use: show hints after command
-      export YSU_MESSAGE_POSITION="after"
 
       bindkey "\eh" backward-word
       bindkey "\ej" down-line-or-history
@@ -78,16 +70,6 @@
     shellAliases = {
       c = "clear";
       man = "batman";
-
-      # VPN - AQ/Dahua
-      aq-vpn = "sudo systemctl start openfortivpn-dahua.service";
-      aq-vpn-stop = "sudo systemctl stop openfortivpn-dahua.service";
-      aq-vpn-status = "systemctl status openfortivpn-dahua.service";
-
-      # Tailscale - Ninkear P2P (via cloudflared TCP tunnel)
-      ninkear = "cloudflared access tcp --hostname headscale.romanv.dev --url 127.0.0.1:18085 & sleep 2 && sudo tailscale up --login-server=http://127.0.0.1:18085 --accept-routes";
-      ninkear-stop = "sudo tailscale down; pkill -f 'cloudflared access tcp.*headscale'";
-      ninkear-status = "tailscale status";
     };
   };
 }
