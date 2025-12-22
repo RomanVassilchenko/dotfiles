@@ -46,6 +46,7 @@
     ./packages/development/protobuf.nix
     ./packages/development/databases.nix
     ./packages/development/development.nix
+    ./packages/development/tex.nix
 
     # CLI packages (always loaded)
     ./packages/cli/cli-tools.nix
