@@ -84,7 +84,7 @@ in
         autoSquash = true; # Auto-squash fixup commits
       };
 
-      # Delta configuration for better diffs
+      # Delta configuration for better diffs (Catppuccin Mocha theme)
       core.pager = "delta";
       interactive.diffFilter = "delta --color-only";
       delta = {
@@ -92,13 +92,14 @@ in
         light = false;
         side-by-side = true;
         line-numbers = true;
-        syntax-theme = "Dracula";
+        syntax-theme = "Catppuccin Mocha";
         features = "decorations";
       };
       delta.decorations = {
-        commit-decoration-style = "bold yellow box ul";
-        file-style = "bold yellow ul";
+        commit-decoration-style = "bold #cba6f7 box ul"; # mauve
+        file-style = "bold #cba6f7 ul"; # mauve
         file-decoration-style = "none";
+        hunk-header-decoration-style = "#89b4fa box"; # blue
       };
       diff.colorMoved = "default";
 

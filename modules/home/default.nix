@@ -72,7 +72,6 @@ in
 
     # GUI Editors (laptop/desktop only)
     ./editors/vscode.nix
-    ./editors/zed.nix
 
     # Fastfetch (laptop/desktop only - uses kitty image protocol)
     ./fastfetch

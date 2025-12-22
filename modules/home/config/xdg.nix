@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, isServer, ... }:
 {
   # Add /usr/local/bin to PATH for dot CLI and other local binaries
   home.sessionPath = [ "/usr/local/bin" ];
@@ -44,6 +44,51 @@
         "x-scheme-handler/about" = "brave-browser.desktop";
         "x-scheme-handler/unknown" = "brave-browser.desktop";
       };
+    };
+
+    # Catppuccin Mocha theme for Prism Launcher (Minecraft)
+    # After rebuild, select theme in Prism Launcher: Settings > Launcher > User Interface > Widgets: Catppuccin Mocha
+    dataFile = lib.mkIf (!isServer) {
+      "PrismLauncher/themes/Catppuccin-Mocha/theme.json".text = builtins.toJSON {
+        colors = {
+          AlternateBase = "#1e1e2e";
+          Base = "#181825";
+          BrightText = "#bac2de";
+          Button = "#313244";
+          ButtonText = "#cdd6f4";
+          Highlight = "#cba6f7"; # Changed to mauve for consistency
+          HighlightedText = "#1e1e2e";
+          Link = "#cba6f7"; # Changed to mauve
+          Text = "#cdd6f4";
+          ToolTipBase = "#313244";
+          ToolTipText = "#cdd6f4";
+          Window = "#1e1e2e";
+          WindowText = "#bac2de";
+          fadeAmount = 0.5;
+          fadeColor = "#6c7086";
+        };
+        logColors = {
+          Launcher = "#cba6f7"; # mauve
+          Error = "#f38ba8";
+          Warning = "#f9e2af";
+          Debug = "#a6e3a1";
+          FatalHighlight = "#f38ba8";
+          Fatal = "#181825";
+        };
+        name = "Catppuccin Mocha";
+        widgets = "Fusion";
+      };
+
+      "PrismLauncher/themes/Catppuccin-Mocha/themeStyle.css".text = ''
+        /* Catppuccin Mocha theme for Prism Launcher */
+        QToolTip {
+          color: #cdd6f4;
+          background-color: #313244;
+          border: 1px solid #313244;
+        }
+      '';
+
+      "PrismLauncher/themes/Catppuccin-Mocha/resources/.keep".text = "";
     };
   };
 }

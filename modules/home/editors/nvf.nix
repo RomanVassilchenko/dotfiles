@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  lib,
   ...
 }:
 {
@@ -148,6 +149,13 @@
         typst.enable = true;
         rust.enable = true;
       };
+      # Catppuccin Mocha theme with Mauve accent (override Stylix)
+      theme = {
+        enable = true;
+        name = lib.mkForce "catppuccin";
+        style = lib.mkForce "mocha";
+      };
+
       visuals = {
         nvim-web-devicons.enable = true;
         nvim-cursorline.enable = true;
@@ -160,7 +168,7 @@
 
       statusline.lualine = {
         enable = true;
-        theme = "base16";
+        theme = lib.mkForce "catppuccin";
       };
 
       autopairs.nvim-autopairs.enable = true;
