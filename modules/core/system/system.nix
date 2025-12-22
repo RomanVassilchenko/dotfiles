@@ -67,6 +67,12 @@ in
   environment.variables = {
     NIXOS_OZONE_WL = "1";
   };
+
+  # Add /usr/local/bin to PATH for dot CLI and other local binaries
+  environment.localBinInPath = true;
+  environment.extraInit = ''
+    export PATH="/usr/local/bin:$PATH"
+  '';
   console.keyMap = "${consoleKeyMap}";
   system.stateVersion = "23.11"; # Do not change!
 }
