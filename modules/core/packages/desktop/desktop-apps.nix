@@ -7,6 +7,7 @@
     camunda-modeler
     discord
     droidcam
+    google-chrome
     libreoffice
     xdg-utils
   ];

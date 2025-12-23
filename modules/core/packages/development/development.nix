@@ -9,6 +9,7 @@
     delta
     act
     nodejs
+    playwright-driver.browsers
     jdk
     pkg-config
 

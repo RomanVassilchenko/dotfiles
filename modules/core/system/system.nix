@@ -1,6 +1,7 @@
 {
   host,
   lib,
+  pkgs,
   isServer,
   ...
 }:
@@ -66,6 +67,7 @@ in
   };
   environment.variables = {
     NIXOS_OZONE_WL = "1";
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
   };
 
   # Add /usr/local/bin to PATH for dot CLI and other local binaries
