@@ -18,6 +18,10 @@
     nodePackages.prettier
     shfmt
 
+    # AI CLI tools
+    copilot-cli
+    codex
+
     postman
     (pkgs-pinned.buildGoModule rec {
       pname = "oapi-codegen";

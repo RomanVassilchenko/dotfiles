@@ -1,4 +1,10 @@
-{ pkgs, config, lib, isServer, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  isServer,
+  ...
+}:
 {
   # Add /usr/local/bin to PATH for dot CLI and other local binaries
   home.sessionPath = [ "/usr/local/bin" ];
