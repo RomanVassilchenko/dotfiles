@@ -50,6 +50,9 @@
 
     # CLI packages (always loaded)
     ./packages/cli/cli-tools.nix
+    ./packages/cli/ai-tools.nix
+    ./packages/cli/fun-tools.nix
+    ./packages/cli/terminal-support.nix
     ./packages/cli/system-monitoring.nix
     ./packages/cli/file-management.nix
     ./packages/cli/network-tools.nix

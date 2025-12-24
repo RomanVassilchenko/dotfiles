@@ -1,8 +1,4 @@
-{
-  pkgs,
-  pkgs-pinned,
-  ...
-}:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     git
@@ -18,15 +14,13 @@
     nodePackages.prettier
     shfmt
 
-    # AI CLI tools
-    copilot-cli
-    codex
-
     postman
-    (pkgs-pinned.buildGoModule rec {
+
+    # OpenAPI code generator (custom build for specific version)
+    (buildGoModule rec {
       pname = "oapi-codegen";
       version = "2.2.0";
-      src = pkgs-pinned.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "deepmap";
         repo = "oapi-codegen";
         rev = "v${version}";
@@ -40,7 +34,7 @@
         "-w"
         "-X main.noVCSVersionOverride=v${version}"
       ];
-      meta = with pkgs-pinned.lib; {
+      meta = with lib; {
         description = "Generate Go client and server boilerplate from OpenAPI 3 specifications";
         homepage = "https://github.com/deepmap/oapi-codegen";
         license = licenses.asl20;

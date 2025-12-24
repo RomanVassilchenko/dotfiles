@@ -1,21 +1,17 @@
-{
-  pkgs,
-  pkgs-pinned,
-  ...
-}:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     # Go Language and Core Tools
-    go # Go Programming Language
-    gopls # Go language server
-    gotools # Go development tools (goimports, etc.)
-    go-tools # Additional Go tools
+    go
+    gopls
+    gotools
+    go-tools
 
     # Go Formatters and Linters
-    golines # Go line length formatter
-    (pkgs-pinned.golangci-lint.overrideAttrs (oldAttrs: rec {
+    golines
+    (golangci-lint.overrideAttrs (oldAttrs: rec {
       version = "1.64.8";
-      src = pkgs-pinned.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "golangci";
         repo = "golangci-lint";
         rev = "v${version}";
@@ -25,20 +21,20 @@
     }))
 
     # Go Testing and Mocking
-    go-minimock # Go mock generator from interfaces
-    mockgen # Go mock generator
+    go-minimock
+    mockgen
 
     # Go Debugging
-    delve # Go debugger
+    delve
 
     # Go Database Tools
-    goose # Database migration tool
+    goose
 
     # Go Build Tools
-    statik # Go static file embedding
+    statik
 
     # CGO Support (required for some Go packages)
-    gcc # C compiler for CGO support
-    gnumake # GNU Make build tool
+    gcc
+    gnumake
   ];
 }

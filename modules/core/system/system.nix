@@ -15,6 +15,9 @@ in
       automatic = true;
       dates = [ "weekly" ];
     };
+
+    # Note: GC handled by nh.clean (desktop) and weekly-cleanup.nix (server)
+
     settings = {
       download-buffer-size = 200000000;
       auto-optimise-store = true;
@@ -77,4 +80,13 @@ in
   '';
   console.keyMap = "${consoleKeyMap}";
   system.stateVersion = "23.11"; # Do not change!
+
+  # Disable documentation on server to save space and build time
+  documentation = lib.mkIf isServer {
+    enable = false;
+    man.enable = false;
+    doc.enable = false;
+    info.enable = false;
+    nixos.enable = false;
+  };
 }

@@ -1,23 +1,19 @@
-{
-  pkgs,
-  pkgs-pinned,
-  ...
-}:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     buf
-    (pkgs-pinned.protobuf_29.overrideAttrs (oldAttrs: rec {
+    (protobuf_29.overrideAttrs (oldAttrs: rec {
       version = "29.3";
-      src = pkgs-pinned.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "protocolbuffers";
         repo = "protobuf";
         rev = "v${version}";
         hash = "sha256-zdOBzLdN0ySrdFTF/X/NYI57kJ1ZFyoIl1/Qtgh/VkI=";
       };
     }))
-    (pkgs-pinned.protoc-gen-go.overrideAttrs (oldAttrs: rec {
+    (protoc-gen-go.overrideAttrs (oldAttrs: rec {
       version = "1.36.3";
-      src = pkgs-pinned.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "protocolbuffers";
         repo = "protobuf-go";
         rev = "v${version}";
@@ -25,9 +21,9 @@
       };
       vendorHash = "sha256-nGI/Bd6eMEoY0sBwWEtyhFowHVvwLKjbT4yfzFz6Z3E=";
     }))
-    (pkgs-pinned.protoc-gen-go-grpc.overrideAttrs (oldAttrs: rec {
+    (protoc-gen-go-grpc.overrideAttrs (oldAttrs: rec {
       version = "1.5.1";
-      src = pkgs-pinned.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "grpc";
         repo = "grpc-go";
         rev = "cmd/protoc-gen-go-grpc/v${version}";

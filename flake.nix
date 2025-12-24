@@ -7,8 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # Pinned nixpkgs for stable package versions (won't change on flake update)
-    nixpkgs-pinned.url = "github:nixos/nixpkgs/nixos-unstable";
     nvf.url = "github:notashelf/nvf";
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
     plasma-manager = {
@@ -29,7 +27,6 @@
   outputs =
     {
       nixpkgs,
-      nixpkgs-pinned,
       home-manager,
       nix-flatpak,
       plasma-manager,
@@ -58,10 +55,6 @@
               isServer
               ;
             profile = gpuProfile;
-            pkgs-pinned = import nixpkgs-pinned {
-              system = "x86_64-linux";
-              config.allowUnfree = true;
-            };
           };
           modules = [
             ./profiles/${gpuProfile}
