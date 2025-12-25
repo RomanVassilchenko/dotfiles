@@ -1,9 +1,7 @@
-{ pkgs, ... }:
+{ ... }:
 {
-  hardware.steam-hardware.enable = true; # Steam controller and hardware support
+  # Steam controller and hardware support
+  hardware.steam-hardware.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    prismlauncher
-    osu-lazer
-  ];
+  # Gaming apps (prismlauncher, osu-lazer) are in modules/home/apps/*.nix
 }

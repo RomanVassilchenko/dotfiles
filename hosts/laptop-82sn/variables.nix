@@ -26,9 +26,49 @@
     enable = true;
     autostart = true;
   };
+  dbeaver = {
+    enable = true;
+    autostart = false;
+  };
+  discord = {
+    enable = true;
+    autostart = false;
+  };
+  gimp = {
+    enable = true;
+    autostart = false;
+  };
+  google-chrome = {
+    enable = true;
+    autostart = false;
+  };
+  inkscape = {
+    enable = true;
+    autostart = false;
+  };
   joplin = {
     enable = true;
     autostart = true;
+  };
+  krita = {
+    enable = true;
+    autostart = false;
+  };
+  libreoffice = {
+    enable = true;
+    autostart = false;
+  };
+  osu-lazer = {
+    enable = true;
+    autostart = false;
+  };
+  postman = {
+    enable = true;
+    autostart = false;
+  };
+  prismlauncher = {
+    enable = true;
+    autostart = false;
   };
   solaar = {
     enable = true;

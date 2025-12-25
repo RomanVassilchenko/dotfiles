@@ -14,7 +14,7 @@
     nodePackages.prettier
     shfmt
 
-    postman
+    # GUI apps (postman) are in modules/home/apps/*.nix
 
     # OpenAPI code generator (custom build for specific version)
     (buildGoModule rec {
