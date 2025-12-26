@@ -87,4 +87,16 @@ in
     laptop-82sn
     probook-450
   ];
+
+  # RDP Outlook username
+  "secrets/rdp-outlook-username.age".publicKeys = [
+    laptop-82sn
+    probook-450
+  ];
+
+  # RDP Outlook password
+  "secrets/rdp-outlook-password.age".publicKeys = [
+    laptop-82sn
+    probook-450
+  ];
 }

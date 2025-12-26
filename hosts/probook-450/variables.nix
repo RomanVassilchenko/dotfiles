@@ -61,6 +61,10 @@
     enable = true;
     autostart = false;
   };
+  outlook-rdp = {
+    enable = true;
+    autostart = false;
+  };
   postman = {
     enable = true;
     autostart = false;
@@ -79,7 +83,7 @@
   };
   thunderbird = {
     enable = true;
-    autostart = true;
+    autostart = false;
   };
   zapzap = {
     enable = true;

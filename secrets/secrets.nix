@@ -38,4 +38,8 @@ in
 
   # Cloudflare Tunnel
   "cloudflared-tunnel-token.age".publicKeys = allKeys;
+
+  # RDP Outlook credentials
+  "rdp-outlook-username.age".publicKeys = allKeys;
+  "rdp-outlook-password.age".publicKeys = allKeys;
 }

@@ -55,5 +55,20 @@ in
       owner = "romanv";
       group = "users";
     };
+
+    # RDP Outlook credentials
+    rdp-outlook-username = {
+      file = ../../../secrets/rdp-outlook-username.age;
+      mode = "440";
+      owner = "romanv";
+      group = "users";
+    };
+
+    rdp-outlook-password = {
+      file = ../../../secrets/rdp-outlook-password.age;
+      mode = "440";
+      owner = "romanv";
+      group = "users";
+    };
   };
 }

@@ -83,7 +83,7 @@
       kwin.KrohnkitetoggleDock = [ ];
       kwin."Move Tablet to Next Output" = [ ];
       kwin."Move with Window to Desktop 1" = "Meta+!";
-      kwin."Move with Window to Desktop 10" = [ ];
+      kwin."Move with Window to Desktop 10" = "Meta+)";
       kwin."Move with Window to Desktop 11" = [ ];
       kwin."Move with Window to Desktop 12" = [ ];
       kwin."Move with Window to Desktop 13" = [ ];
@@ -99,9 +99,9 @@
       kwin."Move with Window to Desktop 4" = "Meta+$";
       kwin."Move with Window to Desktop 5" = "Meta+%";
       kwin."Move with Window to Desktop 6" = "Meta+^";
-      kwin."Move with Window to Desktop 7" = [ ];
-      kwin."Move with Window to Desktop 8" = [ ];
-      kwin."Move with Window to Desktop 9" = [ ];
+      kwin."Move with Window to Desktop 7" = "Meta+&";
+      kwin."Move with Window to Desktop 8" = "Meta+*";
+      kwin."Move with Window to Desktop 9" = "Meta+(";
       kwin.MoveMouseToCenter = "Meta+F6";
       kwin.MoveMouseToFocus = "Meta+F5";
       kwin.MoveZoomDown = [ ];
@@ -120,7 +120,7 @@
       kwin."Switch Window Right" = [ ];
       kwin."Switch Window Up" = [ ];
       kwin."Switch to Desktop 1" = "Meta+1";
-      kwin."Switch to Desktop 10" = [ ];
+      kwin."Switch to Desktop 10" = "Meta+0";
       kwin."Switch to Desktop 11" = [ ];
       kwin."Switch to Desktop 12" = [ ];
       kwin."Switch to Desktop 13" = [ ];
@@ -136,9 +136,9 @@
       kwin."Switch to Desktop 4" = "Meta+4";
       kwin."Switch to Desktop 5" = "Meta+5";
       kwin."Switch to Desktop 6" = "Meta+6";
-      kwin."Switch to Desktop 7" = [ ];
-      kwin."Switch to Desktop 8" = [ ];
-      kwin."Switch to Desktop 9" = [ ];
+      kwin."Switch to Desktop 7" = "Meta+7";
+      kwin."Switch to Desktop 8" = "Meta+8";
+      kwin."Switch to Desktop 9" = "Meta+9";
       kwin."Switch to Next Desktop" = "Meta+PgDown";
       kwin."Switch to Next Screen" = [ ];
       kwin."Switch to Previous Desktop" = "Meta+PgUp";
@@ -353,6 +353,10 @@
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-4 = "Meta+$";
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-5 = "Meta+%";
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-6 = "Meta+^";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-7 = "Meta+&";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-8 = "Meta+*";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-9 = "Meta+(";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-10 = "Meta+)";
       "services/plasma-manager-commands.desktop".shortcuts-cheatsheet = [ ];
       "services/postman.desktop"._launch = "Meta+Shift+P";
     };
@@ -461,13 +465,21 @@
       kwinrc.Desktops.Id_4 = "Desktop_4";
       kwinrc.Desktops.Id_5 = "Desktop_5";
       kwinrc.Desktops.Id_6 = "Desktop_6";
+      kwinrc.Desktops.Id_7 = "Desktop_7";
+      kwinrc.Desktops.Id_8 = "Desktop_8";
+      kwinrc.Desktops.Id_9 = "Desktop_9";
+      kwinrc.Desktops.Id_10 = "Desktop_10";
       kwinrc.Desktops.Name_1 = "Web";
-      kwinrc.Desktops.Name_2 = "Code";
-      kwinrc.Desktops.Name_3 = "Chat";
-      kwinrc.Desktops.Name_4 = "Mail";
-      kwinrc.Desktops.Name_5 = "Meet";
-      kwinrc.Desktops.Name_6 = "Tools";
-      kwinrc.Desktops.Number = 6;
+      kwinrc.Desktops.Name_2 = "Term";
+      kwinrc.Desktops.Name_3 = "Code";
+      kwinrc.Desktops.Name_4 = "Chat";
+      kwinrc.Desktops.Name_5 = "Mail";
+      kwinrc.Desktops.Name_6 = "RDP";
+      kwinrc.Desktops.Name_7 = "Meet";
+      kwinrc.Desktops.Name_8 = "Tool";
+      kwinrc.Desktops.Name_9 = "Game";
+      kwinrc.Desktops.Name_10 = "Misc";
+      kwinrc.Desktops.Number = 10;
       kwinrc.Desktops.Rows = 1;
 
       # Blur effect configuration
@@ -605,77 +617,120 @@
       kwinrc.Windows.DelayFocusInterval = 150;
       kwinrc.Windows.FocusPolicy = "FocusFollowsMouse";
       kwinrc.Xwayland.Scale = 1.25;
+      # Rule 1: Hide titlebar by default
       kwinrulesrc."1".Description = "Hide titlebar by default";
       kwinrulesrc."1".noborder = true;
       kwinrulesrc."1".noborderrule = 3;
       kwinrulesrc."1".wmclass = ".*";
       kwinrulesrc."1".wmclasscomplete = true;
       kwinrulesrc."1".wmclassmatch = 3;
-      kwinrulesrc."2".Description = "Assign Brave to Desktop 1";
+
+      # Rule 2: Brave/Chrome -> Desktop 1 (Brws)
+      kwinrulesrc."2".Description = "Browser to Desktop 1";
       kwinrulesrc."2".desktops = "Desktop_1";
       kwinrulesrc."2".desktopsrule = 3;
       kwinrulesrc."2".types = 1;
-      kwinrulesrc."2".wmclass = "brave-browser";
-      kwinrulesrc."2".wmclasscomplete = true;
-      kwinrulesrc."2".wmclassmatch = 2;
-      kwinrulesrc."3".Description = "Assign VSCode to Desktop 2";
+      kwinrulesrc."2".wmclass = "brave-browser|google-chrome";
+      kwinrulesrc."2".wmclasscomplete = false;
+      kwinrulesrc."2".wmclassmatch = 3;
+
+      # Rule 3: Ghostty/Terminal -> Desktop 2 (Term)
+      kwinrulesrc."3".Description = "Terminal to Desktop 2";
       kwinrulesrc."3".desktops = "Desktop_2";
       kwinrulesrc."3".desktopsrule = 3;
       kwinrulesrc."3".types = 1;
-      kwinrulesrc."3".wmclass = "code";
+      kwinrulesrc."3".wmclass = "com.mitchellh.ghostty|kitty|konsole";
       kwinrulesrc."3".wmclasscomplete = false;
-      kwinrulesrc."3".wmclassmatch = 1;
-      kwinrulesrc."4".Description = "Assign Telegram to Desktop 3";
+      kwinrulesrc."3".wmclassmatch = 3;
+
+      # Rule 4: VSCode -> Desktop 3 (Code)
+      kwinrulesrc."4".Description = "VSCode to Desktop 3";
       kwinrulesrc."4".desktops = "Desktop_3";
       kwinrulesrc."4".desktopsrule = 3;
       kwinrulesrc."4".types = 1;
-      kwinrulesrc."4".wmclass = "org.telegram.desktop";
-      kwinrulesrc."4".wmclasscomplete = true;
-      kwinrulesrc."4".wmclassmatch = 2;
-      kwinrulesrc."5".Description = "Assign Thunderbird to Desktop 4";
+      kwinrulesrc."4".wmclass = "code";
+      kwinrulesrc."4".wmclasscomplete = false;
+      kwinrulesrc."4".wmclassmatch = 1;
+
+      # Rule 5: Telegram/ZapZap -> Desktop 4 (Chat)
+      kwinrulesrc."5".Description = "Chat apps to Desktop 4";
       kwinrulesrc."5".desktops = "Desktop_4";
       kwinrulesrc."5".desktopsrule = 3;
       kwinrulesrc."5".types = 1;
-      kwinrulesrc."5".wmclass = "thunderbird";
+      kwinrulesrc."5".wmclass = "org.telegram.desktop|com.rtosta.zapzap|discord";
       kwinrulesrc."5".wmclasscomplete = false;
-      kwinrulesrc."5".wmclassmatch = 1;
-      kwinrulesrc."6".Description = "Assign Zoom to Desktop 5";
+      kwinrulesrc."5".wmclassmatch = 3;
+
+      # Rule 6: Thunderbird -> Desktop 5 (Mail)
+      kwinrulesrc."6".Description = "Thunderbird to Desktop 5";
       kwinrulesrc."6".desktops = "Desktop_5";
       kwinrulesrc."6".desktopsrule = 3;
       kwinrulesrc."6".types = 1;
-      kwinrulesrc."6".wmclass = "zoom";
-      kwinrulesrc."6".wmclasscomplete = true;
-      kwinrulesrc."6".wmclassmatch = 2;
-      kwinrulesrc."7".Description = "Assign Camunda Modeler to Desktop 6";
+      kwinrulesrc."6".wmclass = "thunderbird";
+      kwinrulesrc."6".wmclasscomplete = false;
+      kwinrulesrc."6".wmclassmatch = 1;
+
+      # Rule 7: Outlook RDP -> Desktop 6 (Outl)
+      kwinrulesrc."7".Description = "Outlook RDP to Desktop 6";
       kwinrulesrc."7".desktops = "Desktop_6";
       kwinrulesrc."7".desktopsrule = 3;
       kwinrulesrc."7".types = 1;
-      kwinrulesrc."7".wmclass = "camunda-modeler";
-      kwinrulesrc."7".wmclasscomplete = true;
-      kwinrulesrc."7".wmclassmatch = 2;
-      kwinrulesrc."8".Description = "Brave Picture-in-Picture: Float, Always On Top, All Desktops";
-      kwinrulesrc."8".above = true;
-      kwinrulesrc."8".aboverule = 2;
-      kwinrulesrc."8".desktops = "";
-      kwinrulesrc."8".desktopsrule = 2;
-      kwinrulesrc."8".floatrule = 2;
-      kwinrulesrc."8".ignoregeometry = false;
-      kwinrulesrc."8".ignoregeometryrule = 2;
-      kwinrulesrc."8".position = "1920,1080";
-      kwinrulesrc."8".positionrule = 3;
-      kwinrulesrc."8".size = "640,360";
-      kwinrulesrc."8".sizerule = 3;
-      kwinrulesrc."8".skipagerrule = 2;
-      kwinrulesrc."8".skippager = true;
-      kwinrulesrc."8".skiptaskbar = true;
-      kwinrulesrc."8".skiptaskbarrule = 2;
-      kwinrulesrc."8".title = "Picture in picture";
-      kwinrulesrc."8".titlematch = 2;
+      kwinrulesrc."7".wmclass = "xfreerdp";
+      kwinrulesrc."7".wmclasscomplete = false;
+      kwinrulesrc."7".wmclassmatch = 1;
+
+      # Rule 8: Zoom -> Desktop 7 (Meet)
+      kwinrulesrc."8".Description = "Zoom to Desktop 7";
+      kwinrulesrc."8".desktops = "Desktop_7";
+      kwinrulesrc."8".desktopsrule = 3;
       kwinrulesrc."8".types = 1;
-      kwinrulesrc."8".wmclass = "brave";
+      kwinrulesrc."8".wmclass = "zoom";
+      kwinrulesrc."8".wmclasscomplete = false;
       kwinrulesrc."8".wmclassmatch = 1;
-      kwinrulesrc.General.count = 8;
-      kwinrulesrc.General.rules = "1,2,3,4,5,6,7,8";
+
+      # Rule 9: Tools (Camunda, DBeaver, Postman) -> Desktop 8 (Tool)
+      kwinrulesrc."9".Description = "Tools to Desktop 8";
+      kwinrulesrc."9".desktops = "Desktop_8";
+      kwinrulesrc."9".desktopsrule = 3;
+      kwinrulesrc."9".types = 1;
+      kwinrulesrc."9".wmclass = "camunda-modeler|DBeaver|Postman";
+      kwinrulesrc."9".wmclasscomplete = false;
+      kwinrulesrc."9".wmclassmatch = 3;
+
+      # Rule 10: Games -> Desktop 9 (Game)
+      kwinrulesrc."10".Description = "Games to Desktop 9";
+      kwinrulesrc."10".desktops = "Desktop_9";
+      kwinrulesrc."10".desktopsrule = 3;
+      kwinrulesrc."10".types = 1;
+      kwinrulesrc."10".wmclass = "osu!|prismlauncher|steam|Minecraft";
+      kwinrulesrc."10".wmclasscomplete = false;
+      kwinrulesrc."10".wmclassmatch = 3;
+
+      # Rule 11: Picture-in-Picture floating
+      kwinrulesrc."11".Description = "Picture-in-Picture: Float, Always On Top";
+      kwinrulesrc."11".above = true;
+      kwinrulesrc."11".aboverule = 2;
+      kwinrulesrc."11".desktops = "";
+      kwinrulesrc."11".desktopsrule = 2;
+      kwinrulesrc."11".floatrule = 2;
+      kwinrulesrc."11".ignoregeometry = false;
+      kwinrulesrc."11".ignoregeometryrule = 2;
+      kwinrulesrc."11".position = "1920,1080";
+      kwinrulesrc."11".positionrule = 3;
+      kwinrulesrc."11".size = "640,360";
+      kwinrulesrc."11".sizerule = 3;
+      kwinrulesrc."11".skipagerrule = 2;
+      kwinrulesrc."11".skippager = true;
+      kwinrulesrc."11".skiptaskbar = true;
+      kwinrulesrc."11".skiptaskbarrule = 2;
+      kwinrulesrc."11".title = "Picture in picture";
+      kwinrulesrc."11".titlematch = 2;
+      kwinrulesrc."11".types = 1;
+      kwinrulesrc."11".wmclass = "brave";
+      kwinrulesrc."11".wmclassmatch = 1;
+
+      kwinrulesrc.General.count = 11;
+      kwinrulesrc.General.rules = "1,2,3,4,5,6,7,8,9,10,11";
       kxkbrc.Layout.DisplayNames = ",";
       kxkbrc.Layout.LayoutList = "us,ru";
       kxkbrc.Layout.Use = true;

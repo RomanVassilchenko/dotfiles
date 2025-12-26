@@ -21,6 +21,7 @@ let
   krita = vars.krita or defaultApp;
   libreoffice = vars.libreoffice or defaultApp;
   osu-lazer = vars.osu-lazer or defaultApp;
+  outlook-rdp = vars.outlook-rdp or defaultApp;
   postman = vars.postman or defaultApp;
   prismlauncher = vars.prismlauncher or defaultApp;
   solaar = vars.solaar or defaultApp;
@@ -45,6 +46,7 @@ in
         krita
         libreoffice
         osu-lazer
+        outlook-rdp
         postman
         prismlauncher
         solaar
@@ -119,6 +121,7 @@ in
   ++ lib.optionals (!isServer && krita.enable) [ ./apps/krita.nix ]
   ++ lib.optionals (!isServer && libreoffice.enable) [ ./apps/libreoffice.nix ]
   ++ lib.optionals (!isServer && osu-lazer.enable) [ ./apps/osu-lazer.nix ]
+  ++ lib.optionals (!isServer && outlook-rdp.enable) [ ./apps/outlook-rdp.nix ]
   ++ lib.optionals (!isServer && postman.enable) [ ./apps/postman.nix ]
   ++ lib.optionals (!isServer && prismlauncher.enable) [ ./apps/prismlauncher.nix ]
   ++ lib.optionals (!isServer && solaar.enable) [ ./apps/solaar.nix ]
