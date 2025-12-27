@@ -5,7 +5,7 @@
     enable = true;
     flake = "/home/romanv/backup/dotfiles#ninkear";
     flags = [
-      "--flake-update"
+      "--update-input"
       "nixpkgs"
       "--commit-lock-file"
     ];
