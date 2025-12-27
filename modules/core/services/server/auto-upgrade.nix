@@ -4,8 +4,11 @@
   system.autoUpgrade = {
     enable = true;
     flake = "/home/romanv/backup/dotfiles#ninkear";
-    flags = [ "--commit-lock-file" ];
-    flakeUpdate.inputs = [ "nixpkgs" ];
+    flags = [
+      "--flake-update"
+      "nixpkgs"
+      "--commit-lock-file"
+    ];
     dates = "09:00:00";
     randomizedDelaySec = "5min";
     persistent = true;
