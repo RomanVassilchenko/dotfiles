@@ -2,20 +2,14 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    # Version control
-    git
-    delta
-
     # GitHub Actions local runner
     act
 
     # Build tools
     pkg-config
 
-    # Formatters
-    nixfmt-rfc-style
+    # Formatters (additional to cli/core.nix)
     nodePackages.prettier
-    shfmt
 
     # OpenAPI code generator
     (buildGoModule rec {
