@@ -1,0 +1,7 @@
+# Shell configuration
+{ ... }:
+{
+  imports = [
+    ./zsh
+  ];
+}

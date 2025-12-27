@@ -1,12 +1,14 @@
+# Fastfetch configuration - desktop only (uses DE/WM detection)
 {
   lib,
+  isServer,
   vars,
   ...
 }:
 let
   workEnable = vars.workEnable or false;
 in
-{
+lib.mkIf (!isServer) {
   programs.fastfetch = {
     enable = true;
 

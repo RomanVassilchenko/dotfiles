@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -11,6 +12,11 @@
     enable = true;
 
     settings.vim = {
+      extraPlugins = {
+        lspconfig = {
+          package = pkgs.vimPlugins.nvim-lspconfig;
+        };
+      };
       lsp.enable = true;
       vimAlias = true;
       viAlias = true;

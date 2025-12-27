@@ -16,7 +16,7 @@ in
       dates = [ "weekly" ];
     };
 
-    # Note: GC handled by nh.clean (desktop) and weekly-cleanup.nix (server)
+    # Note: GC handled by nh.clean for all systems
 
     settings = {
       download-buffer-size = 200000000;

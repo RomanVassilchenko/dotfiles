@@ -1,13 +1,9 @@
+# Samba - File sharing server
+{ username, ... }:
 {
-  isServer,
-  username,
-  ...
-}:
-{
-  # Samba server for file sharing (server only)
   services.samba = {
-    enable = isServer;
-    openFirewall = isServer;
+    enable = true;
+    openFirewall = true;
 
     settings = {
       global = {
@@ -37,9 +33,9 @@
     };
   };
 
-  # Enable Samba service discovery (wsdd) for Windows/Dolphin to find the share
+  # Enable Samba service discovery
   services.samba-wsdd = {
-    enable = isServer;
-    openFirewall = isServer;
+    enable = true;
+    openFirewall = true;
   };
 }

@@ -1,7 +1,9 @@
-{ pkgs, ... }:
+# Virtualisation - Docker and container support
+# Available on all systems
+{ pkgs, lib, isServer, ... }:
 {
-  # Docker for container management (podman disabled to avoid conflicts)
   virtualisation = {
+    # Docker for container management
     docker = {
       enable = true;
       autoPrune = {
@@ -14,7 +16,11 @@
     # Podman disabled - using Docker instead
     podman.enable = false;
 
-    libvirtd = {
+    # Enable common container config files
+    containers.enable = true;
+
+    # Libvirt - desktop only (VMs)
+    libvirtd = lib.mkIf (!isServer) {
       enable = true;
       qemu = {
         package = pkgs.qemu_kvm;
@@ -27,18 +33,18 @@
       enable = false;
       enableExtensionPack = true;
     };
-
-    # Enable common container config files
-    containers.enable = true;
   };
 
-  programs = {
-    virt-manager.enable = true;
-  };
+  # Virt-manager - desktop only
+  programs.virt-manager.enable = !isServer;
 
-  environment.systemPackages = with pkgs; [
-    virt-viewer # View Virtual Machines
-    lazydocker
-    docker-client
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      lazydocker
+      docker-client
+    ]
+    ++ lib.optionals (!isServer) [
+      virt-viewer # View Virtual Machines - desktop only
+    ];
 }

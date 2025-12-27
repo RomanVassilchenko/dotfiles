@@ -1,12 +1,15 @@
+# Core development tools - desktop only
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    # Version control
     git
     delta
+
+    # GitHub Actions local runner
     act
-    nodejs
-    playwright-driver.browsers
-    jdk
+
+    # Build tools
     pkg-config
 
     # Formatters
@@ -14,9 +17,7 @@
     nodePackages.prettier
     shfmt
 
-    # GUI apps (postman) are in modules/home/apps/*.nix
-
-    # OpenAPI code generator (custom build for specific version)
+    # OpenAPI code generator
     (buildGoModule rec {
       pname = "oapi-codegen";
       version = "2.2.0";

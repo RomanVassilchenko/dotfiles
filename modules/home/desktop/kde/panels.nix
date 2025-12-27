@@ -140,6 +140,18 @@
               };
             };
           }
+
+          # Shutdown button
+          {
+            name = "org.kde.plasma.lock_logout";
+            config = {
+              General = {
+                show_lockScreen = false;
+                show_requestLogoutScreen = false;
+                show_requestShutDown = true;
+              };
+            };
+          }
         ];
       }
     ];

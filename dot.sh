@@ -15,6 +15,8 @@ set -euo pipefail
 #   rebuild [opts]     - Rebuild NixOS system
 #   rebuild-boot       - Rebuild for next boot
 #   update [opts]      - Update flake and rebuild
+#   auto-upgrade       - Run auto-upgrade service (server)
+#   build-cache        - Build all configs for binary cache
 #   backup             - Backup dotfiles to ninkear
 #   cleanup [all]      - Clean old generations
 #   doctor             - Run system health checks
@@ -245,11 +247,6 @@ parse_nh_args() {
         options_selected+=("nix-output-monitor disabled")
         shift
         ;;
-      --no-backup)
-        NO_BACKUP=true
-        options_selected+=("backup disabled")
-        shift
-        ;;
       --)
         shift
         args_string="$args_string -- $*"
@@ -278,29 +275,6 @@ parse_nh_args() {
   echo "$args_string"
 }
 
-# Backup to ninkear (silent fail if unreachable)
-do_backup() {
-  if [[ "${NO_BACKUP:-false}" == "true" ]]; then
-    return 0
-  fi
-
-  print_info "Backing up dotfiles to ninkear..."
-
-  if ! is_ninkear_reachable; then
-    print_warn "Ninkear not reachable, skipping backup"
-    return 0
-  fi
-
-  # Create backup directory if needed
-  ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
-
-  # Sync dotfiles
-  rsync -avz --delete --chmod=Du+w,Fu+w \
-    "$PROJECT_DIR/" \
-    "$BACKUP_SERVER:$BACKUP_PATH/"
-
-  print_success "Backup completed to $BACKUP_SERVER:$BACKUP_PATH"
-}
 
 # =============================================================================
 # Commands
@@ -313,9 +287,11 @@ print_help() {
   echo "    dot [command] [options]"
   echo ""
   echo -e "${BOLD}SYSTEM COMMANDS${NC}"
-  echo -e "    ${CYAN}rebuild${NC} [opts]     Rebuild NixOS system (auto-backup on success)"
+  echo -e "    ${CYAN}rebuild${NC} [opts]     Rebuild NixOS system"
   echo -e "    ${CYAN}rebuild-boot${NC}       Rebuild for next boot"
   echo -e "    ${CYAN}update${NC} [opts]      Update flake inputs and rebuild"
+  echo -e "    ${CYAN}auto-upgrade${NC}       Run auto-upgrade service (server only)"
+  echo -e "    ${CYAN}build-cache${NC}        Build all host configs for binary cache"
   echo -e "    ${CYAN}cleanup${NC} [all]      Clean old generations"
   echo -e "    ${CYAN}trim${NC}               Run fstrim for SSD optimization"
   echo ""
@@ -340,7 +316,6 @@ print_help() {
   echo "    --cores N          Limit to N CPU cores"
   echo "    --verbose, -v      Verbose output"
   echo "    --no-nom           Disable nix-output-monitor"
-  echo "    --no-backup        Skip auto-backup after success"
   echo ""
   echo -e "${BOLD}EXAMPLES${NC}"
   echo "    dot rebuild              # Rebuild system"
@@ -567,7 +542,6 @@ cmd_rebuild() {
 
   if eval "nh os switch --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs"; then
     print_success "Rebuild finished successfully"
-    do_backup
   else
     print_error "Rebuild failed"
     exit 1
@@ -593,7 +567,6 @@ cmd_rebuild_boot() {
   if eval "nh os boot --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs"; then
     print_success "Rebuild-boot finished successfully"
     print_info "New configuration set as boot default - restart to activate"
-    do_backup
   else
     print_error "Rebuild-boot failed"
     exit 1
@@ -625,8 +598,6 @@ cmd_update() {
       flatpak update -y
       print_success "Flatpak update complete"
     fi
-
-    do_backup
   else
     print_error "Update and rebuild failed"
     exit 1
@@ -658,6 +629,38 @@ cmd_backup() {
   echo ""
   print_success "Backup completed!"
   echo "Location: $BACKUP_SERVER:$BACKUP_PATH"
+}
+
+cmd_auto_upgrade() {
+  print_info "Starting auto-upgrade service in background..."
+  sudo systemctl start nixos-upgrade.service --no-block
+  print_success "Auto-upgrade started. Monitor with: journalctl -fu nixos-upgrade"
+}
+
+cmd_build_cache() {
+  print_header "Building all configurations for cache"
+  echo ""
+
+  local hosts=("laptop-82sn" "probook-450" "ninkear")
+  local failed=()
+
+  for host in "${hosts[@]}"; do
+    print_info "Building $host..."
+    if nix build "$PROJECT_DIR#nixosConfigurations.$host.config.system.build.toplevel" --no-link; then
+      print_success "$host built successfully"
+    else
+      print_error "$host build failed"
+      failed+=("$host")
+    fi
+    echo ""
+  done
+
+  if [[ ${#failed[@]} -eq 0 ]]; then
+    print_success "All configurations built successfully"
+  else
+    print_error "Failed to build: ${failed[*]}"
+    exit 1
+  fi
 }
 
 cmd_cleanup() {
@@ -1034,6 +1037,12 @@ main() {
       ;;
     backup)
       cmd_backup
+      ;;
+    auto-upgrade)
+      cmd_auto_upgrade
+      ;;
+    build-cache)
+      cmd_build_cache
       ;;
     cleanup)
       shift
