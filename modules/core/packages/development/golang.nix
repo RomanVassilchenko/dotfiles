@@ -1,0 +1,34 @@
+{ pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    delve
+    gcc
+    gci
+    gnumake
+    go
+    go-minimock
+    go-mockery
+    go-swag
+    go-tools
+    gofumpt
+    golines
+    goose
+    gopls
+    gotools
+    mockgen
+    oapi-codegen
+    protoc-gen-connect-go
+    sqlc
+    (golangci-lint.overrideAttrs (oldAttrs: rec {
+      version = "1.64.8";
+      src = fetchFromGitHub {
+        owner = "golangci";
+        repo = "golangci-lint";
+        rev = "v${version}";
+        hash = "sha256-H7IdXAleyzJeDFviISitAVDNJmiwrMysYcGm6vAoWso=";
+      };
+      vendorHash = "sha256-i7ec4U4xXmRvHbsDiuBjbQ0xP7xRuilky3gi+dT1H10=";
+    }))
+
+  ];
+}

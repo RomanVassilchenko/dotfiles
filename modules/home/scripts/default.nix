@@ -1,0 +1,8 @@
+{
+  ...
+}:
+{
+  imports = [
+    ./service-monitor.nix
+  ];
+}
