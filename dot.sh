@@ -112,7 +112,28 @@ setup_sudo() {
 
 # Check if ninkear is reachable via SSH
 is_ninkear_reachable() {
-  ssh -o ConnectTimeout=3 -o BatchMode=yes "$BACKUP_SERVER" "exit" 2>/dev/null
+  local server="${1:-$BACKUP_SERVER}"
+  ssh -o ConnectTimeout=3 -o BatchMode=yes "$server" "exit" 2>/dev/null
+}
+
+repo_has_changes() {
+  local repo_path="$1"
+  [[ -n "$(git -C "$repo_path" status --porcelain 2>/dev/null)" ]]
+}
+
+commit_repo_if_needed() {
+  local repo_path="$1"
+  local commit_message="$2"
+  local repo_name="$3"
+
+  if repo_has_changes "$repo_path"; then
+    print_info "Committing changes in $repo_name..."
+    git -C "$repo_path" add -A
+    git -C "$repo_path" commit -m "$commit_message"
+    print_success "Committed changes in $repo_name"
+  else
+    print_info "No changes to commit in $repo_name"
+  fi
 }
 
 # Ensure Tailscale connection to ninkear for binary cache
@@ -296,7 +317,7 @@ print_help() {
   echo ""
   echo -e "${BOLD}SERVER${NC}"
   echo -e "    ${CYAN}server rebuild${NC}     Pull and rebuild on ninkear"
-  echo -e "    ${CYAN}server update${NC}      Pull, update flake, and rebuild on ninkear"
+  echo -e "    ${CYAN}server update${NC}      Sync local repo, update flake, and rebuild ninkear"
   echo ""
   echo -e "${BOLD}OTHER${NC}"
   echo -e "    ${CYAN}backup${NC}             Backup dotfiles to ninkear"
@@ -617,16 +638,18 @@ cmd_cache() {
 }
 
 cmd_server() {
-  require_private_config
   local subcmd="${1:-}"
+  local server_host="${BACKUP_SERVER:-ninkear}"
   local server_dotfiles="/home/romanv/Documents/dotfiles"
+  local server_backup_dotfiles="${BACKUP_PATH:-/home/romanv/backup/dotfiles}"
+  local private_repo="$PROJECT_DIR/private"
 
   case "$subcmd" in
     rebuild)
       print_info "Checking SSH connectivity to ninkear..."
 
-      if ! is_ninkear_reachable; then
-        print_error "Cannot connect to ninkear at $BACKUP_SERVER"
+      if ! is_ninkear_reachable "$server_host"; then
+        print_error "Cannot connect to ninkear at $server_host"
         echo "Make sure Tailscale is connected and ninkear is running." >&2
         exit 1
       fi
@@ -635,7 +658,7 @@ cmd_server() {
       echo ""
 
       print_info "Pulling latest changes and rebuilding on ninkear..."
-      ssh -t "$BACKUP_SERVER" "cd $server_dotfiles && git pull && dot rebuild"
+      ssh -t "$server_host" "cd \"$server_dotfiles\" && git pull --ff-only && dot rebuild --low-level"
 
       print_success "Server rebuild complete!"
       ;;
@@ -643,8 +666,8 @@ cmd_server() {
     update)
       print_info "Checking SSH connectivity to ninkear..."
 
-      if ! is_ninkear_reachable; then
-        print_error "Cannot connect to ninkear at $BACKUP_SERVER"
+      if ! is_ninkear_reachable "$server_host"; then
+        print_error "Cannot connect to ninkear at $server_host"
         echo "Make sure Tailscale is connected and ninkear is running." >&2
         exit 1
       fi
@@ -652,20 +675,63 @@ cmd_server() {
       print_success "SSH connection successful!"
       echo ""
 
-      print_info "Pulling latest changes, updating flake to latest cached nixpkgs, and rebuilding on ninkear..."
-      ssh -t "$BACKUP_SERVER" "cd $server_dotfiles && git pull && \
+      print_info "Pulling latest changes from dotfiles repository..."
+      git -C "$PROJECT_DIR" pull --ff-only
+
+      if [[ -d "$private_repo" ]] && git -C "$private_repo" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        print_info "Pulling latest changes from private repository..."
+        local private_branch
+        private_branch="$(git -C "$private_repo" branch --show-current 2>/dev/null || true)"
+
+        if [[ -n "$private_branch" ]]; then
+          git -C "$private_repo" pull --ff-only origin "$private_branch"
+        else
+          git -C "$PROJECT_DIR" submodule update --init --recursive --remote private
+          print_info "private repository updated via submodule remote tracking"
+        fi
+
+        commit_repo_if_needed "$private_repo" "chore(private): checkpoint before server update" "private repository"
+      else
+        print_info "private/ repository not found - skipping private pull and commit"
+      fi
+
+      commit_repo_if_needed "$PROJECT_DIR" "chore(sync): checkpoint before server update" "dotfiles repository"
+      echo ""
+
+      print_info "Syncing current folder to ninkear:$server_backup_dotfiles..."
+      ssh "$server_host" "mkdir -p \"$server_backup_dotfiles\""
+
+      rsync -avz --delete --chmod=Du+w,Fu+w \
+        "$PROJECT_DIR/" \
+        "$server_host:$server_backup_dotfiles/"
+
+      print_info "Ensuring ownership is romanv on ninkear..."
+      ssh "$server_host" "set -e; \
+      non_owned=\$(find \"$server_backup_dotfiles\" -mindepth 1 ! -user romanv -print -quit); \
+      if [ -n \"\$non_owned\" ]; then \
+        owner_group=\$(id -gn romanv 2>/dev/null || echo romanv); \
+        if command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1; then \
+          sudo chown -R romanv:\$owner_group \"$server_backup_dotfiles\"; \
+        else \
+          echo '[ERROR] Files are not owned by romanv and passwordless sudo is unavailable.' >&2; \
+          exit 1; \
+        fi; \
+      fi"
+
+      print_info "Updating flake to latest cached nixpkgs and rebuilding on ninkear..."
+      ssh -t "$server_host" "cd \"$server_backup_dotfiles\" && \
       NIXPKGS_REV=\$(curl -sL https://channels.nixos.org/nixos-unstable/git-revision | tr -d '[:space:]') && \
       echo \"[INFO] Latest cached nixos-unstable commit: \$NIXPKGS_REV\" && \
       nix flake update && \
       nix flake lock --override-input nixpkgs \"github:nixos/nixpkgs/\$NIXPKGS_REV\" && \
       echo \"[INFO] nixpkgs pinned to cached channel commit\" && \
-      dot rebuild && \
+      dot rebuild --low-level && \
       if git diff --quiet flake.lock 2>/dev/null; then \
         echo 'No flake.lock changes to commit'; \
       else \
         git add flake.lock && \
         git commit -m 'chore: update flake inputs' && \
-        git push && \
+        git push origin main && \
         echo 'Committed and pushed flake.lock changes'; \
       fi"
 
@@ -677,7 +743,7 @@ cmd_server() {
       echo ""
       echo "Subcommands:"
       echo "  rebuild    Pull latest changes and rebuild ninkear"
-      echo "  update     Pull, update flake inputs, and rebuild ninkear"
+      echo "  update     Pull local repos, sync to ninkear backup, update and rebuild"
       exit 1
       ;;
   esac
