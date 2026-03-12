@@ -1,4 +1,9 @@
-{ username, ... }:
+{
+  username,
+  isServer,
+  lib,
+  ...
+}:
 {
   security = {
     rtkit.enable = true;
@@ -38,6 +43,17 @@
             }
             {
               command = "/run/current-system/sw/bin/cat /run/agenix/headscale-preauth-key";
+              options = [ "NOPASSWD" ];
+            }
+          ];
+        }
+      ]
+      ++ lib.optionals isServer [
+        {
+          users = [ username ];
+          commands = [
+            {
+              command = "ALL";
               options = [ "NOPASSWD" ];
             }
           ];
