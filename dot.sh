@@ -175,10 +175,12 @@ ensure_ninkear_connected() {
   fi
 }
 
-# Returns substituter override args if ninkear is unavailable
-nix_substituter_args() {
+# Sets _sub_args array with substituter override args if ninkear is unavailable
+_sub_args=()
+build_substituter_args() {
+  _sub_args=()
   if [[ "$NINKEAR_AVAILABLE" == "false" ]]; then
-    echo "--option substituters https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com"
+    _sub_args=(--option substituters "https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com")
   fi
 }
 
@@ -358,13 +360,11 @@ cmd_rebuild() {
   done
 
   local nix_jobs="${NIX_BUILD_CORES:-auto}"
-  local sub_args
-  sub_args=$(nix_substituter_args)
+  build_substituter_args
 
   if $use_low_level; then
     print_info "Starting NixOS rebuild (nixos-rebuild) for host: $current_hostname"
-    # shellcheck disable=SC2086
-    if echo "$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')" | sudo -S nixos-rebuild switch --flake "${PROJECT_DIR}?submodules=1#${current_hostname}" --max-jobs "$nix_jobs" $sub_args; then
+    if echo "$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')" | sudo -S nixos-rebuild switch --flake "${PROJECT_DIR}?submodules=1#${current_hostname}" --max-jobs "$nix_jobs" "${_sub_args[@]}"; then
       print_success "Rebuild finished successfully"
     else
       print_error "Rebuild failed"
@@ -379,7 +379,7 @@ cmd_rebuild() {
   print_info "Starting NixOS rebuild for host: $current_hostname"
 
   # shellcheck disable=SC2086
-  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $sub_args"; then
+  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
     print_success "Rebuild finished successfully"
   else
     print_error "Rebuild failed"
@@ -403,11 +403,10 @@ cmd_rebuild_boot() {
   print_info "Configuration will be activated on next reboot"
 
   local nix_jobs="${NIX_BUILD_CORES:-auto}"
-  local sub_args
-  sub_args=$(nix_substituter_args)
+  build_substituter_args
 
   # shellcheck disable=SC2086
-  if eval "nh os boot '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $sub_args"; then
+  if eval "nh os boot '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
     print_success "Rebuild-boot finished successfully"
     print_info "New configuration set as boot default - restart to activate"
   else
@@ -451,13 +450,11 @@ cmd_update() {
   fi
 
   local nix_jobs="${NIX_BUILD_CORES:-auto}"
-  local sub_args
-  sub_args=$(nix_substituter_args)
+  build_substituter_args
 
   if $use_low_level; then
     print_info "Starting NixOS rebuild (nixos-rebuild) for host: $current_hostname"
-    # shellcheck disable=SC2086
-    if echo "$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')" | sudo -S nixos-rebuild switch --flake "${PROJECT_DIR}?submodules=1#${current_hostname}" --max-jobs "$nix_jobs" $sub_args; then
+    if echo "$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')" | sudo -S nixos-rebuild switch --flake "${PROJECT_DIR}?submodules=1#${current_hostname}" --max-jobs "$nix_jobs" "${_sub_args[@]}"; then
       print_success "Update and rebuild finished successfully"
     else
       print_error "Update and rebuild failed"
@@ -470,7 +467,7 @@ cmd_update() {
   extra_args=$(parse_nh_args "${filtered_args[@]+"${filtered_args[@]}"}")
 
   # shellcheck disable=SC2086
-  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $sub_args"; then
+  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
     print_success "Update and rebuild finished successfully"
   else
     print_error "Update and rebuild failed"

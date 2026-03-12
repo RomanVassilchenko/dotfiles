@@ -26,8 +26,7 @@
     pam.services.swaylock = {
       text = "auth include login ";
     };
-    sudo.enable = false;
-    sudo-rs = {
+    sudo = {
       enable = true;
       extraRules = [
         {
