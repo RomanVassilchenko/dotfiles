@@ -136,42 +136,17 @@ commit_repo_if_needed() {
   fi
 }
 
-# Ensure Tailscale connection to ninkear for binary cache
+# Check if ninkear binary cache is reachable
 NINKEAR_AVAILABLE=false
 
 ensure_ninkear_connected() {
-  print_info "Checking ninkear P2P connection for binary cache..."
+  print_info "Checking ninkear binary cache reachability..."
 
-  if tailscale status --json 2>/dev/null | jq -e '.BackendState == "Running"' >/dev/null 2>&1; then
-    print_success "Ninkear P2P already connected"
-    NINKEAR_AVAILABLE=true
-    return
-  fi
-
-  print_info "Tailscale not connected. Connecting to ninkear P2P..."
-
-  # Start cloudflared tunnel only if not already running
-  if ! ss -tlnp 2>/dev/null | grep -q ':18085'; then
-    cloudflared access tcp \
-      --hostname "$HEADSCALE_HOST" \
-      --url 127.0.0.1:18085 &
-    CLOUDFLARED_PID=$!
-    sleep 2
-  fi
-
-  local tailscale_bin
-  tailscale_bin=$(command -v tailscale 2>/dev/null) || true
-  if [[ -z "$tailscale_bin" ]]; then
-    print_warn "tailscale binary not found - skipping P2P connect"
-    [[ -n "${CLOUDFLARED_PID:-}" ]] && kill $CLOUDFLARED_PID 2>/dev/null || true
-    return
-  fi
-  if sudo "$tailscale_bin" up --login-server http://127.0.0.1:18085 --accept-routes --accept-dns=false; then
-    print_success "Connected to ninkear P2P"
+  if ping -c 1 -W 2 100.64.0.1 >/dev/null 2>&1; then
+    print_success "Ninkear reachable - binary cache will be used"
     NINKEAR_AVAILABLE=true
   else
-    print_warn "Failed to connect to ninkear P2P - build may be slower without binary cache"
-    [[ -n "${CLOUDFLARED_PID:-}" ]] && kill $CLOUDFLARED_PID 2>/dev/null || true
+    print_warn "Ninkear not reachable - building without binary cache"
   fi
 }
 
