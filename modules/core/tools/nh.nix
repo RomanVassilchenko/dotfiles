@@ -1,6 +1,6 @@
 {
   pkgs,
-  username,
+  vars,
   ...
 }:
 {
@@ -10,7 +10,7 @@
       enable = true;
       extraArgs = "--keep-since 7d --keep 5";
     };
-    flake = "/home/${username}/Documents/dotfiles";
+    flake = vars.dotfilesPath;
   };
 
   environment.systemPackages = with pkgs; [
