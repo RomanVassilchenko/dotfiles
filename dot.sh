@@ -342,13 +342,49 @@ cmd_rebuild() {
   local nix_jobs="${NIX_BUILD_CORES:-auto}"
   build_substituter_args
 
+  local flake_ref="${PROJECT_DIR}?submodules=1"
+  if [[ -z "$(git -C "$PROJECT_DIR" status --porcelain 2>/dev/null)" ]]; then
+    local repo_rev
+    repo_rev=$(git -C "$PROJECT_DIR" rev-parse HEAD 2>/dev/null || true)
+    if [[ -n "$repo_rev" ]]; then
+      flake_ref="git+file://${PROJECT_DIR}?submodules=1&rev=${repo_rev}"
+    fi
+  fi
+
   if $use_low_level; then
-    print_info "Starting NixOS rebuild (nixos-rebuild) for host: $current_hostname"
-    if echo "$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')" | sudo -S nixos-rebuild switch --flake "${PROJECT_DIR}?submodules=1#${current_hostname}" --max-jobs "$nix_jobs" "${_sub_args[@]}"; then
-      print_success "Rebuild finished successfully"
-    else
-      print_error "Rebuild failed"
+    print_info "Building target system closure for host: $current_hostname"
+
+    local built_system
+    if ! built_system=$(nix build "${flake_ref}#nixosConfigurations.${current_hostname}.config.system.build.toplevel" --no-link --print-out-paths --max-jobs "$nix_jobs" "${_sub_args[@]}"); then
+      print_error "Rebuild failed during build phase"
       exit 1
+    fi
+
+    local current_system
+    current_system=$(readlink -f /run/current-system 2>/dev/null || true)
+    if [[ -n "$current_system" && "$built_system" == "$current_system" ]]; then
+      print_success "No system changes detected - skipping activation"
+      return
+    fi
+
+    print_info "Activating prebuilt closure via store path"
+    local sudo_pass
+    sudo_pass=$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')
+
+    if [[ -n "$sudo_pass" ]]; then
+      if echo "$sudo_pass" | sudo -S nixos-rebuild switch --store-path "$built_system"; then
+        print_success "Rebuild finished successfully"
+      else
+        print_error "Rebuild failed during activation phase"
+        exit 1
+      fi
+    else
+      if sudo nixos-rebuild switch --store-path "$built_system"; then
+        print_success "Rebuild finished successfully"
+      else
+        print_error "Rebuild failed during activation phase"
+        exit 1
+      fi
     fi
     return
   fi
@@ -359,7 +395,7 @@ cmd_rebuild() {
   print_info "Starting NixOS rebuild for host: $current_hostname"
 
   # shellcheck disable=SC2086
-  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(sub_args_for_eval)"; then
+  if eval "nh os switch '$flake_ref' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(sub_args_for_eval)"; then
     print_success "Rebuild finished successfully"
   else
     print_error "Rebuild failed"
