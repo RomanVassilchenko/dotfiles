@@ -3,7 +3,7 @@
   programs.starship = {
     enable = true;
     settings = {
-      format = "[╭─](fg:overlay0)$os$directory$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs[─╮](fg:overlay0)\n[╰─](fg:overlay0)$character";
+      format = "[](fg:mauve)$os$directory$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs\n$character";
       add_newline = false;
       palette = lib.mkForce "catppuccin_mocha";
 
@@ -38,70 +38,65 @@
 
       os = {
         disabled = false;
-        format = "[](fg:mauve)[ $symbol ](bg:mauve fg:crust bold)[](fg:mauve bg:blue)";
+        format = "[ $symbol ](bg:mauve fg:crust bold)";
         symbols = {
-          NixOS = "";
-          Linux = "";
+          NixOS = " ";
+          Linux = " ";
         };
       };
 
       directory = {
-        format = "[ $path$read_only ](bg:blue fg:crust bold)";
+        format = "[](fg:mauve bg:blue)[ $path$read_only ](bg:blue fg:crust bold)";
         truncation_length = 3;
         truncate_to_repo = false;
         read_only = "  ";
         read_only_style = "bg:blue fg:red";
       };
 
-      # git_branch: opens with dir→surface0 transition, no closing (git_status closes)
       git_branch = {
-        format = "[](fg:blue bg:surface0)[ $symbol$branch(:$remote_branch) ](bg:surface0 fg:text)";
+        format = "[](fg:blue bg:yellow)[ $symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
         symbol = " ";
       };
 
-      # git_state: rebase/merge/etc progress
-      git_state = {
-        format = "[ $state( $progress_current/$progress_total) ](bg:surface0 fg:peach bold)";
-      };
+      git_state.format = "[ $state( $progress_current/$progress_total) ](bg:yellow fg:crust bold)";
 
-      # git_status: always provides the surface0 closing arrow (even when clean, renders a space + arrow)
       git_status = {
-        format = "[$all_status$ahead_behind](bg:surface0 fg:text)[](fg:surface0)";
-        style = "bg:surface0";
-        conflicted = "[✗](fg:red)";
-        ahead = "[⇡\${count}](fg:green)";
-        behind = "[⇣\${count}](fg:yellow)";
-        diverged = "[⇡\${ahead_count}⇣\${behind_count}](fg:peach)";
-        untracked = "[ ?](fg:peach)";
-        stashed = "[ $](fg:text)";
-        modified = "[ !](fg:yellow)";
-        staged = "[ +](fg:green)";
-        renamed = "[ »](fg:blue)";
-        deleted = "[ -](fg:red)";
+        format = "[$all_status$ahead_behind ](bg:yellow fg:crust)[](fg:yellow)";
+        style = "bg:yellow";
+        conflicted = "[✗](fg:red bold)";
+        ahead = "[⇡\${count}](fg:crust bold)";
+        behind = "[⇣\${count}](fg:crust bold)";
+        diverged = "[⇡\${ahead_count}⇣\${behind_count}](fg:red bold)";
+        untracked = "[?](fg:overlay0)";
+        stashed = "[$](fg:crust)";
+        modified = "[!](fg:overlay0)";
+        staged = "[+](fg:crust bold)";
+        renamed = "[»](fg:crust)";
+        deleted = "[-](fg:red)";
       };
 
       golang = {
-        format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+        format = "[](fg:green)[ $symbol($version) ](bg:green fg:crust)[](fg:green)";
         symbol = " ";
       };
 
       nix_shell = {
-        format = "[](fg:blue)[ $symbol$name ](bg:blue fg:crust)[](fg:blue)";
+        format = "[](fg:teal)[ $symbol$name ](bg:teal fg:crust)[](fg:teal)";
         symbol = " ";
-        impure_msg = "[impure](bold fg:red)";
-        pure_msg = "[pure](bold fg:green)";
+        impure_msg = "impure";
+        pure_msg = "pure";
       };
 
       hostname = {
         ssh_only = true;
-        format = "[ @$hostname ](fg:mauve bold)";
+        format = "[](fg:mauve)[ @$hostname ](bg:mauve fg:crust bold)[](fg:mauve)";
       };
 
       fill.symbol = " ";
 
       status = {
         disabled = false;
-        format = "[](fg:surface0)[ $symbol ]($style)[](fg:surface0)";
+        format = "[](fg:surface0)[ $symbol ]($style)[](fg:surface0)";
         style = "bg:surface0 fg:red";
         success_style = "bg:surface0 fg:green";
         success_symbol = "✔";
@@ -113,13 +108,13 @@
       };
 
       cmd_duration = {
-        format = "[](fg:yellow)[ $duration ](bg:yellow fg:crust)[](fg:yellow)";
+        format = "[](fg:yellow)[ $duration ](bg:yellow fg:crust)[](fg:yellow)";
         min_time = 3000;
         show_milliseconds = false;
       };
 
       jobs = {
-        format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
+        format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
         symbol = "⚙ ";
       };
 
@@ -133,7 +128,6 @@
         vimcmd_visual_symbol = "[❮](bold fg:yellow)";
       };
 
-      # Disable unused cloud/infra modules for faster prompt
       aws.disabled = true;
       gcloud.disabled = true;
       azure.disabled = true;
