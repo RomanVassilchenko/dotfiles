@@ -184,6 +184,11 @@ build_substituter_args() {
   fi
 }
 
+# Returns properly quoted substituter args for use in eval, or empty string
+sub_args_for_eval() {
+  [[ "${#_sub_args[@]}" -gt 0 ]] && printf '%q ' "${_sub_args[@]}" || true
+}
+
 # Verify host configuration exists
 verify_hostname() {
   local current_hostname
@@ -379,7 +384,7 @@ cmd_rebuild() {
   print_info "Starting NixOS rebuild for host: $current_hostname"
 
   # shellcheck disable=SC2086
-  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
+  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(sub_args_for_eval)"; then
     print_success "Rebuild finished successfully"
   else
     print_error "Rebuild failed"
@@ -406,7 +411,7 @@ cmd_rebuild_boot() {
   build_substituter_args
 
   # shellcheck disable=SC2086
-  if eval "nh os boot '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
+  if eval "nh os boot '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(sub_args_for_eval)"; then
     print_success "Rebuild-boot finished successfully"
     print_info "New configuration set as boot default - restart to activate"
   else
@@ -467,7 +472,7 @@ cmd_update() {
   extra_args=$(parse_nh_args "${filtered_args[@]+"${filtered_args[@]}"}")
 
   # shellcheck disable=SC2086
-  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(printf '%q ' "${_sub_args[@]}")"; then
+  if eval "nh os switch '${PROJECT_DIR}?submodules=1' --hostname '$current_hostname' $extra_args -- --max-jobs $nix_jobs $(sub_args_for_eval)"; then
     print_success "Update and rebuild finished successfully"
   else
     print_error "Update and rebuild failed"
