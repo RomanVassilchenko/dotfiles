@@ -17,10 +17,9 @@
     git-branchless
     jq
     just
-    nixfmt
+    nixfmt-rfc-style
     ripgrep
     shfmt
-    tree
     unrar
     unzip
     xdg-ninja

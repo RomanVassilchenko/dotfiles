@@ -47,6 +47,7 @@
       ];
       kwin."Switch to Next Desktop" = "Meta+PgDown";
       kwin."Switch to Previous Desktop" = "Meta+PgUp";
+      kwin."Toggle Tiling" = [ ];
       kwin."Window Close" = "Meta+Q";
       kwin."Window Fullscreen" = "Meta+M";
       kwin."Window Move Center" = "Ctrl+Alt+C";
@@ -68,7 +69,7 @@
       "services/com.obsproject.Studio.desktop"._launch = "Meta+Shift+R";
       "services/com.rtosta.zapzap.desktop"._launch = "Meta+Shift+W";
       "services/dev.zed.Zed.desktop"._launch = "Meta+Shift+Z";
-      "services/discord.desktop"._launch = "Meta+Shift+D";
+      "services/vesktop.desktop"._launch = "Meta+Shift+D";
       "services/org.kde.dolphin.desktop"._launch = "Meta+Shift+F";
       "services/goland.desktop"._launch = "Meta+Shift+G";
       "services/obsidian.desktop"._launch = "Meta+Shift+O";
@@ -227,7 +228,7 @@
       kwinrulesrc."4".desktops = "Desktop_3";
       kwinrulesrc."4".desktopsrule = 3;
       kwinrulesrc."4".types = 1;
-      kwinrulesrc."4".wmclass = "org.telegram.desktop|com.rtosta.zapzap|discord|zoom.*|obsidian";
+      kwinrulesrc."4".wmclass = "org.telegram.desktop|com.rtosta.zapzap|vesktop|zoom.*|obsidian";
       kwinrulesrc."4".wmclasscomplete = false;
       kwinrulesrc."4".wmclassmatch = 3;
 

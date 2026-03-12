@@ -15,7 +15,6 @@
       lsof
       openssh
       openssl
-      wget
       xh # Modern httpie alternative (Rust)
     ]
     ++ lib.optionals (!isServer) [

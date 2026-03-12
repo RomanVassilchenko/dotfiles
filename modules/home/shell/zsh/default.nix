@@ -93,10 +93,6 @@ in
       path = "${config.xdg.stateHome}/zsh/history";
     };
 
-    oh-my-zsh = {
-      enable = true;
-    };
-
     plugins = [
       {
         name = "powerlevel10k";
