@@ -11,6 +11,7 @@
     ./glow.nix
     ./lazygit.nix
     ./nix-index.nix
+    ./starship.nix
     ./zoxide.nix
   ];
 }
