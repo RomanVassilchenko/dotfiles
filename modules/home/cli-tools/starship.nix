@@ -3,7 +3,7 @@
   programs.starship = {
     enable = true;
     settings = {
-      format = "[](fg:mauve)$os$directory$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs\n$character";
+      format = "[](fg:mauve)$os$directory$custom.dir_close$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs\n$character";
       add_newline = false;
       palette = lib.mkForce "catppuccin_mocha";
 
@@ -38,7 +38,6 @@
 
       os = {
         disabled = false;
-        # symbol hardcoded in format to ensure the glyph survives nix serialization
         format = "[  ](bg:mauve fg:crust bold)";
         symbols = {
           NixOS = "";
@@ -54,6 +53,19 @@
         read_only_style = "bg:blue fg:red";
       };
 
+      # Rounded close cap on directory — only shown when NOT in a git repo.
+      # When in git, git_branch provides the blue→yellow transition instead.
+      "custom.dir_close" = {
+        command = "echo -n ''";
+        when = "! git rev-parse --git-dir > /dev/null 2>&1";
+        format = "[](fg:blue)";
+        shell = [
+          "bash"
+          "--norc"
+          "--noprofile"
+        ];
+      };
+
       git_branch = {
         format = "[](fg:blue bg:yellow)[ $symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
         symbol = " ";
@@ -61,7 +73,6 @@
 
       git_state.format = "[ $state( $progress_current/$progress_total) ](bg:yellow fg:crust bold)";
 
-      # bg:yellow is repeated in each status var to prevent background reset
       git_status = {
         format = "[$all_status$ahead_behind ](bg:yellow fg:crust)[](fg:yellow)";
         style = "bg:yellow fg:crust";
@@ -96,16 +107,18 @@
 
       fill.symbol = " ";
 
+      # Show nothing on success (empty symbol = module hidden).
+      # Show ✗ in bold red on error — no background, clean look.
       status = {
         disabled = false;
-        format = "[](fg:surface0)[ $symbol ]($style)[](fg:surface0)";
-        style = "bg:surface0 fg:red";
-        success_style = "bg:surface0 fg:green";
-        success_symbol = "✔";
-        symbol = "✘";
-        not_executable_symbol = "⊘";
-        not_found_symbol = "?";
-        signal_symbol = "⚡";
+        format = "[$symbol]($style)";
+        style = "bold fg:red";
+        success_style = "bold fg:green";
+        success_symbol = "";
+        symbol = " ✗";
+        not_executable_symbol = " ⊘";
+        not_found_symbol = " ?";
+        signal_symbol = " ⚡";
         map_symbol = true;
       };
 
