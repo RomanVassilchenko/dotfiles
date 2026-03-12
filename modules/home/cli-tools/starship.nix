@@ -38,10 +38,11 @@
 
       os = {
         disabled = false;
-        format = "[ $symbol ](bg:mauve fg:crust bold)";
+        # symbol hardcoded in format to ensure the glyph survives nix serialization
+        format = "[  ](bg:mauve fg:crust bold)";
         symbols = {
-          NixOS = " ";
-          Linux = " ";
+          NixOS = "";
+          Linux = "";
         };
       };
 
@@ -60,19 +61,20 @@
 
       git_state.format = "[ $state( $progress_current/$progress_total) ](bg:yellow fg:crust bold)";
 
+      # bg:yellow is repeated in each status var to prevent background reset
       git_status = {
         format = "[$all_status$ahead_behind ](bg:yellow fg:crust)[](fg:yellow)";
-        style = "bg:yellow";
-        conflicted = "[✗](fg:red bold)";
-        ahead = "[⇡\${count}](fg:crust bold)";
-        behind = "[⇣\${count}](fg:crust bold)";
-        diverged = "[⇡\${ahead_count}⇣\${behind_count}](fg:red bold)";
-        untracked = "[?](fg:overlay0)";
-        stashed = "[$](fg:crust)";
-        modified = "[!](fg:overlay0)";
-        staged = "[+](fg:crust bold)";
-        renamed = "[»](fg:crust)";
-        deleted = "[-](fg:red)";
+        style = "bg:yellow fg:crust";
+        conflicted = "[✗](bg:yellow fg:red bold)";
+        ahead = "[⇡\${count}](bg:yellow fg:crust bold)";
+        behind = "[⇣\${count}](bg:yellow fg:crust bold)";
+        diverged = "[⇡\${ahead_count}⇣\${behind_count}](bg:yellow fg:red bold)";
+        untracked = "[?](bg:yellow fg:overlay0)";
+        stashed = "[$](bg:yellow fg:crust)";
+        modified = "[!](bg:yellow fg:overlay0)";
+        staged = "[+](bg:yellow fg:crust bold)";
+        renamed = "[»](bg:yellow fg:crust)";
+        deleted = "[-](bg:yellow fg:red)";
       };
 
       golang = {
@@ -112,7 +114,6 @@
         min_time = 3000;
         show_milliseconds = false;
       };
-
       jobs = {
         format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
         symbol = "⚙ ";
