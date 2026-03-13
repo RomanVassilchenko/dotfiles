@@ -5,7 +5,7 @@ in
 {
   programs.starship.enable = true;
   programs.starship.settings = {
-    format = "[](fg:mauve)$os$directory$custom.dir_close$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs\n$character";
+    format = "[](fg:mauve)$os$directory$custom$git_branch$git_state$git_status$golang$nix_shell$hostname$fill$status$cmd_duration$jobs\n$character";
     add_newline = false;
     palette = lib.mkForce "stylix";
 
