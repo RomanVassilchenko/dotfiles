@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  isServer,
+  ...
+}:
 
 {
   boot = {
@@ -91,12 +96,12 @@
       cleanOnBoot = true;
     };
 
-    loader.systemd-boot.enable = lib.mkForce false;
+    loader.systemd-boot.enable = if isServer then true else lib.mkForce false;
     loader.efi.canTouchEfiVariables = true;
     loader.timeout = 1;
 
     lanzaboote = {
-      enable = true;
+      enable = !isServer;
       pkiBundle = "/var/lib/sbctl";
     };
   };
