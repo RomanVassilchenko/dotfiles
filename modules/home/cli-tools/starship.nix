@@ -25,7 +25,7 @@ in
 
     os = {
       disabled = false;
-      format = "[  ](bg:mauve fg:crust bold)";
+      format = "[ $symbol ](bg:mauve fg:crust bold)";
       symbols = {
         NixOS = "";
         Linux = "";
