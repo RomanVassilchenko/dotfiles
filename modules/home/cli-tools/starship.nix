@@ -52,7 +52,7 @@ in
     };
 
     git_branch = {
-      format = "[](fg:blue bg:yellow)[ $symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
+      format = "[](fg:blue bg:yellow)[$symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
       symbol = " ";
     };
 
