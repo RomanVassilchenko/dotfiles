@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   boot = {
@@ -91,9 +91,14 @@
       cleanOnBoot = true;
     };
 
-    loader.systemd-boot.enable = true;
+    loader.systemd-boot.enable = lib.mkForce false;
     loader.efi.canTouchEfiVariables = true;
     loader.timeout = 1;
+
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
 
   services.devmon.enable = true;

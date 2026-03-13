@@ -20,6 +20,10 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     stylix = {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -89,6 +93,7 @@
             gpuConfig.${gpuProfile}
             inputs.stylix.nixosModules.stylix
             inputs.nix-flatpak.nixosModules.nix-flatpak
+            inputs.lanzaboote.nixosModules.lanzaboote
           ]
           ++ lib.optional (builtins.pathExists ./private/default.nix) ./private;
         };

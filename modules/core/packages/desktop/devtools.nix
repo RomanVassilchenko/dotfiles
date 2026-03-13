@@ -9,6 +9,7 @@ let
 in
 {
   environment.systemPackages = [
+    pkgs.bruno
     pkgs.dbeaver-bin
     pkgs.freerdp
     pkgs.jetbrains.datagrip

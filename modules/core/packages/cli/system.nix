@@ -22,6 +22,7 @@ in
       inxi
       lm_sensors
       pciutils
+      sbctl
       trash-cli
       usbutils
     ]

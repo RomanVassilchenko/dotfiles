@@ -371,15 +371,16 @@ cmd_rebuild() {
     local sudo_pass
     sudo_pass=$(grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"')
 
+    local activate_cmd="nix-env --profile /nix/var/nix/profiles/system --set '$built_system' && '$built_system/bin/switch-to-configuration' switch"
     if [[ -n "$sudo_pass" ]]; then
-      if echo "$sudo_pass" | sudo -S nixos-rebuild switch --store-path "$built_system"; then
+      if echo "$sudo_pass" | sudo -S bash -c "$activate_cmd"; then
         print_success "Rebuild finished successfully"
       else
         print_error "Rebuild failed during activation phase"
         exit 1
       fi
     else
-      if sudo nixos-rebuild switch --store-path "$built_system"; then
+      if sudo bash -c "$activate_cmd"; then
         print_success "Rebuild finished successfully"
       else
         print_error "Rebuild failed during activation phase"
