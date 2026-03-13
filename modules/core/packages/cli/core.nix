@@ -17,7 +17,7 @@
     git-branchless
     jq
     just
-    nixfmt-rfc-style
+    nixfmt
     ripgrep
     shfmt
     unrar

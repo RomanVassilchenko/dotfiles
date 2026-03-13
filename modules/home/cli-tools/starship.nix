@@ -40,7 +40,7 @@ in
       read_only_style = "bg:blue fg:red";
     };
 
-    "custom.dir_close" = {
+    custom.dir_close = {
       command = "echo -n ''";
       when = "! git rev-parse --git-dir > /dev/null 2>&1";
       format = "[](fg:blue)";
