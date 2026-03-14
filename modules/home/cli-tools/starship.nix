@@ -18,7 +18,7 @@ in
 {
   programs.starship.enable = true;
   programs.starship.settings = {
-    format = "[](fg:mauve)$os$directory$custom$git_branch$git_state$git_status$golang$nix_shell$buf$c$python$rust$nodejs$lua$nim$swift$zig$ocaml$haskell$java$julia$elixir$elm$scala$docker_context$package$fill$status$cmd_duration$jobs$hostname\n$character";
+    format = "[](fg:mauve)$os$directory$custom$git_branch$git_state$git_status$golang$nix_shell$buf$c$python$rust$nodejs$lua$nim$swift$zig$ocaml$haskell$java$julia$elixir$elm$scala$docker_context$package$fill$status$cmd_duration$jobs$hostname\n$character";
     add_newline = false;
     palette = lib.mkForce "stylix";
 
@@ -40,13 +40,13 @@ in
       disabled = false;
       format = "[ $symbol ](bg:mauve fg:crust bold)";
       symbols = {
-        NixOS = "";
-        Linux = "";
+        NixOS = "";
+        Linux = "";
       };
     };
 
     directory = {
-      format = "[](fg:mauve bg:blue)[ $path$read_only ](bg:blue fg:crust bold)";
+      format = "[](fg:mauve bg:blue)[ $path$read_only ](bg:blue fg:crust bold)";
       truncation_length = 3;
       truncate_to_repo = false;
       read_only = " 󰌾";
@@ -64,7 +64,7 @@ in
     custom.dir_close = {
       command = "echo -n ''";
       when = "! git rev-parse --git-dir > /dev/null 2>&1";
-      format = "[](fg:blue)";
+      format = "[](fg:blue)";
       shell = [
         "bash"
         "--norc"
@@ -73,14 +73,14 @@ in
     };
 
     git_branch = {
-      format = "[](fg:blue bg:yellow)[$symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
+      format = "[](fg:blue bg:yellow)[$symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
       symbol = " ";
     };
 
     git_state.format = "[ $state( $progress_current/$progress_total) ](bg:yellow fg:crust bold)";
 
     git_status = {
-      format = "[$all_status$ahead_behind ](bg:yellow fg:crust)[](fg:yellow)";
+      format = "[$all_status$ahead_behind ](bg:yellow fg:crust)[](fg:yellow)";
       style = "bg:yellow fg:crust";
       conflicted = "[✗](bg:yellow fg:red bold)";
       ahead = "[⇡\${count}](bg:yellow fg:crust bold)";
@@ -95,12 +95,12 @@ in
     };
 
     golang = {
-      format = "[](fg:green)[ $symbol($version) ](bg:green fg:crust)[](fg:green)";
+      format = "[](fg:green)[ $symbol($version) ](bg:green fg:crust)[](fg:green)";
       symbol = " ";
     };
 
     nix_shell = {
-      format = "[](fg:teal)[ $symbol$name ](bg:teal fg:crust)[](fg:teal)";
+      format = "[](fg:teal)[ $symbol$name ](bg:teal fg:crust)[](fg:teal)";
       symbol = " ";
       impure_msg = "impure";
       pure_msg = "pure";
@@ -108,98 +108,98 @@ in
 
     # Language modules — all use blue for consistency
     buf = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     c = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     python = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     rust = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     nodejs = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     lua = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     nim = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = "󰆥 ";
     };
 
     swift = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     zig = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     ocaml = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     haskell = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     java = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     julia = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     elixir = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     elm = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     scala = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     docker_context = {
-      format = "[](fg:blue)[ $symbol$context ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol$context ](bg:blue fg:crust)[](fg:blue)";
       symbol = " ";
     };
 
     package = {
-      format = "[](fg:blue)[ $symbol$version ](bg:blue fg:crust)[](fg:blue)";
+      format = "[](fg:blue)[ $symbol$version ](bg:blue fg:crust)[](fg:blue)";
       symbol = "󰏗 ";
     };
 
     hostname = {
       ssh_only = true;
-      format = "[](fg:mauve)[ @$hostname ](bg:mauve fg:crust bold)[](fg:mauve)";
+      format = "[](fg:mauve)[ @$hostname ](bg:mauve fg:crust bold)[](fg:mauve)";
     };
 
     fill.symbol = " ";
@@ -218,13 +218,13 @@ in
     };
 
     cmd_duration = {
-      format = "[](fg:yellow)[ $duration ](bg:yellow fg:crust)[](fg:yellow)";
+      format = "[](fg:yellow)[ $duration ](bg:yellow fg:crust)[](fg:yellow)";
       min_time = 3000;
       show_milliseconds = false;
     };
 
     jobs = {
-      format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
+      format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
       symbol = "⚙ ";
     };
 
