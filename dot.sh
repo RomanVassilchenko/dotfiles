@@ -117,9 +117,13 @@ do_rebuild() {
   handle_backups
   ensure_ninkear_connected
   build_substituter_args
+  local flake_ref="${PROJECT_DIR}#${hostname}"
+  if git -C "$PROJECT_DIR" submodule status private 2>/dev/null | grep -qv "^-"; then
+    flake_ref="${PROJECT_DIR}?submodules=1#${hostname}"
+  fi
   print_info "nixos-rebuild $action → $hostname"
   run_sudo nixos-rebuild "$action" \
-    --flake "${PROJECT_DIR}?submodules=1#${hostname}" \
+    --flake "$flake_ref" \
     "${_sub_args[@]}" "$@"
 }
 
