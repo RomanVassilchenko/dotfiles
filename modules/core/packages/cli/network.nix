@@ -8,6 +8,7 @@
 {
   environment.systemPackages =
     (with pkgs-stable; [
+      # lazyssh # SSH manager TUI
       bind # provides nslookup, dig, host
       curl
       lsof

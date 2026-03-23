@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./containers.nix
     ./core.nix
     ./fetch.nix
     ./media.nix
