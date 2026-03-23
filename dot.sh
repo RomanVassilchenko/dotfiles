@@ -104,7 +104,7 @@ handle_backups() {
   done < <(find "$HOME" -maxdepth 5 \( -name "*.hm-bak" -o -name "*.backup.[0-9]*" \) \
     -type f -not -path "$HOME/.local/share/Trash/*" -print0 2>/dev/null)
   for f in "${BACKUP_FILES[@]}"; do
-    [[ -f "$HOME/$f" ]] && trash-put "$HOME/$f"
+    if [[ -f "$HOME/$f" ]]; then trash-put "$HOME/$f"; fi
   done
 }
 
