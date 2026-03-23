@@ -1,0 +1,8 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "/home/romanv/.claude/statusline-command.sh"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "model": "opusplan"
+}

@@ -1,0 +1,11 @@
+[
+  {},
+  {
+    "context": "Workspace",
+    "bindings": { "ctrl-b": "workspace::ToggleRightDock" },
+  },
+  {
+    "context": "Workspace",
+    "bindings": { "ctrl-alt-b": "workspace::ToggleLeftDock" },
+  },
+]
