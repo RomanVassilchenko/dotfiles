@@ -2,9 +2,6 @@
   description = "Dotfiles";
 
   inputs = {
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,109 +42,95 @@
   };
 
   outputs =
-    inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      { self, ... }:
-      {
-        systems = [ "x86_64-linux" ];
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
+    let
+      inherit (nixpkgs) lib;
+      username = "romanv";
 
-        imports = [
-          ./modules/wrappedPrograms/noctalia.nix
-        ];
+      mkStable =
+        system:
+        import inputs.nixpkgs-stable {
+          inherit system;
+          config.allowUnfree = true;
+        };
 
-        flake =
-          let
-            inherit (inputs.nixpkgs) lib;
-            username = "romanv";
+      gpuConfig = {
+        intel = {
+          drivers.intel.enable = true;
+        };
+        amd = {
+          drivers.amdgpu.enable = true;
+        };
+      };
 
-            mkStable =
-              system:
-              import inputs.nixpkgs-stable {
-                inherit system;
-                config.allowUnfree = true;
-              };
-
-            gpuConfig = {
-              intel = {
-                drivers.intel.enable = true;
-              };
-              amd = {
-                drivers.amdgpu.enable = true;
-              };
-            };
-
-            mkNixosConfig =
-              {
-                gpuProfile,
-                host,
-                profile,
-              }:
-              let
-                commonDefaults = import ./hosts/default/common.nix;
-                hostVars = import ./hosts/${host}/variables.nix;
-                profileDefaults = import ./hosts/profiles/${profile}.nix;
-                vars = lib.recursiveUpdate (commonDefaults // profileDefaults) hostVars;
-                deviceType = vars.deviceType or (if profile == "server" then "server" else "laptop");
-                isServer = deviceType == "server";
-              in
-              inputs.nixpkgs.lib.nixosSystem {
-                system = "x86_64-linux";
-                specialArgs = {
-                  inherit
-                    inputs
-                    self
-                    username
-                    host
-                    vars
-                    isServer
-                    profile
-                    ;
-                  pkgs-stable = mkStable "x86_64-linux";
-                };
-                modules = [
-                  {
-                    nixpkgs.overlays = [
-                      inputs.llm-agents.overlays.default
-                      (final: prev: {
-                        # Enable MS-RDPECAM camera redirection (V4L2 backend)
-                        freerdp = prev.freerdp.overrideAttrs (old: {
-                          buildInputs = old.buildInputs ++ [ final.linuxHeaders ];
-                          cmakeFlags = old.cmakeFlags ++ [ "-DCHANNEL_RDPECAM_CLIENT:BOOL=ON" ];
-                        });
-                      })
-                    ];
-                  }
-                  ./hosts/${host}
-                  ./modules/drivers
-                  ./modules/core
-                  gpuConfig.${gpuProfile}
-                  inputs.stylix.nixosModules.stylix
-                  inputs.nix-flatpak.nixosModules.nix-flatpak
-                  inputs.lanzaboote.nixosModules.lanzaboote
-                ]
-                ++ lib.optional (builtins.pathExists ./private/default.nix) ./private;
-              };
-
-            nixosConfigurations = {
-              laptop-82sn = mkNixosConfig {
-                gpuProfile = "amd";
-                host = "laptop-82sn";
-                profile = "workstation";
-              };
-              ninkear = mkNixosConfig {
-                gpuProfile = "amd";
-                host = "ninkear";
-                profile = "server";
-              };
-            };
-          in
-          {
-            inherit nixosConfigurations;
-            checks.x86_64-linux = {
-              laptop-82sn = nixosConfigurations.laptop-82sn.config.system.build.toplevel;
-              ninkear = nixosConfigurations.ninkear.config.system.build.toplevel;
-            };
+      mkNixosConfig =
+        {
+          gpuProfile,
+          host,
+          profile,
+        }:
+        let
+          commonDefaults = import ./hosts/default/common.nix;
+          hostVars = import ./hosts/${host}/variables.nix;
+          profileDefaults = import ./hosts/profiles/${profile}.nix;
+          vars = lib.recursiveUpdate (commonDefaults // profileDefaults) hostVars;
+          deviceType = vars.deviceType or (if profile == "server" then "server" else "laptop");
+          isServer = deviceType == "server";
+        in
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit
+              inputs
+              username
+              host
+              vars
+              isServer
+              profile
+              ;
+            pkgs-stable = mkStable "x86_64-linux";
           };
-      }
-    );
+          modules = [
+            {
+              nixpkgs.overlays = [
+                inputs.llm-agents.overlays.default
+                (final: prev: {
+                  # Enable MS-RDPECAM camera redirection (V4L2 backend)
+                  freerdp = prev.freerdp.overrideAttrs (old: {
+                    buildInputs = old.buildInputs ++ [ final.linuxHeaders ];
+                    cmakeFlags = old.cmakeFlags ++ [ "-DCHANNEL_RDPECAM_CLIENT:BOOL=ON" ];
+                  });
+                })
+              ];
+            }
+            ./hosts/${host}
+            ./modules/drivers
+            ./modules/core
+            gpuConfig.${gpuProfile}
+            inputs.stylix.nixosModules.stylix
+            inputs.nix-flatpak.nixosModules.nix-flatpak
+            inputs.lanzaboote.nixosModules.lanzaboote
+          ]
+          ++ lib.optional (builtins.pathExists ./private/default.nix) ./private;
+        };
+    in
+    {
+      nixosConfigurations = {
+        laptop-82sn = mkNixosConfig {
+          gpuProfile = "amd";
+          host = "laptop-82sn";
+          profile = "workstation";
+        };
+        ninkear = mkNixosConfig {
+          gpuProfile = "amd";
+          host = "ninkear";
+          profile = "server";
+        };
+      };
+    };
 }
