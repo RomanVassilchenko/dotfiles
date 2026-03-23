@@ -3,7 +3,7 @@
   environment.systemPackages = with pkgs; [
     delve
     gcc
-    gci
+
     gnumake
     go
     go-minimock
