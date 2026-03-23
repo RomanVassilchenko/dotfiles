@@ -31,6 +31,7 @@
     mime.enable = true;
     userDirs = {
       enable = true;
+      setSessionVariables = true;
       createDirectories = true;
       desktop = "$HOME/Desktop";
       documents = "$HOME/Documents";

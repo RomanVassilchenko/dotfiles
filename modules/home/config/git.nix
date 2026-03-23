@@ -12,6 +12,7 @@ in
 
   programs.git = {
     enable = true;
+    signing.format = null;
     includes = [
       { path = "~/.config/git/secrets"; }
       # GitHub-specific configuration

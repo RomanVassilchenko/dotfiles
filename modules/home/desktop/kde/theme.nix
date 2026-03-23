@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   ...
 }:
 {
@@ -8,6 +9,7 @@
 
   gtk = {
     enable = true;
+    gtk4.theme = config.gtk.theme;
     theme = {
       name = lib.mkForce "catppuccin-mocha-mauve-standard";
       package = lib.mkForce (

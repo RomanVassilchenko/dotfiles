@@ -13,6 +13,8 @@ in
 {
   environment.systemPackages = [
     dotCli
+    pkgs.nix-output-monitor
+    pkgs.nvd
     pkgs-stable.inxi
     pkgs-stable.lm_sensors
     pkgs-stable.pciutils
