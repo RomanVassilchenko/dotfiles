@@ -1,0 +1,352 @@
+/* @import url(diagram-js.css);
+@import url(colors.css);  */
+@import url(codemirror-dracula.css);
+
+:root {
+    /* Catppuccin Mocha Colors */
+    --catppuccin-base: #1e1e2e;
+    --catppuccin-mantle: #181825;
+    --catppuccin-crust: #11111b;
+    --catppuccin-text: #cdd6f4;
+    --catppuccin-subtext0: #a6adc8;
+    --catppuccin-surface0: #313244;
+    --catppuccin-surface1: #45475a;
+    --catppuccin-surface2: #585b70;
+    --catppuccin-overlay0: #6c7086;
+    --catppuccin-blue: #89b4fa;
+    --catppuccin-green: #a6e3a1;
+    --catppuccin-yellow: #f9e2af;
+    --catppuccin-red: #f38ba8;
+    --catppuccin-mauve: #cba6f7;
+    --catppuccin-lavender: #b4befe;
+
+    --color-white: var(--catppuccin-base);
+    --color-black: var(--catppuccin-text);
+    --color-transparent: transparent;
+
+    --color-grey-225-10-15: var(--catppuccin-text);
+    --color-grey-225-10-35: var(--catppuccin-subtext0);
+    --color-grey-225-10-55: var(--catppuccin-surface2);
+    --color-grey-225-10-75: var(--catppuccin-surface1);
+    --color-grey-225-10-80: var(--catppuccin-surface0);
+    --color-grey-225-10-85: var(--catppuccin-base);
+    --color-grey-225-10-90: var(--catppuccin-mantle);
+    --color-grey-225-10-95: var(--catppuccin-mantle);
+    --color-grey-225-10-97: var(--catppuccin-crust);
+
+    --overlay-border-color: var(--color-grey-225-10-85);
+    --overlay-background-color: var(--color-white);
+    --overlay-font-color: var(--color-grey-225-10-15);
+    --overlay-title-color: var(--color-grey-225-10-15);
+    --overlay-link-color: var(--color-blue-205-100-50);
+    --overlay-max-height: auto;
+    --overlay-max-width: auto;
+    --overlay-min-height: auto;
+    --overlay-min-width: auto;
+
+    --log-button-background-color: var(--catppuccin-surface1);
+    --log-color: var(--catppuccin-text);
+
+    --token-simulation-silver-darken-94: var(--catppuccin-surface1);
+    --token-simulation-grey-darken-30: var(--catppuccin-text);
+}
+
+.bts-animation-speed-buttons path{
+  fill: var(--catppuccin-text);
+}
+
+.bts-animation-speed-buttons button{
+  background-color: var(--catppuccin-surface1);
+  color: var(--catppuccin-text);
+}
+
+.bts-notifications .bts-notification{
+  color: var(--catppuccin-text) !important;
+}
+
+.bio-properties-panel-group-header,
+.form-group label {
+    color: var(--catppuccin-mauve);
+}
+
+body, .djs-direct-editing-content,.djs-direct-editing-parent{
+    background-color: var(--catppuccin-base) !important;
+    color: var(--catppuccin-text) !important;
+}
+
+input,
+textarea,
+select{
+    color: var(--catppuccin-text) !important;
+    background-color: var(--catppuccin-surface1);
+}
+
+.bio-properties-panel-input:focus, .bio-properties-panel-input:focus-within{
+    background-color: var(--catppuccin-surface1);
+    color: var(--catppuccin-text);
+}
+
+.welcome-card{
+    background-color: var(--catppuccin-surface1) !important;
+    color: var(--catppuccin-text) !important;
+}
+
+.bio-properties-panel{
+    --color-grey-225-10-15: var(--catppuccin-text);
+    --color-grey-225-10-35: var(--catppuccin-subtext0);
+    --color-grey-225-10-55: var(--catppuccin-surface2);
+    --color-grey-225-10-75: var(--catppuccin-surface1);
+    --color-grey-225-10-80: var(--catppuccin-surface0);
+    --color-grey-225-10-85: var(--catppuccin-base);
+    --color-grey-225-10-90: var(--catppuccin-mantle);
+    --color-grey-225-10-95: var(--catppuccin-mantle);
+    --color-grey-225-10-97: var(--catppuccin-crust);
+
+    --color-blue-205-100-35: var(--catppuccin-blue);
+    --color-blue-205-100-45: var(--catppuccin-blue);
+    --color-blue-205-100-50: var(--catppuccin-blue);
+    --color-blue-205-100-95: var(--catppuccin-surface0);
+
+    --color-green-150-86-44: var(--catppuccin-green);
+
+    --color-red-360-100-40: var(--catppuccin-red);
+    --color-red-360-100-45: var(--catppuccin-red);
+    --color-red-360-100-92: var(--catppuccin-surface0);
+    --color-red-360-100-97: var(--catppuccin-mantle);
+
+    --color-white: var(--catppuccin-base);
+    --color-black: var(--catppuccin-text);
+    --color-transparent: transparent;
+
+    --text-base-color: var(--catppuccin-text) !important;
+    --text-error-color: var(--catppuccin-red);
+    --link-color: var(--catppuccin-blue);
+
+    --description-color: rgba(205, 214, 244, .1);
+    --description-code-background-color: var(--color-grey-225-10-97);
+    --description-code-border-color: var(--color-grey-225-10-85);
+    --description-list-item-color: var(--color-grey-225-10-35);
+
+    --placeholder-color: var(--color-grey-225-10-35);
+    --placeholder-background-color: var(--color-grey-225-10-95);
+
+    --header-background-color: var(--color-grey-225-10-95);
+    --header-icon-fill-color: var(--color-grey-225-10-15);
+    --header-bottom-border-color: var(--color-grey-225-10-75);
+
+    --group-background-color: var(--color-white);
+    --group-bottom-border-color: var(--color-grey-225-10-75);
+
+    --sticky-group-background-color: var(--color-grey-225-10-95);
+    --sticky-group-bottom-border-color: var(--color-grey-225-10-75);
+
+    --add-entry-fill-color: var(--color-grey-225-10-35);
+    --add-entry-hover-fill-color: var(--color-white);
+    --add-entry-hover-background-color: var(--color-blue-205-100-50);
+    --add-entry-label-color: var(--color-white);
+
+    --remove-entry-fill-color: var(--color-red-360-100-45);
+    --remove-entry-hover-background-color: var(--color-red-360-100-92);
+
+    --arrow-fill-color: var(--color-grey-225-10-35);
+    --arrow-hover-background-color: var(--color-grey-225-10-95);
+
+    --dot-color: var(--color-grey-225-10-35);
+
+    --list-badge-color: var(--color-white);
+    --list-badge-background-color: var(--color-grey-225-10-35);
+
+    --input-background-color: var(--catppuccin-surface1);
+    --input-border-color: var(--color-grey-225-10-75);
+
+    --input-focus-background-color: var(--color-blue-205-100-95);
+    --input-focus-border-color: var(--color-blue-205-100-50);
+
+    --input-error-background-color: var(--color-red-360-100-97);
+    --input-error-border-color: var(--color-red-360-100-45);
+    --input-error-focus-border-color: var(--color-red-360-100-45);
+
+    --input-disabled-color: var(--color-grey-225-10-55);
+    --input-disabled-background-color: var(--color-grey-225-10-97);
+    --input-disabled-border-color: var(--color-grey-225-10-90);
+
+    --toggle-switch-on-background-color: var(--color-blue-205-100-50);
+    --toggle-switch-off-background-color: var(--color-grey-225-10-75);
+    --toggle-switch-switcher-background-color: var(--color-white);
+
+    --side-line-background-color: var(--color-grey-225-10-35);
+    --side-line-extension-background-color: var(--color-grey-225-10-35);
+
+    --list-entry-dot-background-color: var(--color-grey-225-10-35);
+    --list-entry-header-button-fill-color: var(--color-grey-225-10-35);
+    --list-entry-add-entry-empty-background-color: var(--color-blue-205-100-50);
+    --list-entry-add-entry-empty-hover-background-color: var(--color-blue-205-100-45);
+    --list-entry-add-entry-label-color: var(--color-white);
+    --list-entry-add-entry-background-color: var(--color-blue-205-100-50);
+    --list-entry-add-entry-fill-color: var(--color-white);
+
+    --dropdown-item-background-color: var(--color-white);
+    --dropdown-item-hover-background-color: var(--color-grey-225-10-95);
+    --dropdown-separator-background-color: var(--color-grey-225-10-75);
+
+    --feel-active-color: var(--color-blue-205-100-35);
+    --feel-inactive-color: var(--color-grey-225-10-35);
+
+    --feel-indicator-background-color: var(--color-grey-225-10-90);
+
+}
+
+.align-elements img,
+.djs-context-pad img{
+  filter: invert(1) !important;
+}
+
+.djs-container {
+
+    --color-black-opacity-10: rgba(205, 214, 244, .1);
+
+    --color-grey-225-10-15: var(--catppuccin-text);
+    --color-grey-225-10-35: var(--catppuccin-subtext0);
+    --color-grey-225-10-55: var(--catppuccin-surface2);
+    --color-grey-225-10-75: var(--catppuccin-surface1);
+    --color-grey-225-10-80: var(--catppuccin-surface0);
+    --color-grey-225-10-85: var(--catppuccin-base);
+    --color-grey-225-10-90: var(--catppuccin-mantle);
+    --color-grey-225-10-95: var(--catppuccin-mantle);
+    --color-grey-225-10-97: var(--catppuccin-crust);
+
+    --color-blue-205-100-35: var(--catppuccin-blue);
+    --color-blue-205-100-45: var(--catppuccin-blue);
+    --color-blue-205-100-50: var(--catppuccin-blue);
+    --color-blue-205-100-95: var(--catppuccin-surface0);
+
+    --color-green-150-86-44: var(--catppuccin-green);
+
+    --color-red-360-100-40: var(--catppuccin-red);
+    --color-red-360-100-45: var(--catppuccin-red);
+    --color-red-360-100-92: var(--catppuccin-surface0);
+    --color-red-360-100-97: var(--catppuccin-mantle);
+
+    --color-white: var(--catppuccin-base);
+    --color-black: var(--catppuccin-text);
+    --color-transparent: transparent;
+
+    --popup-border-color: var(--catppuccin-overlay0);
+
+    --context-pad-entry-background-color: var(--color-white);
+    --context-pad-entry-hover-background-color: var(--color-grey-225-10-95);
+
+    --element-hover-outline-fill-color: var(--color-blue-205-100-45);
+    --element-selected-outline-stroke-color: var(--catppuccin-mauve);
+    --element-selected-outline-secondary-stroke-color: var(--element-selected-outline-stroke-color);
+    --element-dragger-color: var(--element-selected-outline-stroke-color);
+
+    --palette-entry-hover-color: var(--catppuccin-mauve);
+
+    --popup-header-entry-selected-background-color: var(--catppuccin-surface1);
+
+    --palette-entry-selected-color: var(--catppuccin-mauve);
+
+    --lasso-fill-color: rgba(203, 166, 247, .2);
+}
+
+.modal-dialog,
+.btn-primary{
+  color: var(--catppuccin-text);
+}
+
+.controls button{
+  color: var(--catppuccin-text);
+}
+
+.bts-toggle-mode {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: var(--catppuccin-surface1);
+  border: 1px solid var(--catppuccin-text);
+  border-radius: 2px !important;
+  padding: 6px;
+  font-size: 16px;
+  color: var(--catppuccin-text);
+  user-select: none;
+  display: inline-flex;
+}
+
+.djs-container .djs-minimap{
+    background-color: rgba(30, 30, 46, 0.9);
+}
+
+.bio-properties-panel-description, .bio-properties-panel-description p, .bio-properties-panel-description span, .bio-properties-panel-description div{
+    color: var(--catppuccin-mauve);
+}
+
+.djs-popup .entry:hover {
+    color: var(--catppuccin-mauve);
+  }
+
+.djs-context-pad {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    line-height: 1;
+    background-color: var(--catppuccin-base);
+    border: 1px solid var(--catppuccin-overlay0);
+    padding: 5px;
+    width: 42px !important;
+  }
+
+  .djs-context-pad .group:not(:last-child){
+    border-bottom: 1px solid var(--catppuccin-overlay0);
+  }
+
+  .djs-context-pad .entry {
+    border-radius: 0px !important;
+    padding: 0px;
+    background-color: var(--context-pad-entry-background-color);
+    box-shadow: 0 0 0px 0px var(--context-pad-entry-background-color) !important;
+    pointer-events: all;
+    vertical-align: middle;
+    width: 30px;
+    height: 22px;
+    margin: 5px 0 5px 0;
+  }
+
+  .djs-context-pad .entry:hover {
+    background: var(--catppuccin-base);
+    color: var(--catppuccin-mauve);
+  }
+
+  .djs-context-pad.open {
+    display: block;
+  }
+
+  .djs-element.selected .djs-outline,
+  .djs-selection-outline {    
+    stroke-dasharray: 2;
+    stroke-dashoffset: 500;
+    animation: dash 80s linear infinite;
+    stroke: var(--element-selected-outline-stroke-color);
+  }
+
+  
+  .layer-selectionOutline .djs-selection-outline {    
+    stroke: none;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .tabs .primary{
+    background-color: var(--catppuccin-base) !important;
+    color: var(--catppuccin-text) !important;
+  }
+
+  .tabs .active {
+    background-color: var(--catppuccin-surface1) !important;
+    color: var(--catppuccin-text) !important;
+  }

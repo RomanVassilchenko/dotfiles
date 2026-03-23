@@ -1,0 +1,18 @@
+{ lib, isServer, ... }:
+lib.mkIf (!isServer) {
+  services.pipewire.extraConfig.pipewire."10-virtual-mic" = {
+    "context.objects" = [
+      {
+        factory = "adapter";
+        args = {
+          "factory.name" = "support.null-audio-sink";
+          "node.name" = "VirtualMic";
+          "node.description" = "Virtual Microphone";
+          "media.class" = "Audio/Duplex";
+          "audio.position" = "FL,FR";
+          "monitor.passthrough" = true;
+        };
+      }
+    ];
+  };
+}

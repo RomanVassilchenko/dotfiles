@@ -1,0 +1,24 @@
+CLAUDE.md
+AGENTS.md
+
+# SSH private keys (keep public keys)
+config/ssh/id_*
+!config/ssh/*.pub
+
+# Nextcloud sync database files
+.sync_*.db
+.sync_*.db-wal
+.sync_*.db-shm
+.nextcloudsync.log
+
+# Environment variables
+.env
+
+# Claude Code config (keep only shared files)
+config/.claude/*
+!config/.claude/skills/
+config/.claude/skills/*
+!config/.claude/skills/log/
+!config/.claude/skills/log/**
+!config/.claude/settings.json
+!config/.claude/statusline-command.sh

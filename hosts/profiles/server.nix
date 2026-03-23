@@ -1,0 +1,3 @@
+{
+  deviceType = "server";
+}
