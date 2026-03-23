@@ -109,8 +109,8 @@ handle_backups() {
 }
 
 do_rebuild() {
-  local action="$1"
-  shift
+  local action="$1" plain="$2"
+  shift 2
   local hostname
   hostname=$(hostname)
   verify_hostname
@@ -121,18 +121,36 @@ do_rebuild() {
   if git -C "$PROJECT_DIR" submodule status private 2>/dev/null | grep -qv "^-"; then
     flake_ref="${PROJECT_DIR}?submodules=1#${hostname}"
   fi
+
+  local prev_system=""
+  [[ "$action" == "switch" && "$plain" == "false" ]] && prev_system=$(readlink -f /run/current-system 2>/dev/null || true)
+
   print_info "nixos-rebuild $action → $hostname"
-  run_sudo nixos-rebuild "$action" \
-    --flake "$flake_ref" \
-    "${_sub_args[@]}" "$@"
+  if [[ "$plain" == "false" ]] && command -v nom &>/dev/null; then
+    run_sudo nixos-rebuild "$action" \
+      --flake "$flake_ref" \
+      "${_sub_args[@]}" "$@" 2>&1 | nom
+  else
+    run_sudo nixos-rebuild "$action" \
+      --flake "$flake_ref" \
+      "${_sub_args[@]}" "$@"
+  fi
+
+  if [[ -n "$prev_system" ]] && command -v nvd &>/dev/null; then
+    nvd diff "$prev_system" /run/current-system
+  fi
 }
 
 cmd_rebuild() {
-  local dry=false extra=()
+  local dry=false plain=false extra=()
   while [[ $# -gt 0 ]]; do
     case $1 in
       --dry | -n)
         dry=true
+        shift
+        ;;
+      --plain)
+        plain=true
         shift
         ;;
       --cores)
@@ -146,16 +164,16 @@ cmd_rebuild() {
     esac
   done
   if $dry; then
-    do_rebuild dry-activate "${extra[@]}"
+    do_rebuild dry-activate "$plain" "${extra[@]}"
     print_success "Dry-activate complete (no changes applied)"
   else
-    do_rebuild switch "${extra[@]}"
+    do_rebuild switch "$plain" "${extra[@]}"
     print_success "Rebuild complete"
   fi
 }
 
 cmd_rebuild_boot() {
-  do_rebuild boot
+  do_rebuild boot false
   print_success "Rebuild complete — activate on next boot"
 }
 
@@ -171,7 +189,7 @@ cmd_update() {
     print_warn "Could not fetch cached nixpkgs revision - updating to HEAD"
     nix flake update
   fi
-  do_rebuild switch
+  do_rebuild switch false
   print_success "Update and rebuild complete"
 }
 

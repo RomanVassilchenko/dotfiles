@@ -44,6 +44,9 @@ in
       keep-derivations = true;
       http-connections = 128;
       max-substitution-jobs = 128;
+      narinfo-cache-negative-ttl = 0;
+      min-free = 1073741824;
+      max-free = 5368709120;
       warn-dirty = false;
       fallback = true;
       connect-timeout = 5;
