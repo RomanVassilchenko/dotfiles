@@ -16,8 +16,6 @@ let
   overlay0 = "#6c7086";
 in
 {
-  imports = [ ];
-
   programs.zsh = {
     enable = true;
     dotDir = "${config.xdg.configHome}/zsh";
@@ -231,39 +229,33 @@ in
           'rebuild:Rebuild NixOS system'
           'rebuild-boot:Rebuild for next boot'
           'update:Update flake inputs and rebuild'
-          'format:Format files (nix, md, sh, all)'
-          'cache:Cache management (build, start, status, upgrade)'
-          'cleanup:Clean old generations'
+          'cleanup:Trash backup files, GC old generations'
           'backup:Backup dotfiles to ninkear'
+          'cache:Cache management (build, start, status)'
+          'server:Server management (rebuild, update)'
           'doctor:Run system health checks'
           'trim:Run fstrim for SSD'
           'help:Show help'
         )
 
-        local -a format_types
-        format_types=('nix:Format Nix files' 'md:Format Markdown files' 'sh:Format shell scripts' 'all:Format all files')
-
         local -a rebuild_opts
-        rebuild_opts=('--dry:Show what would be done' '--ask:Ask for confirmation' '--cores:Limit CPU cores' '--verbose:Verbose output' '--no-nom:Disable nix-output-monitor')
+        rebuild_opts=('--dry:Preview what would change' '--cores:Limit CPU cores')
 
         local -a cache_subcmds
-        cache_subcmds=('build:Build all configs locally' 'start:Start remote build on ninkear' 'status:Check remote build progress' 'upgrade:Run auto-upgrade (server)')
+        cache_subcmds=('build:Build all configs locally' 'start:Start remote build on ninkear' 'status:Check remote build progress')
 
-        local -a cleanup_opts
-        cleanup_opts=('--gc:Run garbage collection')
+        local -a server_subcmds
+        server_subcmds=('rebuild:Pull and rebuild on ninkear' 'update:Sync, update flake, rebuild ninkear')
 
         case "$words[2]" in
-          format)
-            _describe -t format_types 'format types' format_types
-            ;;
           rebuild|rebuild-boot|update)
             _describe -t rebuild_opts 'options' rebuild_opts
             ;;
           cache)
             _describe -t cache_subcmds 'subcommands' cache_subcmds
             ;;
-          cleanup)
-            _describe -t cleanup_opts 'options' cleanup_opts
+          server)
+            _describe -t server_subcmds 'subcommands' server_subcmds
             ;;
           *)
             _describe -t commands 'dot commands' commands

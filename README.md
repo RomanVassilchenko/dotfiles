@@ -45,7 +45,7 @@ dot rebuild              # Rebuild current system
 dot rebuild --dry        # Preview changes
 dot rebuild-boot         # Rebuild, activate on next boot
 dot update               # Update flake inputs and rebuild
-dot cleanup              # Clean backup files and old generations
+dot cleanup              # Trash backup files and GC old generations
 dot trim                 # Run fstrim (SSD)
 dot doctor               # Health checks
 
@@ -55,7 +55,7 @@ dot server update        # Pull, update flake, and rebuild on ninkear
 
 # Binary cache (via ninkear)
 dot cache build          # Build all configs locally
-dot cache start          # Start remote build on ninkear
+dot cache start          # Start remote build on ninkear (tmux)
 dot cache status         # Check remote build progress
 ```
 
@@ -63,9 +63,7 @@ dot cache status         # Check remote build progress
 
 ```
 --dry, -n      Preview what would change
---ask, -a      Ask for confirmation before switching
 --cores N      Limit to N CPU cores
---low-level    Use nixos-rebuild directly instead of nh
 ```
 
 ## Configuration
