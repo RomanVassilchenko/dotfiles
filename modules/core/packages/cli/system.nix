@@ -19,6 +19,11 @@ in
     pkgs-stable.sbctl
     pkgs-stable.trash-cli
     pkgs-stable.usbutils
+    # duf # Disk usage (df alternative)
+    # dust # Intuitive disk usage (du alternative)
+    # dysk
+    # lazyjournal # Journald/Docker logs TUI
+    # ncdu # Interactive disk usage
   ]
   ++ lib.optionals (!isServer) [
     pkgs.v4l-utils

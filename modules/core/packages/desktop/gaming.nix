@@ -30,6 +30,9 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # heroic # GOG/Epic/Amazon games launcher
+    # lutris # Gaming platform
+    # osu-lazer # osu! rhythm game
     mangohud
     prismlauncher
   ];
