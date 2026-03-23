@@ -6,6 +6,5 @@
 {
   imports = lib.optionals (!isServer) [
     ./kde
-    ./niri
   ];
 }

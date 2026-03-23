@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  self,
   username,
   host,
   vars,
@@ -18,7 +17,6 @@
     extraSpecialArgs = {
       inherit
         inputs
-        self
         username
         host
         vars
