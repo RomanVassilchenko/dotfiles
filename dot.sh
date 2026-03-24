@@ -11,10 +11,10 @@ BACKUP_PATH=""
 [[ -f "$PROJECT_DIR/private/dot-config.sh" ]] && source "$PROJECT_DIR/private/dot-config.sh"
 
 require_private_config() {
-  [[ -z "$BACKUP_SERVER" ]] && {
+  if [[ -z "$BACKUP_SERVER" ]]; then
     print_error "Private config not found. Init private/ submodule first."
     exit 1
-  }
+  fi
 }
 
 BACKUP_FILES=(
