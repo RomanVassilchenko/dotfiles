@@ -10,10 +10,19 @@ let
 in
 {
   nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
     optimise = {
       automatic = true;
       dates = [ "weekly" ];
     };
+
+    daemonCPUSchedPolicy = "idle";
+    daemonIOSchedClass = "idle";
 
     settings = {
       download-buffer-size = 200000000;

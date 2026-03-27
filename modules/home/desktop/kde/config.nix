@@ -76,6 +76,10 @@
         "Meta+B"
       ];
 
+      plasmashell."activate application launcher" = [
+        "Meta"
+        "Alt+F1"
+      ];
       plasmashell.clipboard_action = "Meta+Ctrl+X";
       plasmashell.cycle-panels = "Meta+Alt+P";
       plasmashell.show-on-mouse-pos = "Meta+V";
@@ -289,6 +293,8 @@
       kxkbrc.Layout.VariantList = ",";
 
       "plasma-applet-org.kde.plasma.battery".General.showPercentage = true;
+
+      baloofilerc."Basic Settings"."Indexing-Enabled" = false;
 
       spectaclerc.GuiConfig.quitAfterSaveCopyExport = true;
 

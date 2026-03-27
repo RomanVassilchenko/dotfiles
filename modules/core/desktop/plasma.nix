@@ -15,7 +15,10 @@ in
 
   programs.regreet = {
     enable = true;
-    settings.GTK.cursor_theme_name = "Bibata-Modern-Ice";
+    settings = {
+      GTK.cursor_theme_name = "Bibata-Modern-Ice";
+      regreet.session_dirs = [ "/run/current-system/sw/share/wayland-sessions" ];
+    };
   };
 
   xdg.portal = {
@@ -77,10 +80,14 @@ in
   security.pam.services.greetd.enableKwallet = true;
   security.pam.services.login.enableKwallet = true;
 
+  programs.kde-pim.enable = false;
+
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     discover
     khelpcenter
     konsole
+    krdp
+    kwin-x11
   ];
 
   systemd.user.services = {
