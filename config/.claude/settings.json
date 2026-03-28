@@ -4,5 +4,18 @@
     "command": "/home/romanv/.claude/statusline-command.sh"
   },
   "skipDangerousModePermissionPrompt": true,
-  "model": "opusplan"
+  "model": "opusplan",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/romanv/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ]
+  }
 }

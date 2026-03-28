@@ -19,8 +19,17 @@ in
     ".claude" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/.claude";
     };
-    ".config/opencode/opencode.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/opencode.json";
+    ".codex" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/codex";
+    };
+    ".gemini" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/gemini";
+    };
+    ".config/rtk" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/rtk";
+    };
+    ".config/opencode" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode";
     };
   };
 }
