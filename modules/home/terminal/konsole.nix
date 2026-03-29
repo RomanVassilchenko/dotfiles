@@ -100,12 +100,13 @@
   '';
 
   # Full reproduction of the embedded "Linux console" keytab with one override:
-  # Shift+Return sends ESC+CR (same fix as wezterm had) for Claude Code newline-without-submit.
+  # Shift+Return sends \n (newline) for Claude Code newline-without-submit.
+  # Default Konsole sends \EOM which Claude Code ignores (issue #2115, closed as not planned).
   # IMPORTANT: Return+Shift must come before Return-NewLine — first match wins.
   xdg.dataFile."konsole/custom.keytab".text = ''
     keyboard "custom"
 
-    key Return+Shift   : "\x00\n"
+    key Return+Shift   : "\n"
 
     key Escape         : "\E"
     key Tab            : "\t"
