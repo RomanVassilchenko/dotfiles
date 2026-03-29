@@ -8,6 +8,7 @@
     ./tmux.nix
   ]
   ++ lib.optionals (!isServer) [
-    ./wezterm.nix
+    ./konsole.nix
+    ./yakuake.nix
   ];
 }

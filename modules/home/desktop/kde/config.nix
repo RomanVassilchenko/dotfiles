@@ -87,7 +87,8 @@
       "services/brave-browser.desktop"._launch = "Meta+Shift+B";
       "services/camunda-modeler.desktop"._launch = "Meta+Shift+U";
       "services/code.desktop"._launch = "Meta+Shift+C";
-      "services/org.wezfurlong.wezterm.desktop"._launch = "Meta+Return";
+      yakuake."toggle-window-state" = "F12";
+      "services/org.kde.konsole.desktop"._launch = "Meta+Return";
       "services/com.obsproject.Studio.desktop"._launch = "Meta+Shift+R";
       "services/com.rtosta.zapzap.desktop"._launch = "Meta+Shift+W";
       "services/dev.zed.Zed.desktop"._launch = "Meta+Shift+Z";
@@ -127,8 +128,8 @@
       kdeglobals.KDE.contrast = 7;
       kdeglobals.General.AccentColor = "203,166,247";
       kdeglobals.General.BrowserApplication = "brave-browser.desktop";
-      kdeglobals.General.TerminalApplication = "${pkgs.wezterm}/bin/wezterm start --always-new-process";
-      kdeglobals.General.TerminalService = "org.wezfurlong.wezterm.desktop";
+      kdeglobals.General.TerminalApplication = "konsole";
+      kdeglobals.General.TerminalService = "org.kde.konsole.desktop";
       kdeglobals.General.fixed = "JetBrainsMono Nerd Font Mono,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
       kdeglobals.General.font = "Inter Variable,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
       kdeglobals.General.menuFont = "Inter Variable,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
@@ -186,7 +187,7 @@
       kwinrc.Compositing.LatencyPolicy = "Low";
       kwinrc.Compositing.WindowsBlockCompositing = true;
 
-      kwinrc."Round-Corners".ActiveOutlineAlpha = 255;
+      kwinrc."Round-Corners".ActiveOutlineAlpha = 0;
       kwinrc."Round-Corners".ActiveOutlineColor = "203,166,247";
       kwinrc."Round-Corners".ActiveOutlineUseCustom = false;
       kwinrc."Round-Corners".ActiveOutlineUsePalette = true;
@@ -222,6 +223,9 @@
       kwinrc.Windows.DelayFocusInterval = 150;
       kwinrc.Windows.FocusPolicy = "FocusFollowsMouse";
 
+      # Meta alone opens the application launcher
+      kwinrc.ModifierOnlyShortcuts.Meta = "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu";
+
       kwinrulesrc."1".Description = "Hide titlebar by default";
       kwinrulesrc."1".noborder = true;
       kwinrulesrc."1".noborderrule = 3;
@@ -242,7 +246,7 @@
       kwinrulesrc."3".desktopsrule = 3;
       kwinrulesrc."3".types = 1;
       kwinrulesrc."3".wmclass =
-        "org.wezfurlong.wezterm|kitty|konsole|code|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
+        "kitty|konsole|code|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
       kwinrulesrc."3".wmclasscomplete = false;
       kwinrulesrc."3".wmclassmatch = 3;
 
