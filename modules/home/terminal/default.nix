@@ -8,7 +8,6 @@
     ./tmux.nix
   ]
   ++ lib.optionals (!isServer) [
-    ./konsole.nix
-    ./yakuake.nix
+    ./kitty.nix
   ];
 }
