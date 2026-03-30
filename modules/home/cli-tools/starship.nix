@@ -104,7 +104,7 @@ in
       behind = "[⇣\${count}](bg:yellow fg:crust bold)";
       diverged = "[⇡\${ahead_count}⇣\${behind_count}](bg:yellow fg:red bold)";
       untracked = "[?\${count}](bg:yellow fg:overlay0)";
-      stashed = "[$\${count}](bg:yellow fg:crust)";
+      stashed = "[\\$\${count}](bg:yellow fg:crust)";
       modified = "[!\${count}](bg:yellow fg:overlay0)";
       staged = "[+\${count}](bg:yellow fg:crust bold)";
       renamed = "[»\${count}](bg:yellow fg:crust)";

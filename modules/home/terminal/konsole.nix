@@ -100,13 +100,14 @@
   '';
 
   # Full reproduction of the embedded "Linux console" keytab with one override:
-  # Shift+Return sends \n (newline) for Claude Code newline-without-submit.
-  # Default Konsole sends \EOM which Claude Code ignores (issue #2115, closed as not planned).
+  # Shift+Return sends \r\n for multiline input in Claude Code, OpenCode, and other modern CLIs.
+  # Default Konsole sends \EOM (VT100 numeric keypad Enter, 1978) which modern apps ignore.
+  # See: https://github.com/anthropics/claude-code/issues/2115
   # IMPORTANT: Return+Shift must come before Return-NewLine — first match wins.
   xdg.dataFile."konsole/custom.keytab".text = ''
     keyboard "custom"
 
-    key Return+Shift   : "\n"
+    key Return+Shift   : "\r\n"
 
     key Escape         : "\E"
     key Tab            : "\t"

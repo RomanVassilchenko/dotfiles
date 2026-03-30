@@ -87,8 +87,7 @@
       "services/brave-browser.desktop"._launch = "Meta+Shift+B";
       "services/camunda-modeler.desktop"._launch = "Meta+Shift+U";
       "services/code.desktop"._launch = "Meta+Shift+C";
-      yakuake."toggle-window-state" = "F12";
-      "services/org.kde.konsole.desktop"._launch = "Meta+Return";
+      "services/kitty.desktop"._launch = "Meta+Return";
       "services/com.obsproject.Studio.desktop"._launch = "Meta+Shift+R";
       "services/com.rtosta.zapzap.desktop"._launch = "Meta+Shift+W";
       "services/dev.zed.Zed.desktop"._launch = "Meta+Shift+Z";
@@ -128,8 +127,8 @@
       kdeglobals.KDE.contrast = 7;
       kdeglobals.General.AccentColor = "203,166,247";
       kdeglobals.General.BrowserApplication = "brave-browser.desktop";
-      kdeglobals.General.TerminalApplication = "konsole";
-      kdeglobals.General.TerminalService = "org.kde.konsole.desktop";
+      kdeglobals.General.TerminalApplication = "kitty";
+      kdeglobals.General.TerminalService = "kitty.desktop";
       kdeglobals.General.fixed = "JetBrainsMono Nerd Font Mono,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
       kdeglobals.General.font = "Inter Variable,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
       kdeglobals.General.menuFont = "Inter Variable,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
@@ -246,7 +245,7 @@
       kwinrulesrc."3".desktopsrule = 3;
       kwinrulesrc."3".types = 1;
       kwinrulesrc."3".wmclass =
-        "kitty|konsole|code|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
+        "kitty|code|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
       kwinrulesrc."3".wmclasscomplete = false;
       kwinrulesrc."3".wmclassmatch = 3;
 
