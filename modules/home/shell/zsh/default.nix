@@ -23,65 +23,6 @@ in
       enable = true;
       highlight = "fg=${overlay0}";
     };
-    syntaxHighlighting = {
-      enable = true;
-      highlighters = [
-        "main"
-        "brackets"
-        "pattern"
-        "regexp"
-        "root"
-        "line"
-      ];
-      styles = {
-        command = "fg=${mauve},bold";
-        builtin = "fg=${mauve}";
-        alias = "fg=${mauve}";
-        function = "fg=${blue}";
-        precommand = "fg=${peach},underline";
-        arg0 = "fg=${mauve}";
-
-        single-hyphen-option = "fg=${peach}";
-        double-hyphen-option = "fg=${peach}";
-        back-quoted-argument = "fg=${mauve}";
-
-        path = "fg=${teal},underline";
-        path_prefix = "fg=${teal}";
-        autodirectory = "fg=${teal},underline";
-
-        single-quoted-argument = "fg=${green}";
-        double-quoted-argument = "fg=${green}";
-        dollar-quoted-argument = "fg=${green}";
-        back-double-quoted-argument = "fg=${mauve}";
-        back-dollar-quoted-argument = "fg=${mauve}";
-
-        assign = "fg=${text}";
-        redirection = "fg=${peach},bold";
-        comment = "fg=${overlay0}";
-        named-fd = "fg=${blue}";
-        numeric-fd = "fg=${blue}";
-
-        globbing = "fg=${yellow}";
-        history-expansion = "fg=${mauve}";
-        commandseparator = "fg=${peach}";
-        command-substitution = "fg=${text}";
-        command-substitution-delimiter = "fg=${mauve}";
-        process-substitution = "fg=${text}";
-        process-substitution-delimiter = "fg=${mauve}";
-
-        unknown-token = "fg=${red},bold";
-        reserved-word = "fg=${mauve},bold";
-        suffix-alias = "fg=${green},underline";
-        global-alias = "fg=${yellow}";
-
-        bracket-level-1 = "fg=${mauve},bold";
-        bracket-level-2 = "fg=${blue},bold";
-        bracket-level-3 = "fg=${peach},bold";
-        bracket-level-4 = "fg=${green},bold";
-        bracket-error = "fg=${red},bold";
-        cursor-matchingbracket = "fg=${text},bold,standout";
-      };
-    };
     historySubstringSearch.enable = true;
 
     history = {
@@ -102,12 +43,65 @@ in
         src = pkgs.zsh-fzf-tab;
         file = "share/fzf-tab/fzf-tab.plugin.zsh";
       }
+      {
+        name = "fast-syntax-highlighting";
+        src = pkgs.zsh-fast-syntax-highlighting;
+        file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+      }
     ];
 
     initContent = ''
-      # XDG-compliant compinit directory
+      # XDG-compliant compinit with 24h cache
       autoload -U compinit
-      compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
+      if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"(#qN.mh+24) ]]; then
+        compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+      else
+        compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+      fi
+
+      # ===========================================
+      # fast-syntax-highlighting — Catppuccin Mocha
+      # ===========================================
+      typeset -A FAST_HIGHLIGHT_STYLES
+      FAST_HIGHLIGHT_STYLES[command]="fg=${mauve},bold"
+      FAST_HIGHLIGHT_STYLES[builtin]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[alias]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[function]="fg=${blue}"
+      FAST_HIGHLIGHT_STYLES[precommand]="fg=${peach},underline"
+      FAST_HIGHLIGHT_STYLES[default]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[single-hyphen-option]="fg=${peach}"
+      FAST_HIGHLIGHT_STYLES[double-hyphen-option]="fg=${peach}"
+      FAST_HIGHLIGHT_STYLES[back-quoted-argument]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[path]="fg=${teal},underline"
+      FAST_HIGHLIGHT_STYLES[path-prefix]="fg=${teal}"
+      FAST_HIGHLIGHT_STYLES[autodirectory]="fg=${teal},underline"
+      FAST_HIGHLIGHT_STYLES[single-quoted-argument]="fg=${green}"
+      FAST_HIGHLIGHT_STYLES[double-quoted-argument]="fg=${green}"
+      FAST_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=${green}"
+      FAST_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[assign]="fg=${text}"
+      FAST_HIGHLIGHT_STYLES[redirection]="fg=${peach},bold"
+      FAST_HIGHLIGHT_STYLES[comment]="fg=${overlay0}"
+      FAST_HIGHLIGHT_STYLES[named-fd]="fg=${blue}"
+      FAST_HIGHLIGHT_STYLES[numeric-fd]="fg=${blue}"
+      FAST_HIGHLIGHT_STYLES[globbing]="fg=${yellow}"
+      FAST_HIGHLIGHT_STYLES[history-expansion]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[commandseparator]="fg=${peach}"
+      FAST_HIGHLIGHT_STYLES[command-substitution]="fg=${text}"
+      FAST_HIGHLIGHT_STYLES[command-substitution-delimiter]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[process-substitution]="fg=${text}"
+      FAST_HIGHLIGHT_STYLES[process-substitution-delimiter]="fg=${mauve}"
+      FAST_HIGHLIGHT_STYLES[unknown-token]="fg=${red},bold"
+      FAST_HIGHLIGHT_STYLES[reserved-word]="fg=${mauve},bold"
+      FAST_HIGHLIGHT_STYLES[suffix-alias]="fg=${green},underline"
+      FAST_HIGHLIGHT_STYLES[global-alias]="fg=${yellow}"
+      FAST_HIGHLIGHT_STYLES[bracket-level-1]="fg=${mauve},bold"
+      FAST_HIGHLIGHT_STYLES[bracket-level-2]="fg=${blue},bold"
+      FAST_HIGHLIGHT_STYLES[bracket-level-3]="fg=${peach},bold"
+      FAST_HIGHLIGHT_STYLES[bracket-level-4]="fg=${green},bold"
+      FAST_HIGHLIGHT_STYLES[bracket-error]="fg=${red},bold"
+      FAST_HIGHLIGHT_STYLES[cursor-matchingbracket]="fg=${text},bold,standout"
 
       # ===========================================
       # fzf-tab Configuration
