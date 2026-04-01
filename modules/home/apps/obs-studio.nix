@@ -9,7 +9,7 @@
       obs-source-clone
       obs-move-transition
       obs-composite-blur
-      obs-backgroundremoval
+      # obs-backgroundremoval
       droidcam-obs
     ];
   };
