@@ -6,9 +6,26 @@
   ...
 }:
 let
-  dotCli = pkgs.writeShellScriptBin "dot" ''
-    exec /home/romanv/Documents/dotfiles/dot.sh "$@"
-  '';
+  dotCli = pkgs.writeShellApplication {
+    name = "dot";
+    runtimeInputs = with pkgs; [
+      git
+      gnugrep
+      nix
+    ];
+    text = ''
+      set -euo pipefail
+
+      PROJECT_DIR=${lib.escapeShellArg config.dotfiles.paths.dotfiles}
+      FLAKE_REF="$PROJECT_DIR#dot"
+
+      if git -C "$PROJECT_DIR" submodule status private 2>/dev/null | grep -qv "^-"; then
+        FLAKE_REF="$PROJECT_DIR?submodules=1#dot"
+      fi
+
+      exec env DOT_PROJECT_DIR="$PROJECT_DIR" nix run "$FLAKE_REF" -- "$@"
+    '';
+  };
 in
 {
   environment.systemPackages = [
