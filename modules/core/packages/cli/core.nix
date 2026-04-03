@@ -17,6 +17,7 @@
       zip
     ])
     ++ [
-      pkgs.nixfmt # keep on unstable — tracks nixpkgs formatting changes
+      pkgs.kitty.terminfo
+      pkgs.nixfmt
     ];
 }

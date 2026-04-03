@@ -22,3 +22,4 @@ config/.claude/skills/*
 !config/.claude/skills/log/**
 !config/.claude/settings.json
 !config/.claude/statusline-command.sh
+config/codex/cache/codex_apps_tools/*
