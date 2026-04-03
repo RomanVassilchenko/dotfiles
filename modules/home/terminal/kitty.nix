@@ -18,8 +18,7 @@
     };
 
     keybindings = {
-      # New tab / close tab
-      "ctrl+t" = "new_tab_with_cwd";
+      # Close tab (ctrl+t unbound)
       "ctrl+w" = "close_tab";
 
       # Navigate tabs
