@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    nodePackages.prettier
+    prettier
     nodejs
     playwright-driver.browsers
     pnpm

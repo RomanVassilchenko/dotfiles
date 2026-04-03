@@ -1,9 +1,26 @@
 { pkgs, ... }:
+let
+  gci = pkgs.buildGoModule rec {
+    pname = "gci";
+    version = "0.14.0";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "daixiang0";
+      repo = "gci";
+      rev = "v${version}";
+      hash = "sha256-+qoHORHUMgr03v3RB+7+g9O/tlDkQKFmKybma0FdhVs=";
+    };
+
+    vendorHash = "sha256-MS6Ei58HpR/ueqdmGEx15WoSSSwDpQUcxAWz36UnhmA=";
+    subPackages = [ "." ];
+    excludedPackages = [ "v2" ];
+  };
+in
 {
   environment.systemPackages = with pkgs; [
     delve
     gcc
-
+    gci
     gnumake
     go
     go-minimock
