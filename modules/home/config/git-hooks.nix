@@ -41,7 +41,7 @@
           echo "Formatting Markdown files..."
           echo "$STAGED_MD" | while read -r file; do
             if [[ -f "$file" ]]; then
-              ${pkgs.nodePackages.prettier}/bin/prettier --write "$file"
+              ${pkgs.prettier}/bin/prettier --write "$file"
               git add "$file"
             fi
           done
