@@ -1,10 +1,11 @@
 {
+  dotfiles,
   lib,
   pkgs,
   config,
   ...
 }:
-{
+lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma.workspace.colorScheme = "CatppuccinMochaMauve";
 
   gtk = {

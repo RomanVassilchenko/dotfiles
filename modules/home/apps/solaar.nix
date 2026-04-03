@@ -1,10 +1,11 @@
 {
+  dotfiles,
   pkgs,
   lib,
   appConfig,
   ...
 }:
-{
+lib.mkIf dotfiles.features.apps.solaar.enable {
   xdg.configFile."autostart/solaar.desktop" = lib.mkIf (appConfig.solaar.autostart or false) {
     text = ''
       [Desktop Entry]

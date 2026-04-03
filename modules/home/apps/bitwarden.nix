@@ -1,4 +1,5 @@
 {
+  dotfiles,
   pkgs-stable,
   lib,
   appConfig,
@@ -7,7 +8,7 @@
 let
   bitwardenPackage = pkgs-stable.bitwarden-desktop;
 in
-{
+lib.mkIf dotfiles.features.apps.bitwarden.enable {
   xdg.configFile."autostart/bitwarden.desktop" = lib.mkIf (appConfig.bitwarden.autostart or false) {
     text = ''
       [Desktop Entry]

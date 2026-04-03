@@ -1,10 +1,13 @@
 {
+  config,
   pkgs,
   pkgs-stable,
   lib,
-  isServer,
   ...
 }:
+let
+  hostIsServer = config.dotfiles.host.isServer;
+in
 {
   virtualisation = {
     docker = {
@@ -18,7 +21,7 @@
 
     containers.enable = true;
 
-    libvirtd = lib.mkIf isServer {
+    libvirtd = lib.mkIf hostIsServer {
       enable = true;
       qemu = {
         package = pkgs-stable.qemu_kvm;
@@ -28,9 +31,9 @@
     };
   };
 
-  programs.virt-manager.enable = isServer;
+  programs.virt-manager.enable = hostIsServer || config.dotfiles.features.apps.virtManager.enable;
 
-  systemd.services.virt-secret-init-encryption = lib.mkIf isServer {
+  systemd.services.virt-secret-init-encryption = lib.mkIf hostIsServer {
     before = [
       "virtsecretd.service"
       "libvirtd.service"
@@ -48,5 +51,7 @@
   environment.systemPackages = [
     pkgs-stable.lazydocker
   ]
-  ++ lib.optionals isServer [ pkgs-stable.virt-viewer ];
+  ++ lib.optionals (hostIsServer || config.dotfiles.features.apps.virtManager.enable) [
+    pkgs-stable.virt-viewer
+  ];
 }

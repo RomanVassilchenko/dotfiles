@@ -1,14 +1,14 @@
 {
+  config,
   pkgs,
   pkgs-stable,
-  vars,
   lib,
   ...
 }:
 let
-  inherit (vars) keyboardLayout;
+  keyboardLayout = config.dotfiles.locale.keyboardLayout;
 in
-{
+lib.mkIf config.dotfiles.features.desktop.plasma.enable {
   services.desktopManager.plasma6.enable = true;
 
   services.greetd.enable = true;

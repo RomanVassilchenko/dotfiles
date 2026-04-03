@@ -1,8 +1,13 @@
 {
+  dotfiles,
+  lib,
+  ...
+}:
+lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {
     workspace = {
       wallpaperSlideShow = {
-        path = "/home/romanv/Documents/dotfiles/wallpapers";
+        path = "${dotfiles.paths.dotfiles}/wallpapers";
         interval = 600;
       };
     };

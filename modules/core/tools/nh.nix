@@ -1,6 +1,6 @@
 {
+  config,
   pkgs,
-  vars,
   ...
 }:
 {
@@ -10,7 +10,7 @@
       enable = true;
       extraArgs = "--keep-since 7d --keep 5";
     };
-    flake = vars.dotfilesPath;
+    flake = config.dotfiles.paths.dotfiles;
   };
 
   environment.systemPackages = with pkgs; [

@@ -1,11 +1,11 @@
 {
+  config,
   pkgs,
   lib,
-  isServer,
   ...
 }:
 {
-  stylix = lib.mkIf (!isServer) {
+  stylix = lib.mkIf config.dotfiles.features.stylix.enable {
     enable = true;
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";

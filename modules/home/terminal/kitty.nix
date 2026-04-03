@@ -1,5 +1,5 @@
-{ ... }:
-{
+{ dotfiles, lib, ... }:
+lib.mkIf dotfiles.features.desktop.enable {
   programs.kitty = {
     enable = true;
     settings = {

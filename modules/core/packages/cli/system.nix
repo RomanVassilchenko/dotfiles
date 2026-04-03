@@ -1,8 +1,8 @@
 {
+  config,
   pkgs,
   pkgs-stable,
   lib,
-  isServer,
   ...
 }:
 let
@@ -27,7 +27,7 @@ in
     pkgs-stable.lazyjournal # Journald/Docker logs TUI
     # pkgs-stable.ncdu # Interactive disk usage
   ]
-  ++ lib.optionals (!isServer) [
+  ++ lib.optionals config.dotfiles.features.desktop.enable [
     pkgs.v4l-utils
     pkgs.mesa-demos
   ];

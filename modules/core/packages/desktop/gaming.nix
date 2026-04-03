@@ -1,5 +1,10 @@
-{ pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+lib.mkIf config.dotfiles.features.desktop.enable {
   hardware.steam-hardware.enable = true;
 
   programs = {

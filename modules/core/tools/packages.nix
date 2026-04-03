@@ -1,6 +1,6 @@
 {
+  config,
   lib,
-  isServer,
   ...
 }:
 {
@@ -17,9 +17,9 @@
     nix-index.enable = true;
     command-not-found.enable = false;
 
-    dconf.enable = !isServer;
+    dconf.enable = config.dotfiles.features.desktop.enable || config.dotfiles.features.stylix.enable;
 
-    appimage = lib.mkIf (!isServer) {
+    appimage = lib.mkIf config.dotfiles.features.desktop.enable {
       enable = true;
       binfmt = true;
     };

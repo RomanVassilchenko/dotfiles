@@ -1,6 +1,6 @@
 {
+  dotfiles,
   pkgs-stable,
-  isServer,
   ...
 }:
 {
@@ -23,7 +23,7 @@
         plugin = continuum;
         extraConfig =
           "set -g @continuum-save-interval '10'"
-          + (if isServer then "" else "\nset -g @continuum-restore 'on'");
+          + (if dotfiles.host.isServer then "" else "\nset -g @continuum-restore 'on'");
       }
       {
         plugin = catppuccin;

@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  dotfiles,
+  lib,
+  pkgs,
+  ...
+}:
 let
   windowTitle = pkgs.stdenvNoCC.mkDerivation {
     pname = "plasma6-window-title-applet";
@@ -32,7 +37,7 @@ let
     sha256 = "sha256-xdExLEYfkX4L/hY/Z5PG0vC6IxsIclbgn/pw0SoZaL4=";
   };
 in
-{
+lib.mkIf dotfiles.features.desktop.plasma.enable {
   home.packages = [ windowTitle ];
 
   xdg.dataFile."kwin/scripts/move-windows-to-desktops" = {

@@ -1,5 +1,10 @@
-{ pkgs, ... }:
 {
+  dotfiles,
+  lib,
+  pkgs,
+  ...
+}:
+lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {
     enable = true;
 

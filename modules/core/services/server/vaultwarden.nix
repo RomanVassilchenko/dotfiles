@@ -1,5 +1,5 @@
-{ ... }:
-{
+{ config, lib, ... }:
+lib.mkIf config.dotfiles.host.isServer {
   services.vaultwarden = {
     enable = true;
     backupDir = "/var/backup/vaultwarden";

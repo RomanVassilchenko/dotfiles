@@ -1,12 +1,10 @@
 {
   pkgs,
   lib,
-  vars,
-  isServer,
+  dotfiles,
   ...
 }:
 let
-  workEnable = vars.workEnable or false;
   python = pkgs.python3.withPackages (ps: [ ps.pyqt6 ]);
 
   vpnTrayScript = pkgs.writeScriptBin "vpn-tray" ''
@@ -167,7 +165,7 @@ let
     comment = "BerekeBank VPN status indicator";
   };
 in
-lib.mkIf (workEnable && !isServer) {
+lib.mkIf (dotfiles.features.work.enable && dotfiles.features.desktop.enable) {
   home.packages = [
     vpnTrayScript
     vpnTrayDesktop

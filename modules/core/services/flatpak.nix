@@ -1,5 +1,5 @@
-{ ... }:
-{
+{ config, lib, ... }:
+lib.mkIf config.dotfiles.features.desktop.enable {
   services.flatpak = {
     enable = true;
 

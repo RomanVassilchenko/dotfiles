@@ -1,7 +1,11 @@
-{ lib, isServer, ... }:
 {
+  config,
+  lib,
+  ...
+}:
+lib.mkIf config.dotfiles.features.desktop.enable {
   # After 30 min of sleep → auto-hibernate (0W power draw)
-  systemd.sleep.settings.Sleep = lib.mkIf (!isServer) {
+  systemd.sleep.settings.Sleep = {
     HibernateDelaySec = "30min";
   };
   services = {

@@ -1,23 +1,14 @@
 {
-  lib,
-  isServer,
-  ...
-}:
-{
   imports = [
     ./common.nix
-    ./firewall.nix
-    ./performance.nix
-  ]
-  ++ lib.optionals (!isServer) [
     ./desktop.nix
     ./flatpak.nix
+    ./firewall.nix
     ./kdeconnect.nix
     ./logiops.nix
+    ./performance.nix
     ./printing.nix
-    ./virtual-mic.nix
-  ]
-  ++ lib.optionals isServer [
     ./server
+    ./virtual-mic.nix
   ];
 }

@@ -1,12 +1,12 @@
 {
-  vars,
+  config,
   lib,
   pkgs,
-  isServer,
   ...
 }:
 let
-  inherit (vars) consoleKeyMap;
+  consoleKeyMap = config.dotfiles.locale.consoleKeyMap;
+  desktopEnable = config.dotfiles.features.desktop.enable;
 in
 {
   nix = {
@@ -30,7 +30,7 @@ in
         "https://nix-community.cachix.org"
         "https://cache.numtide.com"
       ]
-      ++ lib.optionals (!isServer) [
+      ++ lib.optionals desktopEnable [
         "http://100.64.0.1:5000"
       ];
       trusted-public-keys = [
@@ -38,7 +38,7 @@ in
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" # llm-agents.nix
       ]
-      ++ lib.optionals (!isServer) [
+      ++ lib.optionals desktopEnable [
         "ninkear-cache:sNCVuzpn+Ku3BRQZztAMz2fhDL4/0PkE7+IGYwIn+90="
       ];
       max-jobs = 12;
@@ -70,18 +70,21 @@ in
     LC_TIME = "en_GB.UTF-8";
   };
   environment.variables = {
+    PLAYWRIGHT_BROWSERS_PATH = lib.mkIf config.dotfiles.features.development.enable "${pkgs.playwright-driver.browsers
+    }";
+  }
+  // lib.optionalAttrs desktopEnable {
     NIXOS_OZONE_WL = "1";
-    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
   };
 
   environment.localBinInPath = true;
   environment.extraInit = ''
     export PATH="/usr/local/bin:$PATH"
   '';
-  console.keyMap = "${consoleKeyMap}";
+  console.keyMap = consoleKeyMap;
   system.stateVersion = "23.11";
 
-  documentation = lib.mkIf isServer {
+  documentation = lib.mkIf config.dotfiles.host.isServer {
     enable = false;
     man.enable = false;
     doc.enable = false;

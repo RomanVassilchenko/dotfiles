@@ -1,8 +1,8 @@
 {
+  config,
   lib,
-  isServer,
   ...
 }:
-lib.mkIf (!isServer) {
+lib.mkIf config.dotfiles.features.desktop.plasma.enable {
   programs.kdeconnect.enable = true;
 }

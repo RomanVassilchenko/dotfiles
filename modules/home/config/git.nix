@@ -1,6 +1,6 @@
-{ vars, pkgs, ... }:
+{ dotfiles, ... }:
 let
-  inherit (vars) gitUsername;
+  gitUsername = dotfiles.user.gitName;
 in
 {
   # GitHub-specific git configuration

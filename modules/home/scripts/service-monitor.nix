@@ -1,7 +1,7 @@
 {
+  dotfiles,
   pkgs,
   lib,
-  isServer,
   ...
 }:
 let
@@ -37,7 +37,7 @@ let
         echo ""
       fi
 
-      ${lib.optionalString (!isServer) ''
+      ${lib.optionalString dotfiles.features.desktop.enable ''
         if command -v notify-send &> /dev/null; then
           notify-send -u critical "Systemd Services" "$total_failed service(s) failed"
         fi

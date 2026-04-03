@@ -1,10 +1,11 @@
 {
+  dotfiles,
   pkgs,
   lib,
   appConfig,
   ...
 }:
-{
+lib.mkIf dotfiles.features.apps.telegram.enable {
   xdg.configFile."autostart/org.telegram.desktop.desktop" =
     lib.mkIf (appConfig.telegram.autostart or false)
       {

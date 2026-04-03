@@ -1,10 +1,5 @@
 {
-  lib,
-  isServer,
-  ...
-}:
-{
-  imports = lib.optionals (!isServer) [
+  imports = [
     ./kde
   ];
 }

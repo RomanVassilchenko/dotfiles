@@ -1,7 +1,7 @@
 {
+  config,
   lib,
   pkgs,
-  isServer,
   ...
 }:
 
@@ -15,7 +15,7 @@
   services.tlp = {
     enable = true;
     settings =
-      if isServer then
+      if config.dotfiles.host.isServer then
         {
           CPU_SCALING_GOVERNOR_ON_AC = "powersave";
           CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
