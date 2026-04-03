@@ -23,3 +23,5 @@ config/.claude/skills/*
 !config/.claude/settings.json
 !config/.claude/statusline-command.sh
 config/codex/cache/codex_apps_tools/*
+config/codex/session_index.jsonl
+config/codex/.tmp
