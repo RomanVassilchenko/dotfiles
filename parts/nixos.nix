@@ -137,5 +137,18 @@ let
     };
 in
 {
+  perSystem =
+    { pkgs, ... }:
+    let
+      dotCli = import ../lib/dot-cli.nix { inherit pkgs; };
+    in
+    {
+      packages.dot = dotCli;
+      apps.dot = {
+        type = "app";
+        program = "${dotCli}/bin/dot";
+      };
+    };
+
   flake.nixosConfigurations = lib.genAttrs hostNames mkHost;
 }
