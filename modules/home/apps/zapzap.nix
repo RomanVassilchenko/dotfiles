@@ -1,10 +1,11 @@
 {
+  dotfiles,
   pkgs,
   lib,
   appConfig,
   ...
 }:
-{
+lib.mkIf dotfiles.features.apps.zapzap.enable {
   xdg.configFile."autostart/com.rtosta.zapzap.desktop" =
     lib.mkIf (appConfig.zapzap.autostart or false)
       {

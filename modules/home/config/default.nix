@@ -1,6 +1,6 @@
 {
+  dotfiles,
   lib,
-  isServer,
   ...
 }:
 {
@@ -11,7 +11,7 @@
     ./ssh.nix
     ./xdg.nix
   ]
-  ++ lib.optionals (!isServer) [
+  ++ lib.optionals dotfiles.features.stylix.enable [
     ./stylix.nix
   ];
 }

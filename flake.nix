@@ -2,6 +2,8 @@
   description = "Dotfiles";
 
   inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,160 +44,9 @@
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }@inputs:
-    let
-      inherit (nixpkgs) lib;
-      username = "romanv";
-
-      mkStable =
-        system:
-        import inputs.nixpkgs-stable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-
-      gpuConfig = {
-        intel = {
-          drivers.intel.enable = true;
-        };
-        amd = {
-          drivers.amdgpu.enable = true;
-        };
-      };
-
-      mkNixosConfig =
-        {
-          gpuProfile,
-          host,
-          profile,
-        }:
-        let
-          commonDefaults = import ./hosts/default/common.nix;
-          hostVars = import ./hosts/${host}/variables.nix;
-          profileDefaults = import ./hosts/profiles/${profile}.nix;
-          vars = lib.recursiveUpdate (commonDefaults // profileDefaults) hostVars;
-          deviceType = vars.deviceType or (if profile == "server" then "server" else "laptop");
-          isServer = deviceType == "server";
-        in
-        nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            inherit
-              inputs
-              username
-              host
-              vars
-              isServer
-              profile
-              ;
-            pkgs-stable = mkStable "x86_64-linux";
-          };
-          modules = [
-            {
-              nixpkgs.overlays = [
-                inputs.llm-agents.overlays.default
-                (final: prev: {
-                  # Enable MS-RDPECAM camera redirection and prefer passthrough formats
-                  freerdp = prev.freerdp.overrideAttrs (old: {
-                    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.python3 ];
-                    buildInputs = old.buildInputs ++ [ final.linuxHeaders ];
-                    cmakeFlags = old.cmakeFlags ++ [ "-DCHANNEL_RDPECAM_CLIENT:BOOL=ON" ];
-                    postPatch = (old.postPatch or "") + ''
-                                            python3 - <<'PY'
-                      from pathlib import Path
-
-                      path = Path("channels/rdpecam/client/camera_device_main.c")
-                      text = path.read_text()
-                      old = """
-                      	if (!initialized)
-                      	{
-                      		for (size_t dst = 0; dst < ARRAYSIZE(available); dst++)
-                      		{
-                      			const CAM_MEDIA_FORMAT dstFormat = available[dst];
-
-                      			for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                      			{
-                      				const CAM_MEDIA_FORMAT srcFormat = available[src];
-                      				if (freerdp_video_conversion_supported(ecamToVideoFormat(srcFormat),
-                      				                                       ecamToVideoFormat(dstFormat)))
-                      				{
-                      					formats[count++] = (CAM_MEDIA_FORMAT_INFO){ srcFormat, dstFormat };
-                      				}
-                      			}
-                      		}
-                      		initialized = TRUE;
-                      	}
-                      """
-                      new = """
-                      	if (!initialized)
-                      	{
-                      		for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                      		{
-                      			const CAM_MEDIA_FORMAT format = available[src];
-                      			if (freerdp_video_conversion_supported(ecamToVideoFormat(format),
-                      			                                       ecamToVideoFormat(format)))
-                      			{
-                      				formats[count++] = (CAM_MEDIA_FORMAT_INFO){ format, format };
-                      			}
-                      		}
-
-                      		for (size_t dst = 0; dst < ARRAYSIZE(available); dst++)
-                      		{
-                      			const CAM_MEDIA_FORMAT dstFormat = available[dst];
-
-                      			for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                      			{
-                      				const CAM_MEDIA_FORMAT srcFormat = available[src];
-                      				if ((srcFormat == dstFormat) ||
-                      				    !freerdp_video_conversion_supported(ecamToVideoFormat(srcFormat),
-                      				                                       ecamToVideoFormat(dstFormat)))
-                      				{
-                      					continue;
-                      				}
-
-                      				formats[count++] = (CAM_MEDIA_FORMAT_INFO){ srcFormat, dstFormat };
-                      			}
-                      		}
-                      		initialized = TRUE;
-                      	}
-                      """
-                      if old not in text:
-                          raise SystemExit("expected FreeRDP getSupportedFormats block not found")
-                      path.write_text(text.replace(old, new))
-                      PY
-                    '';
-                  });
-                })
-              ];
-            }
-            ./hosts/${host}
-            ./modules/drivers
-            ./modules/core
-            gpuConfig.${gpuProfile}
-            inputs.stylix.nixosModules.stylix
-            inputs.nix-flatpak.nixosModules.nix-flatpak
-            inputs.lanzaboote.nixosModules.lanzaboote
-          ]
-          ++ lib.optional (builtins.pathExists ./private/default.nix) ./private;
-        };
-    in
-    {
-      nixosConfigurations = {
-        laptop-82sn = mkNixosConfig {
-          gpuProfile = "amd";
-          host = "laptop-82sn";
-          profile = "workstation";
-        };
-        ninkear = mkNixosConfig {
-          gpuProfile = "amd";
-          host = "ninkear";
-          profile = "server";
-        };
-      };
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      imports = [ ./parts/nixos.nix ];
     };
 }

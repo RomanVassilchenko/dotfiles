@@ -1,31 +1,21 @@
 {
-  lib,
-  vars,
+  dotfiles,
   ...
 }:
-let
-  deviceType = vars.deviceType or "laptop";
-
-  bitwarden = vars.bitwarden or { };
-  discord = vars.discord or { };
-  solaar = vars.solaar or { };
-  telegram = vars.telegram or { };
-  zapzap = vars.zapzap or { };
-in
 {
   _module.args = {
     appConfig = {
-      inherit
-        bitwarden
-        discord
-        solaar
-        telegram
-        zapzap
-        ;
+      bitwarden.autostart = dotfiles.features.apps.bitwarden.autostart;
+      discord.autostart = dotfiles.features.apps.discord.autostart;
+      obsStudio.autostart = dotfiles.features.apps.obsStudio.autostart;
+      "outlook-rdp".autostart = dotfiles.features.apps.outlookRdp.autostart;
+      solaar.autostart = dotfiles.features.apps.solaar.autostart;
+      telegram.autostart = dotfiles.features.apps.telegram.autostart;
+      zapzap.autostart = dotfiles.features.apps.zapzap.autostart;
     };
   };
 
-  imports = lib.optionals (deviceType != "server") [
+  imports = [
     ./bitwarden.nix
     ./camunda-modeler.nix
     ./discord.nix

@@ -1,10 +1,13 @@
 {
+  config,
   pkgs,
   pkgs-stable,
   lib,
-  isServer,
   ...
 }:
+let
+  desktopEnable = config.dotfiles.features.desktop.enable;
+in
 {
 
   services.ananicy = {
@@ -27,7 +30,7 @@
 
   services.earlyoom = {
     enable = true;
-    enableNotifications = lib.mkDefault (!isServer);
+    enableNotifications = lib.mkDefault desktopEnable;
     freeMemThreshold = 5;
     freeSwapThreshold = 10;
     freeMemKillThreshold = 2;
@@ -42,5 +45,5 @@
 
   services.irqbalance.enable = true;
 
-  services.systembus-notify.enable = lib.mkForce (!isServer);
+  services.systembus-notify.enable = lib.mkForce desktopEnable;
 }

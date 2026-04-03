@@ -1,5 +1,7 @@
 {
+  dotfiles,
   inputs,
+  lib,
   pkgs,
   ...
 }:
@@ -8,7 +10,7 @@
     inputs.plasma-manager.homeModules.plasma-manager
   ];
 
-  home.packages = [
+  home.packages = lib.optionals dotfiles.features.desktop.plasma.enable [
     inputs.plasma-manager.packages.${pkgs.stdenv.hostPlatform.system}.rc2nix
   ];
 }

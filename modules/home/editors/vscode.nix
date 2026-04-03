@@ -1,12 +1,14 @@
 {
+  dotfiles,
+  lib,
   pkgs,
   config,
   ...
 }:
 let
-  dotfilesPath = "/home/romanv/Documents/dotfiles";
+  dotfilesPath = dotfiles.paths.dotfiles;
 in
-{
+lib.mkIf dotfiles.features.development.enable {
   programs.vscode = {
     enable = true;
     package = pkgs.vscode;

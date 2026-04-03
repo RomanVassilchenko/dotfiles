@@ -1,5 +1,10 @@
-{ username, ... }:
 {
+  config,
+  lib,
+  username,
+  ...
+}:
+lib.mkIf config.dotfiles.host.isServer {
   services.samba = {
     enable = true;
     openFirewall = true;

@@ -1,5 +1,11 @@
-{ pkgs-stable, ... }:
 {
+  dotfiles,
+  lib,
+  pkgs-stable,
+  appConfig,
+  ...
+}:
+lib.mkIf dotfiles.features.apps.obsStudio.enable {
   programs.obs-studio = {
     enable = true;
     plugins = with pkgs-stable.obs-studio-plugins; [
@@ -13,6 +19,22 @@
       droidcam-obs
     ];
   };
+
+  xdg.configFile."autostart/com.obsproject.Studio.desktop" =
+    lib.mkIf (appConfig.obsStudio.autostart or false)
+      {
+        text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=OBS Studio
+          Comment=Live streaming and recording studio
+          Exec=${pkgs-stable.obs-studio}/bin/obs
+          Icon=com.obsproject.Studio
+          Terminal=false
+          Categories=AudioVideo;Recorder;Video;
+          StartupWMClass=obs
+        '';
+      };
 
   xdg.configFile."obs-studio/themes/Catppuccin.obt".text = ''
     @OBSThemeMeta {

@@ -1,4 +1,9 @@
 {
+  dotfiles,
+  lib,
+  ...
+}:
+lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {
     panels = [
       {

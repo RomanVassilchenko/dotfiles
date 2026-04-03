@@ -1,10 +1,6 @@
 {
-  lib,
-  isServer,
-  ...
-}:
-{
   imports = [
+    ./dotfiles.nix
     ./boot.nix
     ./hardware.nix
     ./local-hardware-clock.nix
@@ -14,8 +10,6 @@
     ./thermal.nix
     ./user.nix
     ./virtualisation.nix
-  ]
-  ++ lib.optionals (!isServer) [
     ./boot-desktop.nix
   ];
 }

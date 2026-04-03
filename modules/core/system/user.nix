@@ -1,13 +1,15 @@
 {
+  config,
   pkgs,
   inputs,
-  username,
   host,
-  vars,
-  isServer,
   pkgs-stable,
   ...
 }:
+let
+  dotfiles = config.dotfiles;
+  userName = dotfiles.user.name;
+in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
   home-manager = {
@@ -17,26 +19,25 @@
     extraSpecialArgs = {
       inherit
         inputs
-        username
         host
-        vars
-        isServer
+        dotfiles
         pkgs-stable
         ;
+      username = userName;
     };
-    users.${username} = {
+    users.${userName} = {
       imports = [ ../../home ];
       home = {
-        username = "${username}";
-        homeDirectory = "/home/${username}";
+        username = userName;
+        homeDirectory = dotfiles.user.homeDirectory;
         stateVersion = "23.11";
       };
     };
   };
   users.mutableUsers = true;
-  users.users.${username} = {
+  users.users.${userName} = {
     isNormalUser = true;
-    description = vars.gitUsername;
+    description = dotfiles.user.gitName;
     extraGroups = [
       "adbusers"
       "docker"
@@ -57,5 +58,5 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInNKbTTbxK433xEXs5A3az+j7z9bBxdgPQn6BhiOgnq roman.vassilchenko.work@gmail.com"
     ];
   };
-  nix.settings.allowed-users = [ "${username}" ];
+  nix.settings.allowed-users = [ userName ];
 }

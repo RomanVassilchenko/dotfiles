@@ -1,4 +1,4 @@
-{ lib, isServer, ... }:
-lib.mkIf (!isServer) {
+{ dotfiles, lib, ... }:
+lib.mkIf dotfiles.features.desktop.enable {
   programs.fastfetch.enable = true;
 }

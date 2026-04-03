@@ -1,10 +1,10 @@
 {
+  config,
   pkgs,
   lib,
-  config,
   ...
 }:
-{
+lib.mkIf config.dotfiles.features.desktop.enable {
   boot = {
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];

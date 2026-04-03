@@ -1,8 +1,14 @@
-{ pkgs, config, ... }:
-let
-  dotfilesPath = "/home/romanv/Documents/dotfiles";
-in
 {
+  dotfiles,
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+let
+  dotfilesPath = dotfiles.paths.dotfiles;
+in
+lib.mkIf dotfiles.features.development.enable {
   programs.zed-editor = {
     enable = true;
     package = pkgs.zed-editor;

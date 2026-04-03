@@ -1,8 +1,8 @@
 {
+  config,
   pkgs,
   pkgs-stable,
   lib,
-  isServer,
   ...
 }:
 {
@@ -17,5 +17,5 @@
       xh # Modern httpie alternative (Rust)
     ])
     ++ [ pkgs.cloudflared ] # keep on unstable — actively updated
-    ++ lib.optionals (!isServer) [ pkgs-stable.openfortivpn ];
+    ++ lib.optionals config.dotfiles.features.work.enable [ pkgs-stable.openfortivpn ];
 }

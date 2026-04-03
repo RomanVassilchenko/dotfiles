@@ -1,15 +1,13 @@
 {
   lib,
   config,
-  vars,
-  isServer,
+  dotfiles,
   ...
 }:
 let
-  workEnable = vars.workEnable or false;
-  dotfilesPath = "/home/romanv/Documents/dotfiles";
+  dotfilesPath = dotfiles.paths.dotfiles;
 in
-lib.mkIf (workEnable && !isServer) {
+lib.mkIf (dotfiles.features.work.enable && dotfiles.features.desktop.enable) {
   xdg.configFile."camunda-modeler/resources/plugins/camunda-modeler-dark-theme-plugin".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/camunda-modeler/plugins/camunda-modeler-dark-theme-plugin";
 }

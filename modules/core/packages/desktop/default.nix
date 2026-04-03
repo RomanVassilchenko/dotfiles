@@ -1,13 +1,5 @@
 {
-  lib,
-  vars,
-  ...
-}:
-let
-  deviceType = vars.deviceType or "laptop";
-in
-{
-  imports = lib.optionals (deviceType != "server") [
+  imports = [
     ./apps.nix
     ./browsers.nix
     ./communication.nix

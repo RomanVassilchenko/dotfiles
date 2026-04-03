@@ -1,9 +1,15 @@
 {
+  config,
   pkgs,
   host,
+  lib,
   options,
   ...
 }:
+let
+  desktopEnable = config.dotfiles.features.desktop.enable;
+  plasmaEnable = config.dotfiles.features.desktop.plasma.enable;
+in
 {
   systemd.services.NetworkManager.unitConfig = {
     StopWhenUnneeded = false;
@@ -28,13 +34,13 @@
         59010
         59011
       ];
-      allowedTCPPortRanges = [
+      allowedTCPPortRanges = lib.mkIf plasmaEnable [
         {
           from = 1714;
           to = 1764;
         }
       ];
-      allowedUDPPortRanges = [
+      allowedUDPPortRanges = lib.mkIf plasmaEnable [
         {
           from = 1714;
           to = 1764;
@@ -43,5 +49,5 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ networkmanagerapplet ];
+  environment.systemPackages = lib.optionals desktopEnable [ pkgs.networkmanagerapplet ];
 }

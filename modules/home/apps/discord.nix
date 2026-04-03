@@ -1,4 +1,5 @@
 {
+  dotfiles,
   pkgs,
   lib,
   appConfig,
@@ -10,7 +11,7 @@ let
     sha256 = "sha256-KVv9vfqI+WADn3w4yE1eNsmtm7PQq9ugKiSL3EOLheI=";
   };
 in
-{
+lib.mkIf dotfiles.features.apps.discord.enable {
   xdg.configFile."autostart/vesktop.desktop" = lib.mkIf (appConfig.discord.autostart or false) {
     text = ''
       [Desktop Entry]

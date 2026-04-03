@@ -1,5 +1,5 @@
-{ lib, isServer, ... }:
-lib.mkIf (!isServer) {
+{ config, lib, ... }:
+lib.mkIf config.dotfiles.features.desktop.enable {
   services.pipewire.extraConfig.pipewire."10-virtual-mic" = {
     "context.objects" = [
       {

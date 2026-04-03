@@ -1,7 +1,7 @@
 {
   config,
+  dotfiles,
   lib,
-  isServer,
   ...
 }:
 {
@@ -53,7 +53,7 @@
       };
     };
 
-    dataFile = lib.mkIf (!isServer) {
+    dataFile = lib.mkIf dotfiles.features.desktop.enable {
       "PrismLauncher/themes/Catppuccin-Mocha/theme.json".text = builtins.toJSON {
         colors = {
           AlternateBase = "#1e1e2e";

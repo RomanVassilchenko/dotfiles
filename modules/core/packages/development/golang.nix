@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   gci = pkgs.buildGoModule rec {
     pname = "gci";
@@ -16,7 +21,7 @@ let
     excludedPackages = [ "v2" ];
   };
 in
-{
+lib.mkIf config.dotfiles.features.development.enable {
   environment.systemPackages = with pkgs; [
     delve
     gcc

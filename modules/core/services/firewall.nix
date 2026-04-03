@@ -1,8 +1,11 @@
 {
+  config,
   lib,
-  isServer,
   ...
 }:
+let
+  plasmaEnable = config.dotfiles.features.desktop.plasma.enable;
+in
 {
   networking.firewall = {
     enable = true;
@@ -18,13 +21,13 @@
 
     allowedUDPPorts = [ ];
 
-    allowedTCPPortRanges = lib.mkIf (!isServer) [
+    allowedTCPPortRanges = lib.mkIf plasmaEnable [
       {
         from = 1714;
         to = 1764;
       }
     ];
-    allowedUDPPortRanges = lib.mkIf (!isServer) [
+    allowedUDPPortRanges = lib.mkIf plasmaEnable [
       {
         from = 1714;
         to = 1764;

@@ -1,6 +1,6 @@
 {
+  config,
   username,
-  isServer,
   lib,
   ...
 }:
@@ -44,7 +44,7 @@
           ];
         }
       ]
-      ++ lib.optionals isServer [
+      ++ lib.optionals config.dotfiles.host.isServer [
         {
           users = [ username ];
           commands = [
