@@ -235,7 +235,7 @@ in
     };
 
     cmd_duration = {
-      format = "[✗ ](bold fg:red bg:yellow)[$duration ](bg:yellow fg:crust)[](fg:yellow)";
+      format = "[](fg:yellow)[󰔛 $duration ](bg:yellow fg:crust bold)[](fg:yellow)";
       min_time = 3000;
       show_milliseconds = false;
     };
