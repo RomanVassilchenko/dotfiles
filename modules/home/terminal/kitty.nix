@@ -40,6 +40,14 @@ lib.mkIf dotfiles.features.desktop.enable {
 
       # Rename tab
       "ctrl+shift+r" = "set_tab_title";
+
+      # Word navigation via standard Meta sequences.
+      "ctrl+right" = "send_text all \\x1bf";
+      "ctrl+left" = "send_text all \\x1bb";
+    };
+
+    mouseBindings = {
+      "ctrl+left click" = "ungrabbed mouse_click_url";
     };
   };
 }
