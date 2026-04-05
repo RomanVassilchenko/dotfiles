@@ -15,7 +15,6 @@
   features.work.enable = true;
 
   features.apps.bitwarden.autostart = true;
-  features.apps.obsStudio.autostart = true;
   features.apps.telegram.autostart = true;
   features.apps.zapzap.autostart = true;
 }
