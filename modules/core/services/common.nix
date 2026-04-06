@@ -1,4 +1,5 @@
 {
+  config,
   ...
 }:
 {
@@ -8,7 +9,7 @@
     dbus.implementation = "broker";
 
     openssh = {
-      enable = false;
+      enable = config.dotfiles.host.isServer;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
