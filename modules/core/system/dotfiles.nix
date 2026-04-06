@@ -192,6 +192,6 @@ in
 
     dotfiles.features.apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
 
-    dotfiles.features.apps.virtManager.enable = mkDefault config.dotfiles.host.isServer;
+    dotfiles.features.apps.virtManager.enable = mkDefault false;
   };
 }

@@ -19,6 +19,7 @@ in
   networking = {
     hostName = "${host}";
     networkmanager.enable = true;
+    modemmanager.enable = false;
     timeServers = options.networking.timeServers.default ++ [ "pool.ntp.org" ];
     firewall = {
       enable = true;
