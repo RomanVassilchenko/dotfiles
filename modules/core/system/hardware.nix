@@ -1,17 +1,27 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  hostIsServer = config.dotfiles.host.isServer;
+in
 {
   hardware = {
-    sane = {
+    enableRedistributableFirmware = true;
+    graphics.enable = true;
+    sane = lib.mkIf (!hostIsServer) {
       enable = true;
       extraBackends = [ pkgs.sane-airscan ];
       disabledDefaultBackends = [ "escl" ];
     };
-    bluetooth.enable = true;
-    bluetooth.powerOnBoot = true;
-    enableRedistributableFirmware = true;
-    graphics.enable = true;
-    keyboard.qmk.enable = true;
-    logitech.wireless.enable = true;
-    logitech.wireless.enableGraphical = true;
+    bluetooth = lib.mkIf (!hostIsServer) {
+      enable = true;
+      powerOnBoot = true;
+    };
+    keyboard.qmk.enable = !hostIsServer;
+    logitech.wireless.enable = !hostIsServer;
+    logitech.wireless.enableGraphical = !hostIsServer;
   };
 }

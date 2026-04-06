@@ -8,7 +8,7 @@
     dbus.implementation = "broker";
 
     openssh = {
-      enable = true;
+      enable = false;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;

@@ -5,10 +5,7 @@ lib.mkIf config.dotfiles.features.desktop.enable {
 
     packages = [ ];
 
-    update.onActivation = true;
-    update.auto = {
-      enable = true;
-      onCalendar = "weekly";
-    };
+    update.onActivation = false;
+    update.auto.enable = false;
   };
 }
