@@ -27,8 +27,10 @@ in
 
     history = {
       ignoreDups = true;
-      save = 10000;
-      size = 10000;
+      ignoreSpace = true;
+      expireDuplicatesFirst = true;
+      save = 50000;
+      size = 50000;
       path = "${config.xdg.stateHome}/zsh/history";
     };
 
@@ -106,6 +108,13 @@ in
       # ===========================================
       # fzf-tab Configuration
       # ===========================================
+      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+      zstyle ':completion:*' menu no
+      zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+      zstyle ':completion:*:descriptions' format '[%d]'
+      zstyle ':completion:*' special-dirs true
+      zstyle ':completion:*' squeeze-slashes true
+
       # Catppuccin Mocha colors for fzf-tab
       zstyle ':fzf-tab:*' fzf-flags --color=bg+:${overlay0},spinner:${mauve},hl:${mauve} \
         --color=fg:${text},header:${mauve},info:${peach},pointer:${mauve} \
@@ -118,9 +127,9 @@ in
       zstyle ':fzf-tab:*' switch-group '<' '>'
 
       # Preview directory contents
-      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-      zstyle ':fzf-tab:complete:ls:*' fzf-preview 'eza -1 --color=always $realpath'
-      zstyle ':fzf-tab:complete:eza:*' fzf-preview 'eza -1 --color=always $realpath'
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --tree --level=2 --color=always --icons=always $realpath'
+      zstyle ':fzf-tab:complete:ls:*' fzf-preview 'eza --tree --level=2 --color=always --icons=always $realpath'
+      zstyle ':fzf-tab:complete:eza:*' fzf-preview 'eza --tree --level=2 --color=always --icons=always $realpath'
 
       # Preview file contents
       zstyle ':fzf-tab:complete:cat:*' fzf-preview 'bat --color=always --style=numbers --line-range=:100 $realpath 2>/dev/null || cat $realpath'
@@ -141,11 +150,6 @@ in
       # ===========================================
       # Keybindings
       # ===========================================
-      bindkey "\eh" backward-word
-      bindkey "\ej" down-line-or-history
-      bindkey "\ek" up-line-or-history
-      bindkey "\el" forward-word
-
       # Edit current command in $EDITOR (Ctrl+X, Ctrl+E)
       autoload -Uz edit-command-line
       zle -N edit-command-line
@@ -156,6 +160,8 @@ in
 
       # Accept autosuggestion with Ctrl+Space
       bindkey '^ ' autosuggest-accept
+      bindkey '^[[1;5C' forward-word
+      bindkey '^[[1;5D' backward-word
 
       # ===========================================
       # Custom Widgets
@@ -187,6 +193,29 @@ in
       zle -N toggle-fg-bg
       bindkey '^Z' toggle-fg-bg
 
+      # Open the current buffer in the default terminal editor fast
+      function edit-in-micro() {
+        BUFFER="micro"
+        zle accept-line
+      }
+      zle -N edit-in-micro
+      bindkey '^X^M' edit-in-micro
+
+      # Open the current directory in a GUI editor.
+      function open-in-vscode() {
+        BUFFER="code ."
+        zle accept-line
+      }
+      zle -N open-in-vscode
+      bindkey '^X^V' open-in-vscode
+
+      function open-in-zed() {
+        BUFFER="zed ."
+        zle accept-line
+      }
+      zle -N open-in-zed
+      bindkey '^X^Z' open-in-zed
+
       # ===========================================
       # zmv - Advanced Batch Rename/Move
       # ===========================================
@@ -200,6 +229,63 @@ in
       alias -g NUL='>/dev/null 2>&1'
       alias -g J='| jq'
       alias -g C='| wl-copy'
+      alias -g G='| rg'
+
+      # ===========================================
+      # Search & Navigation Helpers
+      # ===========================================
+      fcd() {
+        local query
+        local dir
+        query="''${1:-.}"
+        dir=$(fd --type d --hidden --follow --exclude .git "$query" . | fzf \
+          --prompt='󰉋 ' \
+          --preview 'eza --tree --level=2 --color=always --icons=always {} 2>/dev/null') || return
+        cd "$dir"
+      }
+
+      fe() {
+        local query
+        local file
+        query="''${1:-.}"
+        file=$(fd --type f --hidden --follow --exclude .git "$query" . | fzf \
+          --prompt='󰈔 ' \
+          --preview 'bat --color=always --style=numbers --line-range=:200 {} 2>/dev/null') || return
+        micro "$file"
+      }
+
+      frg() {
+        local match file line
+        match=$(rg --line-number --no-heading --color=always --smart-case "$@" | fzf \
+          --ansi \
+          --delimiter ':' \
+          --prompt='󰱼 ' \
+          --preview 'bat --color=always --style=numbers --highlight-line {2} --line-range {2}:$(({2}+80)) {1} 2>/dev/null') || return
+        file=$(printf '%s' "$match" | cut -d: -f1)
+        line=$(printf '%s' "$match" | cut -d: -f2)
+        [ -n "$file" ] && micro +"$line" "$file"
+      }
+
+      ai-session() {
+        local tool="''${1:-claude}"
+        case "$tool" in
+          claude|opencode|codex|gemini)
+            "$tool" "''${@:2}"
+            ;;
+          *)
+            printf 'Unknown AI tool: %s\n' "$tool"
+            return 1
+            ;;
+        esac
+      }
+
+      hs() {
+        atuin stats "$@"
+      }
+
+      cu() {
+        claude-usage "$@"
+      }
 
       # ===========================================
       # Suffix Aliases (type filename to open it)
@@ -267,6 +353,17 @@ in
       c = "clear";
       man = "batman";
       rm = "trash-put";
+      cat = "bat";
+      v = "code --wait";
+      vz = "zed .";
+      lg = "lazygit";
+      ld = "lazydocker";
+      dux = "dust";
+      dui = "ncdu";
+      cc = "claude";
+      oc = "opencode";
+      cx = "codex";
+      gem = "gemini";
     };
   };
 }

@@ -1,4 +1,21 @@
 {
+  "agent_servers": {
+    "gemini": {
+      "type": "registry"
+    },
+    "opencode": {
+      "type": "registry"
+    },
+    "github-copilot-cli": {
+      "type": "registry"
+    },
+    "codex-acp": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
   "edit_predictions": {
     "provider": "copilot"
   },

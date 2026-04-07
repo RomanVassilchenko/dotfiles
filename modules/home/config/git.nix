@@ -85,6 +85,13 @@ in
         line-numbers = true;
         syntax-theme = "Catppuccin Mocha";
         features = "decorations";
+        hyperlinks = true;
+        keep-plus-minus-markers = true;
+        hunk-header-style = "file line-number syntax";
+        minus-style = "syntax #313244";
+        minus-emph-style = "syntax bold #f38ba8";
+        plus-style = "syntax #313244";
+        plus-emph-style = "syntax bold #a6e3a1";
       };
       delta.decorations = {
         commit-decoration-style = "bold #cba6f7 box ul"; # mauve

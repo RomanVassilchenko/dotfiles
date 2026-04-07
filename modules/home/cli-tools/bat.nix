@@ -4,7 +4,9 @@
     enable = true;
     config = {
       pager = "less -FR";
-      style = "full";
+      style = "numbers,changes,header";
+      tabs = "2";
+      wrap = "never";
     };
     extraPackages = with pkgs-stable.bat-extras; [
       batman

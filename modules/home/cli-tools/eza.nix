@@ -53,6 +53,7 @@ in
       "--classify"
       "--hyperlink"
       "--color=always"
+      "--time-style=long-iso"
     ];
   };
 
@@ -60,9 +61,10 @@ in
 
   home.shellAliases = {
     ls = "eza";
-    lt = "eza --tree --level=2";
-    ll = "eza  -lh --no-user --long";
-    la = "eza -lah ";
-    tree = "eza --tree ";
+    l = "eza -1";
+    lt = "eza --tree --level=2 --icons=always";
+    ll = "eza -lh --git --smart-group --long";
+    la = "eza -lah --git --smart-group";
+    tree = "eza --tree --icons=always";
   };
 }

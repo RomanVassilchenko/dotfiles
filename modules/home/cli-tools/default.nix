@@ -3,6 +3,7 @@
   imports = [
     ./atuin.nix
     ./bat.nix
+    ./direnv.nix
     ./gh.nix
     ./btop.nix
     ./eza.nix

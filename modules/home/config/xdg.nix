@@ -9,7 +9,9 @@
 
   home.sessionVariables = {
     EDITOR = "micro";
-    VISUAL = "micro";
+    VISUAL = "code --wait";
+    SUDO_EDITOR = "micro";
+    COLORTERM = "truecolor";
 
     DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
 
