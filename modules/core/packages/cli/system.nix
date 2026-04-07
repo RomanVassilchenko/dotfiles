@@ -42,7 +42,7 @@ in
     pkgs-stable.dust # Intuitive disk usage (du alternative)
     # pkgs-stable.dysk
     pkgs-stable.lazyjournal # Journald/Docker logs TUI
-    # pkgs-stable.ncdu # Interactive disk usage
+    pkgs-stable.ncdu # Interactive disk usage
   ]
   ++ lib.optionals config.dotfiles.features.desktop.enable [
     pkgs.v4l-utils

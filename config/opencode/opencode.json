@@ -1,5 +1,26 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "autoupdate": "notify",
+  "default_agent": "build",
+  "share": "manual",
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 12000
+  },
+  "watcher": {
+    "ignore": [
+      "**/.git/**",
+      "**/node_modules/**",
+      "**/.direnv/**",
+      "config/.claude/projects/**",
+      "config/codex/sessions/**",
+      "config/gemini/tmp/**"
+    ]
+  },
   "mcp": {
     "chrome-devtools": {
       "type": "local",

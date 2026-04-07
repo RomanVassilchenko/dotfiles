@@ -24,7 +24,7 @@ in
   programs.starship.enable = true;
   programs.starship.package = pkgs-stable.starship;
   programs.starship.settings = {
-    format = "[](fg:mauve)$os$directory\${custom.dir_close}$git_branch$git_state$git_status$golang\${custom.git_close}$nix_shell$buf$c$python$rust$nodejs$lua$nim$swift$zig$ocaml$haskell$java$julia$elixir$elm$scala$docker_context$package$fill$status$cmd_duration$jobs$hostname\n$character";
+    format = "$os$directory$git_branch$git_state$git_status$golang$nix_shell$buf$c$cmake$python$rust$nodejs$lua$nim$swift$zig$ocaml$haskell$java$julia$elixir$elm$scala$docker_context$package$fill$status$cmd_duration$jobs$hostname\n$character";
     add_newline = false;
     palette = lib.mkForce "stylix";
 
@@ -44,179 +44,156 @@ in
 
     os = {
       disabled = false;
-      format = "[ $symbol ](bg:mauve fg:crust bold)";
-      symbols = {
-        NixOS = "";
-        Linux = "";
-      };
+      format = "[$symbol](bold fg:mauve) ";
     };
 
     directory = {
-      format = "[](fg:mauve bg:blue)[ $path$read_only ](bg:blue fg:crust bold)";
+      format = "[$path$read_only](bold fg:blue) ";
       truncation_length = 3;
       truncate_to_repo = false;
       read_only = " 󰌾";
-      read_only_style = "bg:blue fg:red";
+      read_only_style = "fg:red";
       substitutions = {
         "Documents" = "󰈙 ";
         "Downloads" = "󰇚 ";
         "Music" = "󰎆 ";
         "Pictures" = "󰉏 ";
-        "Development" = "󰲋 ";
-        "dotfiles" = "󰒓 ";
       };
     };
 
-    custom.dir_close = {
-      command = "echo -n ''";
-      when = "! git rev-parse --git-dir > /dev/null 2>&1";
-      format = "[](fg:blue)";
-      shell = [
-        "bash"
-        "--norc"
-        "--noprofile"
-      ];
-    };
-
-    custom.git_close = {
-      command = "echo -n ''";
-      when = "git rev-parse --git-dir > /dev/null 2>&1 && ! test -f go.mod";
-      format = "[](fg:yellow)";
-      shell = [
-        "bash"
-        "--norc"
-        "--noprofile"
-      ];
-    };
-
     git_branch = {
-      format = "[](fg:blue bg:yellow)[$symbol$branch(:$remote_branch) ](bg:yellow fg:crust)";
-      symbol = " ";
+      format = "[$symbol$branch(:$remote_branch)](fg:yellow) ";
+      symbol = " ";
     };
 
-    git_state.format = "[ $state( $progress_current/$progress_total) ](bg:yellow fg:crust bold)";
+    git_state.format = "[$state( $progress_current/$progress_total)](bold fg:yellow) ";
 
     git_status = {
-      format = "[$all_status$ahead_behind ](bg:yellow fg:crust)";
-      style = "bg:yellow fg:crust";
-      conflicted = "[✗](bg:yellow fg:red bold)";
-      ahead = "[⇡\${count}](bg:yellow fg:crust bold)";
-      behind = "[⇣\${count}](bg:yellow fg:crust bold)";
-      diverged = "[⇡\${ahead_count}⇣\${behind_count}](bg:yellow fg:red bold)";
-      untracked = "[?\${count}](bg:yellow fg:overlay0)";
-      stashed = "[\\$\${count}](bg:yellow fg:crust)";
-      modified = "[!\${count}](bg:yellow fg:overlay0)";
-      staged = "[+\${count}](bg:yellow fg:crust bold)";
-      renamed = "[»\${count}](bg:yellow fg:crust)";
-      deleted = "[-\${count}](bg:yellow fg:red)";
+      format = "[$all_status$ahead_behind](fg:yellow) ";
+      style = "fg:yellow";
+      conflicted = "[ \${count}](bold fg:red)";
+      ahead = "[󰁞 \${count}](bold fg:green)";
+      behind = "[󰁆 \${count}](bold fg:peach)";
+      diverged = "[󰹺 ⇕\${ahead_count}/\${behind_count}](bold fg:red)";
+      untracked = "[ \${count}](fg:overlay0)";
+      stashed = "[ \${count}](fg:mauve)";
+      modified = "[ \${count}](fg:overlay0)";
+      staged = "[ \${count}](bold fg:green)";
+      renamed = "[ \${count}](fg:teal)";
+      deleted = "[ \${count}](fg:red)";
     };
 
     golang = {
-      format = "[](fg:yellow bg:green)[ $symbol$version ](bg:green fg:crust)[](fg:green)";
-      symbol = "󰟓 ";
+      format = "[$symbol$version](fg:green) ";
+      symbol = " ";
     };
 
     nix_shell = {
-      format = "[](fg:teal)[ $symbol$name ](bg:teal fg:crust)[](fg:teal)";
-      symbol = " ";
+      format = "[$symbol$name](fg:teal) ";
+      symbol = " ";
       impure_msg = "impure";
       pure_msg = "pure";
     };
 
-    # Language modules — all use blue for consistency
     buf = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     c = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
+    };
+
+    cmake = {
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     python = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     rust = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = "󱘗 ";
     };
 
     nodejs = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     lua = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     nim = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
+      format = "[$symbol($version )](fg:blue)";
       symbol = "󰆥 ";
     };
 
     swift = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     zig = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     ocaml = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     haskell = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     java = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     julia = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     elixir = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     elm = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     scala = {
-      format = "[](fg:blue)[ $symbol($version) ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol($version )](fg:blue)";
+      symbol = " ";
     };
 
     docker_context = {
-      format = "[](fg:blue)[ $symbol$context ](bg:blue fg:crust)[](fg:blue)";
-      symbol = " ";
+      format = "[$symbol$context](fg:blue) ";
+      symbol = " ";
     };
 
     package = {
-      format = "[](fg:blue)[ $symbol$version ](bg:blue fg:crust)[](fg:blue)";
+      format = "[$symbol$version](fg:blue) ";
       symbol = "󰏗 ";
     };
 
     hostname = {
       ssh_only = true;
-      format = "[](fg:mauve)[ @$hostname ](bg:mauve fg:crust bold)[](fg:mauve)";
+      format = "[@$hostname](bold fg:mauve) ";
+      ssh_symbol = " ";
     };
 
     fill.symbol = " ";
@@ -227,7 +204,7 @@ in
       style = "bold fg:red";
       success_style = "bold fg:green";
       success_symbol = "";
-      symbol = " ✗";
+      symbol = " ";
       not_executable_symbol = " ⊘";
       not_found_symbol = " ?";
       signal_symbol = " ⚡";
@@ -235,15 +212,90 @@ in
     };
 
     cmd_duration = {
-      format = "[](fg:yellow)[󰔛 $duration ](bg:yellow fg:crust bold)[](fg:yellow)";
+      format = "[󰔛 $duration](bold fg:yellow) ";
       min_time = 3000;
       show_milliseconds = false;
     };
 
     jobs = {
-      format = "[](fg:surface0)[ $symbol$number ](bg:surface0 fg:teal)[](fg:surface0)";
+      format = "[$symbol$number](fg:teal) ";
       symbol = "⚙ ";
     };
+
+    aws.symbol = " ";
+    bun.symbol = " ";
+    conda.symbol = " ";
+    cpp.symbol = " ";
+    crystal.symbol = " ";
+    dart.symbol = " ";
+    deno.symbol = " ";
+    fennel.symbol = " ";
+    fortran.symbol = " ";
+    gcloud.symbol = " ";
+    git_commit.tag_symbol = "  ";
+    gradle.symbol = " ";
+    guix_shell.symbol = " ";
+    haxe.symbol = " ";
+    memory_usage.symbol = "󰍛 ";
+    meson.symbol = "󰔷 ";
+    os.symbols = {
+      Alpaquita = " ";
+      Alpine = " ";
+      AlmaLinux = " ";
+      Amazon = " ";
+      Android = " ";
+      AOSC = " ";
+      Arch = " ";
+      Artix = " ";
+      CachyOS = " ";
+      CentOS = " ";
+      Debian = " ";
+      DragonFly = " ";
+      Elementary = " ";
+      Emscripten = " ";
+      EndeavourOS = " ";
+      Fedora = " ";
+      FreeBSD = " ";
+      Garuda = "󰛓 ";
+      Gentoo = " ";
+      HardenedBSD = "󰞌 ";
+      Illumos = "󰈸 ";
+      Ios = "󰀷 ";
+      Kali = " ";
+      Linux = " ";
+      Mabox = " ";
+      Macos = " ";
+      Manjaro = " ";
+      Mariner = " ";
+      MidnightBSD = " ";
+      Mint = " ";
+      NetBSD = " ";
+      NixOS = " ";
+      Nobara = " ";
+      OpenBSD = "󰈺 ";
+      openSUSE = " ";
+      OracleLinux = "󰌷 ";
+      Pop = " ";
+      Raspbian = " ";
+      Redhat = " ";
+      RedHatEnterprise = " ";
+      Redox = "󰀘 ";
+      RockyLinux = " ";
+      Solus = "󰠳 ";
+      SUSE = " ";
+      Ubuntu = " ";
+      Unknown = " ";
+      Void = " ";
+      Windows = "󰍲 ";
+      Zorin = " ";
+    };
+    perl.symbol = " ";
+    php.symbol = " ";
+    pijul_channel.symbol = " ";
+    pixi.symbol = "󰏗 ";
+    rlang.symbol = "󰟔 ";
+    ruby.symbol = " ";
+    xmake.symbol = " ";
 
     character = {
       format = "$symbol ";
