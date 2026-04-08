@@ -178,7 +178,7 @@ in
 
       # Copy current command to clipboard (Ctrl+X, Ctrl+C)
       function copy-buffer-to-clipboard() {
-        echo -n "$BUFFER" | wl-copy
+        printf '%s' "$BUFFER" | wl-copy &!
         zle -M "Copied to clipboard"
       }
       zle -N copy-buffer-to-clipboard
@@ -210,7 +210,7 @@ in
       bindkey '^X^V' open-in-vscode
 
       function open-in-zed() {
-        BUFFER="zed ."
+        BUFFER="zeditor ."
         zle accept-line
       }
       zle -N open-in-zed

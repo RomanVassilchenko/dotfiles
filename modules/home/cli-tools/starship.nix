@@ -212,7 +212,7 @@ in
     };
 
     cmd_duration = {
-      format = "[󰔛 $duration](bold fg:yellow) ";
+      format = "[󰔛  $duration](bold fg:yellow) ";
       min_time = 3000;
       show_milliseconds = false;
     };

@@ -45,7 +45,7 @@
       # Window management
       set -g renumber-windows on
       set -g focus-events on
-      set -g status-position top
+      set -g status-position bottom
       set -g set-clipboard on
       setw -g pane-base-index 1
 
