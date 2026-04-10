@@ -204,7 +204,7 @@ in
       style = "bold fg:red";
       success_style = "bold fg:green";
       success_symbol = "";
-      symbol = "✗";
+      symbol = " ✗";
       not_executable_symbol = " ⊘";
       not_found_symbol = " ?";
       signal_symbol = " ⚡";
