@@ -1,4 +1,4 @@
-{ pkgs-stable, lib, ... }:
+{ pkgs-stable, ... }:
 {
   # rbw - Caching Bitwarden CLI with home-manager integration
   # Handles config file generation and shell completions automatically
@@ -11,15 +11,11 @@
     };
   };
 
-  # bw (bitwarden-cli) - configure server URL on activation
-  home.activation.configureBwServer = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    run ${pkgs-stable.bitwarden-cli}/bin/bw config server https://bitwarden.romanv.dev
-  '';
-
   # Shell completions for bw (bitwarden-cli) and rbw
+  # bw completion produces Node.js deprecation noise on stderr — suppress it
   programs.zsh.initContent = ''
     if command -v bw >/dev/null 2>&1; then
-      source <(bw completion --shell zsh)
+      source <(bw completion --shell zsh 2>/dev/null)
     fi
     if command -v rbw >/dev/null 2>&1; then
       source <(rbw gen-completions zsh)
