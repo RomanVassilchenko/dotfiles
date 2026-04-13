@@ -3,7 +3,6 @@
   environment.systemPackages =
     (with pkgs-stable; [
       bitwarden-cli # Bitwarden CLI.
-      rbw # Caching Bitwarden CLI.
       delta
       fd
       git
