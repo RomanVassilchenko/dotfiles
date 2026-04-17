@@ -26,3 +26,4 @@ config/codex/cache/codex_apps_tools/*
 config/codex/session_index.jsonl
 config/codex/.tmp
 config/codex/plugins/cache/*
+config/codex/installation_id
