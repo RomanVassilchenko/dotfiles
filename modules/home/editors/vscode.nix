@@ -7,25 +7,11 @@
 }:
 let
   dotfilesPath = dotfiles.paths.dotfiles;
-  # Pin VS Code to a working Microsoft .deb while the update server tarball is failing.
-  vscodePackage = pkgs.vscode.overrideAttrs (_: {
-    version = "1.116.0";
-    src = pkgs.fetchurl {
-      url = "https://packages.microsoft.com/repos/code/pool/main/c/code/code_1.116.0-1776214182_amd64.deb";
-      sha256 = "cb23885bdd830b83f64f259395ce5264d232666274ac999ab2de0f4e8f7995a2";
-    };
-    sourceRoot = "usr/share/code";
-    unpackPhase = ''
-      runHook preUnpack
-      ${pkgs.dpkg}/bin/dpkg-deb --fsys-tarfile $src | tar --no-same-owner --no-same-permissions -xf -
-      runHook postUnpack
-    '';
-  });
 in
 lib.mkIf dotfiles.features.development.enable {
   programs.vscode = {
     enable = true;
-    package = vscodePackage;
+    package = pkgs.vscode;
 
     profiles.default = {
       keybindings = [
