@@ -21,6 +21,7 @@ description: Log activity to Obsidian project folder. Call with "/log" or "log t
 
 **Приоритет 2 - Проекты:**
 
+- OrqFlow → OrqFlow
 - Dotfiles/NixOS → Personal
 - Банк/Bereke B2C → Bereke B2C
 - Банк/Bereke CoreHub → Bereke CoreHub
@@ -134,7 +135,7 @@ tags: [log]
 
 ### Проектные теги
 
-- `#adalqarau` `#bereke` `#b2c` `#corehub` `#ozon` `#aitu` `#personal`
+- `#orqflow` `#adalqarau` `#bereke` `#b2c` `#corehub` `#ozon` `#aitu` `#personal`
 
 ### Типы контента
 
