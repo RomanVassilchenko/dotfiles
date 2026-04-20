@@ -46,11 +46,17 @@ lib.mkIf config.dotfiles.features.desktop.enable {
           {
             name = "libpipewire-module-protocol-pulse";
             args = {
-              pulse.min.req = "512/48000";
-              pulse.default.req = "1024/48000";
-              pulse.max.req = "2048/48000";
-              pulse.min.quantum = "512/48000";
-              pulse.max.quantum = "2048/48000";
+              pulse = {
+                min = {
+                  req = "512/48000";
+                  quantum = "512/48000";
+                };
+                default.req = "1024/48000";
+                max = {
+                  req = "2048/48000";
+                  quantum = "2048/48000";
+                };
+              };
             };
           }
         ];

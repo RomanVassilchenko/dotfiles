@@ -7,7 +7,7 @@
   ...
 }:
 let
-  dotfiles = config.dotfiles;
+  inherit (config) dotfiles;
   userName = dotfiles.user.name;
 in
 {
@@ -29,7 +29,7 @@ in
       imports = [ ../../home ];
       home = {
         username = userName;
-        homeDirectory = dotfiles.user.homeDirectory;
+        inherit (dotfiles.user) homeDirectory;
         stateVersion = "23.11";
       };
     };

@@ -99,9 +99,11 @@
         cleanOnBoot = true;
       };
 
-      loader.systemd-boot.enable = if hostIsServer then true else lib.mkForce false;
-      loader.efi.canTouchEfiVariables = true;
-      loader.timeout = 1;
+      loader = {
+        systemd-boot.enable = if hostIsServer then true else lib.mkForce false;
+        efi.canTouchEfiVariables = true;
+        timeout = 1;
+      };
 
       lanzaboote = {
         enable = !hostIsServer;

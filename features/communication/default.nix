@@ -10,8 +10,10 @@ in
   options.features.communication.enable = lib.mkEnableOption "communication app bundle";
 
   config = lib.mkIf cfg.enable {
-    dotfiles.features.apps.discord.enable = lib.mkDefault true;
-    dotfiles.features.apps.telegram.enable = lib.mkDefault true;
-    dotfiles.features.apps.zapzap.enable = lib.mkDefault true;
+    dotfiles.features.apps = {
+      discord.enable = lib.mkDefault true;
+      telegram.enable = lib.mkDefault true;
+      zapzap.enable = lib.mkDefault true;
+    };
   };
 }

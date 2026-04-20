@@ -5,7 +5,7 @@
   ...
 }:
 let
-  consoleKeyMap = config.dotfiles.locale.consoleKeyMap;
+  inherit (config.dotfiles.locale) consoleKeyMap;
   desktopEnable = config.dotfiles.features.desktop.enable;
 in
 {
@@ -69,18 +69,20 @@ in
     LC_TELEPHONE = "en_GB.UTF-8";
     LC_TIME = "en_GB.UTF-8";
   };
-  environment.variables = {
-    PLAYWRIGHT_BROWSERS_PATH = lib.mkIf config.dotfiles.features.development.enable "${pkgs.playwright-driver.browsers
-    }";
-  }
-  // lib.optionalAttrs desktopEnable {
-    NIXOS_OZONE_WL = "1";
-  };
+  environment = {
+    variables = {
+      PLAYWRIGHT_BROWSERS_PATH = lib.mkIf config.dotfiles.features.development.enable "${pkgs.playwright-driver.browsers
+      }";
+    }
+    // lib.optionalAttrs desktopEnable {
+      NIXOS_OZONE_WL = "1";
+    };
 
-  environment.localBinInPath = true;
-  environment.extraInit = ''
-    export PATH="/usr/local/bin:$PATH"
-  '';
+    localBinInPath = true;
+    extraInit = ''
+      export PATH="/usr/local/bin:$PATH"
+    '';
+  };
   console.keyMap = consoleKeyMap;
   system.stateVersion = "23.11";
 
