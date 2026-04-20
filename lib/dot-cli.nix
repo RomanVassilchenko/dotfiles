@@ -11,6 +11,7 @@ pkgs.writeShellApplication {
     gnugrep
     gnused
     iputils
+    jq
     nix
     openssh
     rsync
@@ -78,6 +79,42 @@ pkgs.writeShellApplication {
         ref="$PROJECT_DIR?submodules=1"
       fi
       printf '%s\n' "$ref"
+    }
+
+    update_t3code_release_metadata() {
+      local metadata_file json tag version appimage_name appimage_url digest hash rendered current
+
+      metadata_file="$PROJECT_DIR/packages/t3code/release.nix"
+
+      print_info "Refreshing t3code release metadata..."
+      json=$(curl -fsSL https://api.github.com/repos/pingdotgg/t3code/releases/latest)
+      tag=$(printf '%s' "$json" | jq -r '.tag_name')
+      version="''${tag#v}"
+      appimage_name="T3-Code-$version-x86_64.AppImage"
+      appimage_url=$(printf '%s' "$json" | jq -r --arg name "$appimage_name" '.assets[] | select(.name == $name) | .browser_download_url')
+      digest=$(printf '%s' "$json" | jq -r --arg name "$appimage_name" '.assets[] | select(.name == $name) | .digest')
+
+      if [[ -z "$tag" || "$tag" == "null" || -z "$appimage_url" || "$appimage_url" == "null" || -z "$digest" || "$digest" == "null" ]]; then
+        print_warn "Could not resolve t3code AppImage metadata from latest release"
+        return 1
+      fi
+
+      hash=$(nix hash convert --hash-algo sha256 --to sri "''${digest#sha256:}")
+      printf -v rendered '{\n  version = "%s";\n  tag = "%s";\n  appImageUrl = "%s";\n  appImageHash = "%s";\n}' "$version" "$tag" "$appimage_url" "$hash"
+
+      if [[ -f "$metadata_file" ]]; then
+        current=$(<"$metadata_file")
+      else
+        current=""
+      fi
+
+      if [[ "$rendered" == "$current" ]]; then
+        print_info "t3code is already pinned to $tag"
+        return 0
+      fi
+
+      printf '%s\n' "$rendered" > "$metadata_file"
+      print_success "t3code updated to $tag"
     }
 
     list_hosts() {
@@ -232,6 +269,7 @@ pkgs.writeShellApplication {
 
       (
         cd "$PROJECT_DIR"
+        update_t3code_release_metadata || print_warn "Continuing with existing t3code release metadata"
         if [[ -n "$nixpkgs_rev" ]]; then
           nix flake update
           nix flake lock --override-input nixpkgs "github:nixos/nixpkgs/$nixpkgs_rev"
@@ -369,9 +407,10 @@ pkgs.writeShellApplication {
             exit 1
           }
 
-          print_info "Syncing to ninkear:$server_repo..."
-          # shellcheck disable=SC2029
-          ssh "$server_host" "mkdir -p \"$server_repo\""
+           print_info "Syncing to ninkear:$server_repo..."
+           update_t3code_release_metadata || print_warn "Continuing with existing t3code release metadata"
+           # shellcheck disable=SC2029
+           ssh "$server_host" "mkdir -p \"$server_repo\""
           # shellcheck disable=SC2029
           ssh "$server_host" "set -e; non_owned=\$(find \"$server_repo\" -mindepth 1 ! -user romanv -print -quit); if [ -n \"\$non_owned\" ]; then owner_group=\$(id -gn romanv 2>/dev/null || echo romanv); sudo chown -R romanv:\$owner_group \"$server_repo\"; fi"
           rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$server_host:$server_repo/"

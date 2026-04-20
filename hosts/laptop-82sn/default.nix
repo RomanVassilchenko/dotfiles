@@ -4,16 +4,20 @@
     ./hardware.nix
   ];
 
-  features.communication.enable = true;
-  features.desktop.enable = true;
-  features.development.enable = true;
-  features.hardware.enable = true;
-  features.kde.enable = true;
-  features.productivity.enable = true;
-  features.stylix.enable = true;
-  features.work.enable = true;
+  features = {
+    communication.enable = true;
+    desktop.enable = true;
+    development.enable = true;
+    hardware.enable = true;
+    kde.enable = true;
+    productivity.enable = true;
+    stylix.enable = true;
+    work.enable = true;
 
-  features.apps.bitwarden.autostart = true;
-  features.apps.telegram.autostart = true;
-  features.apps.zapzap.autostart = true;
+    apps = {
+      bitwarden.autostart = true;
+      telegram.autostart = true;
+      zapzap.autostart = true;
+    };
+  };
 }

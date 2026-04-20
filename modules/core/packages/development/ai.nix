@@ -7,5 +7,8 @@
       gemini-cli
       opencode
     ])
-    ++ [ pkgs.rtk ];
+    ++ [
+      pkgs.rtk
+      pkgs.t3code
+    ];
 }

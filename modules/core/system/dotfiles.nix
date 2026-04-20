@@ -167,31 +167,40 @@ in
     };
   };
 
-  config = {
-    dotfiles.host.name = mkDefault host;
-    dotfiles.host.profile = mkDefault hostFacts.profile;
-    dotfiles.host.system = mkDefault (hostFacts.system or "x86_64-linux");
-    dotfiles.host.gpuProfile = mkDefault (hostFacts.gpuProfile or null);
-    dotfiles.host.deviceType = mkDefault (
-      hostFacts.deviceType or (if hostFacts.profile == "server" then "server" else "laptop")
-    );
-    dotfiles.host.isServer = mkDefault (config.dotfiles.host.deviceType == "server");
+  config.dotfiles = {
+    host = {
+      name = mkDefault host;
+      profile = mkDefault hostFacts.profile;
+      system = mkDefault (hostFacts.system or "x86_64-linux");
+      gpuProfile = mkDefault (hostFacts.gpuProfile or null);
+      deviceType = mkDefault (
+        hostFacts.deviceType or (if hostFacts.profile == "server" then "server" else "laptop")
+      );
+      isServer = mkDefault (config.dotfiles.host.deviceType == "server");
+    };
 
-    dotfiles.user.name = mkDefault username;
-    dotfiles.user.gitName = mkDefault hostFacts.gitUsername;
-    dotfiles.user.homeDirectory = mkDefault "/home/${username}";
+    user = {
+      name = mkDefault username;
+      gitName = mkDefault hostFacts.gitUsername;
+      homeDirectory = mkDefault "/home/${username}";
+    };
 
-    dotfiles.paths.dotfiles = mkDefault hostFacts.dotfilesPath;
-    dotfiles.paths.sshKey = mkDefault hostFacts.sshKeyPath;
+    paths = {
+      dotfiles = mkDefault hostFacts.dotfilesPath;
+      sshKey = mkDefault hostFacts.sshKeyPath;
+    };
 
-    dotfiles.locale.keyboardLayout = mkDefault hostFacts.keyboardLayout;
-    dotfiles.locale.consoleKeyMap = mkDefault hostFacts.consoleKeyMap;
+    locale = {
+      keyboardLayout = mkDefault hostFacts.keyboardLayout;
+      consoleKeyMap = mkDefault hostFacts.consoleKeyMap;
+    };
 
-    dotfiles.features.desktop.enable = mkDefault (!config.dotfiles.host.isServer);
-    dotfiles.features.stylix.enable = mkDefault config.dotfiles.features.desktop.enable;
+    features = {
+      desktop.enable = mkDefault (!config.dotfiles.host.isServer);
+      stylix.enable = mkDefault config.dotfiles.features.desktop.enable;
 
-    dotfiles.features.apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
-
-    dotfiles.features.apps.virtManager.enable = mkDefault false;
+      apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
+      apps.virtManager.enable = mkDefault false;
+    };
   };
 }

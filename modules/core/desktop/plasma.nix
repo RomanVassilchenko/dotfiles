@@ -6,12 +6,18 @@
   ...
 }:
 let
-  keyboardLayout = config.dotfiles.locale.keyboardLayout;
+  inherit (config.dotfiles.locale) keyboardLayout;
 in
 lib.mkIf config.dotfiles.features.desktop.plasma.enable {
-  services.desktopManager.plasma6.enable = true;
+  services = {
+    desktopManager.plasma6.enable = true;
+    greetd.enable = true;
 
-  services.greetd.enable = true;
+    xserver.xkb = {
+      layout = keyboardLayout;
+      variant = "";
+    };
+  };
 
   programs.regreet = {
     enable = true;
@@ -25,11 +31,6 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
     enable = true;
     extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
     configPackages = [ pkgs.kdePackages.plasma-desktop ];
-  };
-
-  services.xserver.xkb = {
-    layout = keyboardLayout;
-    variant = "";
   };
 
   environment.systemPackages =
