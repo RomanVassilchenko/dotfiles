@@ -10,7 +10,7 @@ let
   vpnTrayScript = pkgs.writeScriptBin "vpn-tray" ''
     #!${python}/bin/python3
     """
-    VPN Tray Indicator for BerekeBank OpenConnect VPN
+    VPN Tray Indicator for BerekeBank Cisco Secure Client VPN
     Shows connection status and allows toggling VPN on/off
     """
     import subprocess
