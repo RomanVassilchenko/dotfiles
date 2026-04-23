@@ -18,7 +18,9 @@
   },
   "[go]": {
     "editor.minimap.maxColumn": 80,
-    "editor.rulers": [80]
+    "editor.rulers": [
+      80
+    ]
   },
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
@@ -111,7 +113,10 @@
   "editor.padding.top": 20,
   "editor.renderControlCharacters": false,
   "editor.renderLineHighlight": "none",
-  "editor.rulers": [80, 120],
+  "editor.rulers": [
+    80,
+    120
+  ],
   "editor.scrollbar.horizontal": "auto",
   "editor.scrollbar.vertical": "auto",
   "editor.selectionHighlight": false,
@@ -195,7 +200,9 @@
   "githubPullRequests.pullBranch": "always",
   "githubPullRequests.pullRequestDescription": "template",
   "githubPullRequests.pushBranch": "always",
-  "githubPullRequests.remotes": ["origin"],
+  "githubPullRequests.remotes": [
+    "origin"
+  ],
   "go.inlayHints.compositeLiteralFields": true,
   "go.inlayHints.compositeLiteralTypes": true,
   "go.inlayHints.constantValues": true,
@@ -224,7 +231,9 @@
   "nix.serverSettings": {
     "nixd": {
       "formatting": {
-        "command": ["nixfmt"]
+        "command": [
+          "nixfmt"
+        ]
       }
     }
   },
@@ -312,5 +321,11 @@
   "zenMode.hideActivityBar": false,
   "cSpell.language": "en,ru",
   "github.copilot.chat.completionsFetcher": "electron-fetch",
-  "cSpell.userWords": ["protoc", "protolint"]
+  "cSpell.userWords": [
+    "protoc",
+    "protolint"
+  ],
+  "xml.server.binary.trustedHashes": [
+    "637a908b82398d8d99f3fc966098825e5357751222d6582323be9aff94555ec8"
+  ]
 }
