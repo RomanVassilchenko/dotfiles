@@ -6,9 +6,9 @@
       codex
       gemini-cli
       opencode
+      pi
     ])
     ++ [
       pkgs.rtk
-      pkgs.t3code
     ];
 }
