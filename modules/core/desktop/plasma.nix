@@ -27,6 +27,16 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
     };
   };
 
+  stylix.targets.regreet = {
+    image.enable = false;
+    extraCss = ''
+      window.background {
+        background-color: #000000;
+        background-image: none;
+      }
+    '';
+  };
+
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
