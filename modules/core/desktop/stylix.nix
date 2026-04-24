@@ -12,7 +12,7 @@
 
     polarity = "dark";
 
-    image = ../../../wallpapers/kurzgesagt-galaxies.jpg;
+    image = ../../../wallpapers/cannondale_horizontal.png;
 
     fonts = {
       monospace = {
