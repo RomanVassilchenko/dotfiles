@@ -34,11 +34,6 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
   qt = {
     enable = true;
     platformTheme.name = lib.mkForce "kde";
-    style.name = lib.mkForce "kvantum";
+    style.name = lib.mkForce "breeze";
   };
-
-  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
-    [General]
-    theme=catppuccin-mocha-mauve
-  '';
 }

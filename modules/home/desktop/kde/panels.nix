@@ -8,11 +8,11 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
     panels = [
       {
         location = "top";
-        height = 32;
+        height = 30;
         floating = false;
         hiding = "none";
         screen = 0;
-        opacity = "translucent";
+        opacity = "opaque";
 
         widgets = [
           {
@@ -24,13 +24,13 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
                 bgColor = "#1e1e2e";
                 bgColorEnabled = true;
                 bgContrastFixEnabled = false;
-                bgOpacity = 0.75;
-                blurBehindEnabled = true;
+                bgOpacity = 1.0;
+                blurBehindEnabled = false;
 
                 fgColorEnabled = true;
                 fgColor = "#cdd6f4";
 
-                cornerRadius = 12;
+                cornerRadius = 0;
                 enableCustomRadius = true;
 
                 marginRules = "0,6,0,6";
@@ -39,9 +39,9 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
                 panelSpacing = 4;
                 widgetBgEnabled = false;
 
-                shadowColorEnabled = true;
+                shadowColorEnabled = false;
                 shadowColor = "#11111b";
-                shadowSize = 2;
+                shadowSize = 0;
               };
             };
           }
@@ -102,10 +102,6 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           }
 
           {
-            name = "com.romanv.displaytoggle";
-          }
-
-          {
             name = "org.kde.plasma.vpnmanager";
           }
 
@@ -142,6 +138,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
               General = {
                 show_lockScreen = false;
                 show_requestLogoutScreen = false;
+                show_requestReboot = true;
                 show_requestShutDown = true;
               };
             };

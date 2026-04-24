@@ -65,18 +65,8 @@
       bottom = 8,
     }
     config.window_decorations = 'NONE'
-    config.window_background_opacity = 0.97
+    config.window_background_opacity = 1.0
     config.text_background_opacity = 1.0
-    config.window_background_gradient = {
-      orientation = { Linear = { angle = -35.0 } },
-      colors = {
-        '#11111B',
-        '#181825',
-        '#1E1E2E',
-      },
-      interpolation = 'Linear',
-      noise = 2,
-    }
     config.inactive_pane_hsb = {
       saturation = 0.9,
       brightness = 0.75,
