@@ -260,12 +260,12 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           AnimationDuration = 0;
           DisableOutlineTile = false;
           DisableRoundTile = false;
-          InactiveCornerRadius = 8;
+          InactiveCornerRadius = 12;
           InactiveOutlineAlpha = 0;
           InactiveSecondOutlineThickness = 0;
           OutlineThickness = 1;
           SecondOutlineThickness = 0;
-          Size = 8;
+          Size = 12;
         };
 
         Script-krohnkite = {
@@ -279,11 +279,14 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           layoutPerActivity = true;
           layoutPerDesktop = true;
           noTileBorder = false;
+          screenDefaultLayout = ":spiral";
           screenGapBetween = 6;
           screenGapBottom = 6;
           screenGapLeft = 6;
           screenGapRight = 6;
           screenGapTop = 6;
+          spiralLayoutOrder = 1;
+          tileLayoutOrder = 4;
         };
 
         Tiling.padding = 4;
