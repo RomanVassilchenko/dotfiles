@@ -32,7 +32,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
                 fgColorEnabled = true;
                 fgColor = "#cdd6f4";
 
-                cornerRadius = 0;
+                cornerRadius = 12;
                 enableCustomRadius = true;
 
                 marginRules = "0,6,0,6";
