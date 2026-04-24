@@ -5,6 +5,17 @@
   ...
 }:
 lib.mkIf dotfiles.features.desktop.plasma.enable {
+  xdg.desktopEntries.plasma-notifications-window = {
+    name = "Notification History";
+    exec = "plasmawindowed org.kde.plasma.notifications";
+    icon = "preferences-desktop-notification";
+    terminal = false;
+    categories = [
+      "Utility"
+      "System"
+    ];
+  };
+
   programs.plasma = {
     enable = true;
 
@@ -44,10 +55,10 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         KrohnkiteShrinkWidth = "Meta+Ctrl+Left";
         KrohnkiteToggleFloat = "Meta+F";
 
-        "Move with Window to Desktop 1" = "Meta+!";
-        "Move with Window to Desktop 2" = "Meta+@";
-        "Move with Window to Desktop 3" = "Meta+#";
-        "Move with Window to Desktop 4" = "Meta+$";
+        "Move with Window to Desktop 1" = "Meta+Ctrl+1";
+        "Move with Window to Desktop 2" = "Meta+Ctrl+2";
+        "Move with Window to Desktop 3" = "Meta+Ctrl+3";
+        "Move with Window to Desktop 4" = "Meta+Ctrl+4";
         "Switch to Desktop 1" = [
           "Meta+1"
           "Meta+Num+1"
@@ -67,6 +78,10 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         "Switch to Next Desktop" = "Meta+PgDown";
         "Switch to Previous Desktop" = "Meta+PgUp";
         "Toggle Tiling" = [ ];
+        "Window Quick Tile Bottom" = "Meta+Ctrl+Alt+Down";
+        "Window Quick Tile Left" = "Meta+Ctrl+Alt+Left";
+        "Window Quick Tile Right" = "Meta+Ctrl+Alt+Right";
+        "Window Quick Tile Top" = "Meta+Ctrl+Alt+Up";
         "Window Close" = "Meta+Q";
         "Window Fullscreen" = "Meta+M";
         "Window Move Center" = "Ctrl+Alt+C";
@@ -75,6 +90,10 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
       ksmserver."Lock Session" = [
         "Meta+L"
         "Meta+Shift+Q"
+      ];
+      ksmserver."Log Out" = [
+        "Ctrl+Alt+Del"
+        "Meta+Backspace"
       ];
 
       org_kde_powerdevil."Turn Off Screen" = "Meta+Shift+L";
@@ -88,11 +107,27 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           "Meta"
           "Alt+F1"
         ];
+        "activate task manager entry 1" = [ ];
+        "activate task manager entry 2" = [ ];
+        "activate task manager entry 3" = [ ];
+        "activate task manager entry 4" = [ ];
+        "activate task manager entry 5" = [ ];
+        "activate task manager entry 6" = [ ];
+        "activate task manager entry 7" = [ ];
+        "activate task manager entry 8" = [ ];
+        "activate task manager entry 9" = [ ];
         clipboard_action = "Meta+Ctrl+X";
         cycle-panels = "Meta+Alt+P";
+        "manage activities" = [ ];
+        "next activity" = [ ];
+        "previous activity" = [ ];
         show-on-mouse-pos = "Meta+V";
+        "switch to next activity" = [ ];
+        "switch to previous activity" = [ ];
+        "toggle do not disturb" = "Meta+Shift+N";
       };
 
+      "services/plasma-notifications-window.desktop"._launch = "Meta+N";
       "services/brave-browser.desktop"._launch = "Meta+Shift+B";
       "services/camunda-modeler.desktop"._launch = "Meta+Shift+U";
       "services/code.desktop"._launch = "Meta+Shift+C";
@@ -107,18 +142,23 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         "Alt+Space"
         "Meta+R"
       ];
+      "services/org.kde.spectacle.desktop".ActiveWindowScreenShot = "Meta+Print";
+      "services/org.kde.spectacle.desktop".FullScreenScreenShot = "Print";
+      "services/org.kde.spectacle.desktop"._launch = [ ];
       "services/org.kde.spectacle.desktop".RectangularRegionScreenShot = [
         "Meta+S"
         "Meta+Shift+Print"
       ];
       "services/org.telegram.desktop.desktop"._launch = "Meta+Shift+T";
       "services/plasma-manager-commands.desktop".clear-notifications = "Meta+Shift+Backspace";
-      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-1 = "Meta+!";
-      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-2 = "Meta+@";
-      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-3 = "Meta+#";
-      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-4 = "Meta+$";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-1 = "Meta+Ctrl+1";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-2 = "Meta+Ctrl+2";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-3 = "Meta+Ctrl+3";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-4 = "Meta+Ctrl+4";
       "services/postman.desktop"._launch = "Meta+Shift+P";
       "services/steam.desktop"._launch = "Meta+Shift+S";
+      "services/systemsettings.desktop"._launch = "Meta+,";
+      "services/kcm_kscreen.desktop"._launch = "Meta+P";
     };
 
     configFile = {
@@ -176,12 +216,12 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         };
 
         Plugins = {
-          # Lightweight effects (minimal GPU cost)
-          fadeEnabled = true;
-          slideEnabled = true;
-          squashEnabled = true;
-          maximizeEnabled = true;
-          overviewEnabled = true;
+          # Disable visual effects for a fully static desktop.
+          fadeEnabled = false;
+          slideEnabled = false;
+          squashEnabled = false;
+          maximizeEnabled = false;
+          overviewEnabled = false;
 
           # Disabled effects (heavy on GPU)
           blurEnabled = false;
@@ -193,7 +233,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           # Functional plugins
           desktop-cursor-moveEnabled = true;
           krohnkiteEnabled = true;
-          kwin4_effect_shapecornersEnabled = true;
+          kwin4_effect_shapecornersEnabled = false;
           move-windows-to-desktopsEnabled = true;
         };
 
@@ -205,7 +245,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         };
 
         Compositing = {
-          AnimationSpeed = 2;
+          AnimationSpeed = 0;
           Backend = "OpenGL";
           GLCore = true;
           LatencyPolicy = "Low";
@@ -361,7 +401,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         DoNotDisturb.WhenFullscreen = false;
         DoNotDisturb.WhenScreensMirrored = false;
         Notifications.PopupPosition = "TopRight";
-        Notifications.PopupTimeout = 7000;
+        Notifications.PopupTimeout = 4000;
       };
     };
   };
