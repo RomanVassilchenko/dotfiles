@@ -19,6 +19,8 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
             name = "luisbocanegra.panel.colorizer";
             config = {
               General = {
+                configurationOverrides = ''{"overrides":{},"associations":[]}'';
+                globalSettings = "{}";
                 hideWidget = true;
 
                 bgColor = "#1e1e2e";
@@ -132,17 +134,6 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
             };
           }
 
-          {
-            name = "org.kde.plasma.lock_logout";
-            config = {
-              General = {
-                show_lockScreen = false;
-                show_requestLogoutScreen = false;
-                show_requestReboot = true;
-                show_requestShutDown = true;
-              };
-            };
-          }
         ];
       }
     ];

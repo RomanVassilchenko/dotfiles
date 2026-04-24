@@ -233,7 +233,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
           # Functional plugins
           desktop-cursor-moveEnabled = true;
           krohnkiteEnabled = true;
-          kwin4_effect_shapecornersEnabled = false;
+          kwin4_effect_shapecornersEnabled = true;
           move-windows-to-desktopsEnabled = true;
         };
 
