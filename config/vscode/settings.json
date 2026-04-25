@@ -51,7 +51,8 @@
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
   },
   "breadcrumbs.enabled": true,
   "chat.editor.fontFamily": "JetBrainsMono Nerd Font Propo",
@@ -89,6 +90,7 @@
   "editor.fontFamily": "JetBrainsMono Nerd Font Propo",
   "editor.fontLigatures": true,
   "window.zoomLevel": 0,
+  "yaml.format.printWidth": 1000,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,

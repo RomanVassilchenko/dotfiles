@@ -5,8 +5,26 @@
   ...
 }:
 let
-  horizontalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/cannondale_horizontal.png";
-  verticalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/cannondale_vertical.png";
+  horizontalWallpaperFile = ../../../../wallpapers/wallpaper_horizontal.png;
+  verticalWallpaperFile = ../../../../wallpapers/wallpaper_vertical.png;
+  horizontalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_horizontal.png";
+  verticalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_vertical.png";
+  packagedWallpaper = "Wallpaper";
+  packagedWallpaperMetadata = pkgs.writeText "wallpaper-metadata.json" (
+    builtins.toJSON {
+      KPlugin = {
+        Id = packagedWallpaper;
+        Name = packagedWallpaper;
+        License = "CC0-1.0";
+        Authors = [ { Name = "romanv"; } ];
+      };
+    }
+  );
+  packagedWallpaperPackage = pkgs.runCommand "kde-wallpaper" { } ''
+    install -Dm644 ${horizontalWallpaperFile} $out/share/wallpapers/${packagedWallpaper}/contents/images/1672x941.png
+    install -Dm644 ${verticalWallpaperFile} $out/share/wallpapers/${packagedWallpaper}/contents/images/941x1672.png
+    install -Dm644 ${packagedWallpaperMetadata} $out/share/wallpapers/${packagedWallpaper}/metadata.json
+  '';
   setWallpapersByOrientation = pkgs.writeShellScriptBin "kde-set-wallpapers" ''
     set -eu
 
@@ -38,9 +56,20 @@ let
   '';
 in
 lib.mkIf dotfiles.features.desktop.plasma.enable {
-  home.packages = [ setWallpapersByOrientation ];
+  home.packages = [
+    packagedWallpaperPackage
+    setWallpapersByOrientation
+  ];
 
   programs.plasma.configFile = {
+    kscreenlockerrc = {
+      Greeter.WallpaperPlugin = "org.kde.image";
+      "Greeter/Wallpaper/org.kde.image/General" = {
+        Image = packagedWallpaper;
+        PreviewImage = "null";
+      };
+    };
+
     "plasma-org.kde.plasma.desktop-appletsrc" = {
       "Containments/1".wallpaperplugin = "org.kde.image";
       "Containments/1/Wallpaper/org.kde.image/General".Image = horizontalWallpaper;
