@@ -4,6 +4,8 @@
     ./atuin.nix
     ./bat.nix
     ./bitwarden.nix
+    ./bottom.nix
+    ./carapace.nix
     ./direnv.nix
     ./gh.nix
     ./btop.nix
@@ -13,7 +15,9 @@
     ./glow.nix
     ./lazygit.nix
     ./nix-index.nix
+    ./procs.nix
     ./starship.nix
+    ./yazi.nix
     ./zoxide.nix
   ];
 }

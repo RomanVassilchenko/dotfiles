@@ -1,6 +1,11 @@
 _: {
   programs.gh = {
     enable = true;
-    settings.git_protocol = "https";
+    settings = {
+      aliases = { };
+      editor = "";
+      git_protocol = "https";
+      version = "1";
+    };
   };
 }

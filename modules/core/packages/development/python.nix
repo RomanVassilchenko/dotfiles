@@ -6,14 +6,7 @@
 }:
 lib.mkIf config.dotfiles.features.development.enable {
   environment.systemPackages = with pkgs; [
-    bun
-    corepack
-    oxlint
-    prettier
-    ni
-    nodejs
-    playwright-driver.browsers
-    pnpm
-    typescript-language-server
+    ruff
+    uv
   ];
 }

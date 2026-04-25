@@ -117,26 +117,13 @@ pkgs.writeShellApplication {
       ssh -o ConnectTimeout=3 -o BatchMode=yes "''${1:-$BACKUP_SERVER}" "exit" 2>/dev/null
     }
 
-    is_ninkear_cache_available() {
-      curl --fail --silent --show-error --max-time 2 http://100.64.0.1:5000/nix-cache-info >/dev/null 2>&1
-    }
-
-    NINKEAR_AVAILABLE=false
-    ensure_ninkear_connected() {
-      if is_ninkear_cache_available; then
-        NINKEAR_AVAILABLE=true
-        print_success "Ninkear binary cache reachable - it will be used"
-      else
-        print_warn "Ninkear binary cache not reachable - building without it"
-      fi
-    }
-
     _sub_args=()
     build_substituter_args() {
-      _sub_args=(--option connect-timeout 3)
-      if [[ "$NINKEAR_AVAILABLE" == "false" ]]; then
-        _sub_args+=(--option substituters "https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com")
-      fi
+      _sub_args=(
+        --no-write-lock-file
+        --option connect-timeout 3
+        --option substituters "https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com"
+      )
     }
 
     verify_hostname() {
@@ -174,7 +161,6 @@ pkgs.writeShellApplication {
 
       verify_hostname
       handle_backups
-      ensure_ninkear_connected
       build_substituter_args
 
       flake_ref="$(project_flake_ref)#$host"
@@ -317,12 +303,6 @@ pkgs.writeShellApplication {
         print_warn "Git worktree has local changes"
       fi
 
-      if is_ninkear_cache_available; then
-        print_success "Ninkear binary cache is reachable"
-      else
-        print_warn "Ninkear binary cache is not reachable"
-      fi
-
       df -h /nix/store
     }
 
@@ -347,83 +327,6 @@ pkgs.writeShellApplication {
       ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
       rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$BACKUP_SERVER:$BACKUP_PATH/"
       print_success "Backup complete -> $BACKUP_SERVER:$BACKUP_PATH"
-    }
-
-    cmd_cache() {
-      local subcmd="''${1:-}"
-      local server_repo="''${BACKUP_PATH:-/home/romanv/backup/dotfiles}"
-
-      case "$subcmd" in
-        build)
-          local flake_ref cores
-          local -a failed hosts
-
-          flake_ref=$(project_flake_ref)
-          cores=$(( $(nproc) - 1 ))
-          [[ $cores -lt 1 ]] && cores=1
-
-          mapfile -t hosts < <(list_hosts)
-          if [[ ''${#hosts[@]} -eq 0 ]]; then
-            print_error "No nixosConfigurations found"
-            exit 1
-          fi
-
-          failed=()
-          for host in "''${hosts[@]}"; do
-            print_info "Building $host..."
-            if nix build "$flake_ref#nixosConfigurations.$host.config.system.build.toplevel" --no-link --max-jobs 1 --cores "$cores"; then
-              print_success "$host built"
-            else
-              print_error "$host failed"
-              failed+=("$host")
-            fi
-          done
-
-          if [[ ''${#failed[@]} -gt 0 ]]; then
-            print_error "Failed: ''${failed[*]}"
-            exit 1
-          fi
-
-          print_success "All configurations built"
-          ;;
-        start)
-          require_private_config
-          if [[ "$(hostname)" == "ninkear" ]]; then
-            print_error "Run 'dot cache build' directly on ninkear"
-            exit 1
-          fi
-
-          is_ninkear_reachable || {
-            print_error "Cannot connect to ninkear"
-            exit 1
-          }
-
-          # shellcheck disable=SC2029
-          ssh -T "$BACKUP_SERVER" "tmux kill-session -t cache-build 2>/dev/null || true; tmux new-session -d -s cache-build 'cd $server_repo && dot cache build 2>&1 | tee /tmp/cache-build.log'"
-          print_success "Cache build started on ninkear"
-          ;;
-        status)
-          require_private_config
-          is_ninkear_reachable || {
-            print_error "Cannot connect to ninkear"
-            exit 1
-          }
-
-          if ssh "$BACKUP_SERVER" "tmux has-session -t cache-build 2>/dev/null"; then
-            print_info "Build is running..."
-            ssh "$BACKUP_SERVER" "tail -20 /tmp/cache-build.log 2>/dev/null || echo 'No log yet'"
-          elif ssh "$BACKUP_SERVER" "test -f /tmp/cache-build.log"; then
-            print_success "Build completed"
-            ssh "$BACKUP_SERVER" "tail -30 /tmp/cache-build.log"
-          else
-            print_info "No build in progress. Start with: dot cache start"
-          fi
-          ;;
-        *)
-          print_error "Usage: dot cache [build|start|status]"
-          exit 1
-          ;;
-      esac
     }
 
     cmd_server() {
@@ -477,7 +380,6 @@ pkgs.writeShellApplication {
       echo -e "  ''${CYAN}update''${NC}"
       echo -e "  ''${CYAN}cleanup''${NC}"
       echo -e "  ''${CYAN}backup''${NC}"
-      echo -e "  ''${CYAN}cache build|start|status''${NC}"
       echo -e "  ''${CYAN}server rebuild|update''${NC}"
       echo -e "  ''${CYAN}doctor''${NC}"
       echo -e "  ''${CYAN}trim''${NC}"
@@ -509,10 +411,6 @@ pkgs.writeShellApplication {
         backup)
           shift
           cmd_backup
-          ;;
-        cache)
-          shift
-          cmd_cache "''${1:-}"
           ;;
         server)
           shift

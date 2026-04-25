@@ -14,7 +14,6 @@ in
     enable = true;
     signing.format = null;
     includes = [
-      { path = "~/.config/git/secrets"; }
       # GitHub-specific configuration
       {
         condition = "hasconfig:remote.*.url:git@github.com:*/**";
@@ -37,7 +36,6 @@ in
       };
 
       gpg.format = "ssh";
-      user.signingkey = "~/.ssh/id_personal.pub";
       commit.gpgsign = true;
       tag.gpgsign = true;
 

@@ -1,9 +1,6 @@
 CLAUDE.md
 AGENTS.md
-
-# SSH private keys (keep public keys)
-config/ssh/id_*
-!config/ssh/*.pub
+/.claude/
 
 # Nextcloud sync database files
 .sync_*.db
@@ -14,16 +11,42 @@ config/ssh/id_*
 # Environment variables
 .env
 
-# Claude Code config (keep only shared files)
+# Private material must not live in the public repo.
+config/s[s]h/
+
+# AI tooling config: keep only stable shared files in repo.
 config/.claude/*
-!config/.claude/skills/
-config/.claude/skills/*
-!config/.claude/skills/log/
-!config/.claude/skills/log/**
+!config/.claude/CLAUDE.md
+!config/.claude/RTK.md
+!config/.claude/hooks/
+config/.claude/hooks/*
+!config/.claude/hooks/rtk-rewrite.sh
 !config/.claude/settings.json
 !config/.claude/statusline-command.sh
-config/codex/cache/codex_apps_tools/*
-config/codex/session_index.jsonl
-config/codex/.tmp
-config/codex/plugins/cache/*
-config/codex/installation_id
+
+config/codex/*
+!config/codex/AGENTS.md
+!config/codex/RTK.md
+
+config/gemini/*
+!config/gemini/GEMINI.md
+!config/gemini/hooks/
+config/gemini/hooks/*
+!config/gemini/hooks/rtk-hook-gemini.sh
+!config/gemini/settings.json
+
+config/opencode/*
+!config/opencode/opencode.json
+!config/opencode/tui.json
+!config/opencode/instructions/
+config/opencode/instructions/*
+!config/opencode/instructions/shell-strategy.md
+!config/opencode/plugins/
+config/opencode/plugins/*
+!config/opencode/plugins/rtk.ts
+!config/opencode/skills/
+config/opencode/skills/*
+!config/opencode/skills/log/
+!config/opencode/skills/log/**
+!config/opencode/skills/find-skills/
+!config/opencode/skills/find-skills/**
