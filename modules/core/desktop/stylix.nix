@@ -12,7 +12,7 @@
 
     polarity = "dark";
 
-    image = ../../../wallpapers/cannondale_horizontal.png;
+    image = ../../../wallpapers/wallpaper_horizontal.png;
 
     fonts = {
       monospace = {
