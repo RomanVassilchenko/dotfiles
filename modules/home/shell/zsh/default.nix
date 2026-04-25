@@ -319,7 +319,15 @@ in
         )
 
         local -a rebuild_opts
-        rebuild_opts=('--dry:Preview what would change' '--cores:Limit CPU cores')
+        rebuild_opts=(
+          '--dry:Show build/download plan without sudo'
+          '--dry-activate:Build and preview activation changes'
+          '--build:Build only, do not activate'
+          '--test:Activate until next boot only'
+          '--plain:Disable nix-output-monitor'
+          '--cores:Limit CPU cores'
+          '--jobs:Limit parallel jobs'
+        )
 
         local -a cache_subcmds
         cache_subcmds=('build:Build all configs locally' 'start:Start remote build on ninkear' 'status:Check remote build progress')

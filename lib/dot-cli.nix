@@ -10,13 +10,13 @@ pkgs.writeShellApplication {
     git
     gnugrep
     gnused
-    iputils
     jq
     nix
     openssh
     rsync
     tmux
     trash-cli
+    util-linux
   ];
 
   text = ''
@@ -117,21 +117,25 @@ pkgs.writeShellApplication {
       ssh -o ConnectTimeout=3 -o BatchMode=yes "''${1:-$BACKUP_SERVER}" "exit" 2>/dev/null
     }
 
+    is_ninkear_cache_available() {
+      curl --fail --silent --show-error --max-time 2 http://100.64.0.1:5000/nix-cache-info >/dev/null 2>&1
+    }
+
     NINKEAR_AVAILABLE=false
     ensure_ninkear_connected() {
-      if ping -c 1 -W 2 100.64.0.1 >/dev/null 2>&1; then
+      if is_ninkear_cache_available; then
         NINKEAR_AVAILABLE=true
-        print_success "Ninkear reachable - binary cache will be used"
+        print_success "Ninkear binary cache reachable - it will be used"
       else
-        print_warn "Ninkear not reachable - building without binary cache"
+        print_warn "Ninkear binary cache not reachable - building without it"
       fi
     }
 
     _sub_args=()
     build_substituter_args() {
-      _sub_args=()
+      _sub_args=(--option connect-timeout 3)
       if [[ "$NINKEAR_AVAILABLE" == "false" ]]; then
-        _sub_args=(--option substituters "https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com")
+        _sub_args+=(--option substituters "https://cache.nixos.org https://nix-community.cachix.org https://cache.numtide.com")
       fi
     }
 
@@ -147,23 +151,25 @@ pkgs.writeShellApplication {
     }
 
     handle_backups() {
-      while IFS= read -r -d $'\0' file; do
-        trash-put "$file"
-      done < <(find "$HOME" -maxdepth 5 \( -name "*.hm-bak" -o -name "*.backup.[0-9]*" \) \
-        -type f -not -path "$HOME/.local/share/Trash/*" -print0 2>/dev/null)
-
       for f in "''${BACKUP_FILES[@]}"; do
         if [[ -f "$HOME/$f" ]]; then
           trash-put "$HOME/$f"
         fi
       done
+
+      if [[ "''${1:-known}" == "all" ]]; then
+        while IFS= read -r -d $'\0' file; do
+          trash-put "$file"
+        done < <(find "$HOME" -maxdepth 5 \( -name "*.hm-bak" -o -name "*.backup.[0-9]*" \) \
+          -type f -not -path "$HOME/.local/share/Trash/*" -print0 2>/dev/null)
+      fi
     }
 
     do_rebuild() {
       local action="$1" plain="$2"
       shift 2
 
-      local host flake_ref prev_system
+      local host flake_ref prev_system needs_sudo
       host=$(hostname)
 
       verify_hostname
@@ -174,12 +180,26 @@ pkgs.writeShellApplication {
       flake_ref="$(project_flake_ref)#$host"
       prev_system=""
       [[ "$action" == "switch" && "$plain" == "false" ]] && prev_system=$(readlink -f /run/current-system 2>/dev/null || true)
+      needs_sudo=true
+      case "$action" in
+        build|dry-build|dry-run)
+          needs_sudo=false
+          ;;
+      esac
 
       print_info "nixos-rebuild $action -> $host"
       if [[ "$plain" == "false" ]] && command -v nom >/dev/null 2>&1; then
-        run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" 2>&1 | nom
+        if [[ "$needs_sudo" == "true" ]]; then
+          run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" 2>&1 | nom
+        else
+          nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" 2>&1 | nom
+        fi
       else
-        run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
+        if [[ "$needs_sudo" == "true" ]]; then
+          run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
+        else
+          nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
+        fi
       fi
 
       if [[ -n "$prev_system" ]] && command -v nvd >/dev/null 2>&1; then
@@ -188,12 +208,24 @@ pkgs.writeShellApplication {
     }
 
     cmd_rebuild() {
-      local dry=false plain=false extra=()
+      local action="switch" plain=false extra=()
 
       while [[ $# -gt 0 ]]; do
         case "$1" in
           --dry|-n)
-            dry=true
+            action="dry-build"
+            shift
+            ;;
+          --dry-activate)
+            action="dry-activate"
+            shift
+            ;;
+          --build)
+            action="build"
+            shift
+            ;;
+          --test)
+            action="test"
             shift
             ;;
           --plain)
@@ -201,6 +233,18 @@ pkgs.writeShellApplication {
             shift
             ;;
           --cores)
+            if [[ $# -lt 2 ]]; then
+              print_error "--cores requires a value"
+              exit 1
+            fi
+            extra+=(--cores "$2")
+            shift 2
+            ;;
+          --jobs)
+            if [[ $# -lt 2 ]]; then
+              print_error "--jobs requires a value"
+              exit 1
+            fi
             extra+=(--max-jobs "$2")
             shift 2
             ;;
@@ -211,13 +255,8 @@ pkgs.writeShellApplication {
         esac
       done
 
-      if $dry; then
-        do_rebuild dry-activate "$plain" "''${extra[@]}"
-        print_success "Dry-activate complete"
-      else
-        do_rebuild switch "$plain" "''${extra[@]}"
-        print_success "Rebuild complete"
-      fi
+      do_rebuild "$action" "$plain" "''${extra[@]}"
+      print_success "Rebuild $action complete"
     }
 
     cmd_rebuild_boot() {
@@ -248,11 +287,52 @@ pkgs.writeShellApplication {
     }
 
     cmd_cleanup() {
+      local nh_bin
+
       print_info "Cleaning up backup files..."
-      handle_backups
+      handle_backups all
       print_info "Collecting garbage (older than 7 days)..."
-      run_sudo nix-collect-garbage --delete-older-than 7d
+      if nh_bin=$(command -v nh 2>/dev/null); then
+        run_sudo "$nh_bin" clean all --keep-since 7d --keep 5
+      else
+        run_sudo nix-collect-garbage --delete-older-than 7d
+      fi
+      print_info "Optimising Nix store..."
+      run_sudo nix store optimise
       print_success "Cleanup complete"
+    }
+
+    cmd_doctor() {
+      print_info "Checking host configuration..."
+      verify_hostname
+      print_success "Host is present in flake"
+
+      print_info "Checking flake metadata..."
+      nix flake metadata "$(project_flake_ref)" >/dev/null
+      print_success "Flake metadata evaluates"
+
+      if git -C "$PROJECT_DIR" diff --quiet && git -C "$PROJECT_DIR" diff --cached --quiet; then
+        print_success "Git worktree is clean"
+      else
+        print_warn "Git worktree has local changes"
+      fi
+
+      if is_ninkear_cache_available; then
+        print_success "Ninkear binary cache is reachable"
+      else
+        print_warn "Ninkear binary cache is not reachable"
+      fi
+
+      df -h /nix/store
+    }
+
+    cmd_trim() {
+      local fstrim_bin
+
+      fstrim_bin=$(command -v fstrim)
+      print_info "Trimming mounted filesystems..."
+      run_sudo "$fstrim_bin" -av
+      print_success "Trim complete"
     }
 
     cmd_backup() {
@@ -392,13 +472,15 @@ pkgs.writeShellApplication {
     print_help() {
       echo -e "''${BOLD}dot''${NC} - flake-native dotfiles CLI"
       echo
-      echo -e "  ''${CYAN}rebuild''${NC} [--dry] [--plain] [--cores N]"
+      echo -e "  ''${CYAN}rebuild''${NC} [--dry|--dry-activate|--build|--test] [--plain] [--cores N] [--jobs N]"
       echo -e "  ''${CYAN}rebuild-boot''${NC}"
       echo -e "  ''${CYAN}update''${NC}"
       echo -e "  ''${CYAN}cleanup''${NC}"
       echo -e "  ''${CYAN}backup''${NC}"
       echo -e "  ''${CYAN}cache build|start|status''${NC}"
       echo -e "  ''${CYAN}server rebuild|update''${NC}"
+      echo -e "  ''${CYAN}doctor''${NC}"
+      echo -e "  ''${CYAN}trim''${NC}"
     }
 
     main() {
@@ -421,9 +503,11 @@ pkgs.writeShellApplication {
           cmd_update "$@"
           ;;
         cleanup)
+          shift
           cmd_cleanup
           ;;
         backup)
+          shift
           cmd_backup
           ;;
         cache)
@@ -433,6 +517,14 @@ pkgs.writeShellApplication {
         server)
           shift
           cmd_server "''${1:-}"
+          ;;
+        doctor)
+          shift
+          cmd_doctor
+          ;;
+        trim)
+          shift
+          cmd_trim
           ;;
         help|--help|-h)
           print_help
