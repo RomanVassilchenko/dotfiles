@@ -71,11 +71,6 @@ in
         type = types.str;
         description = "Path to the dotfiles repository checkout.";
       };
-
-      sshKey = mkOption {
-        type = types.str;
-        description = "Path to the personal SSH key used by local tooling.";
-      };
     };
 
     locale = {
@@ -187,7 +182,6 @@ in
 
     paths = {
       dotfiles = mkDefault hostFacts.dotfilesPath;
-      sshKey = mkDefault hostFacts.sshKeyPath;
     };
 
     locale = {

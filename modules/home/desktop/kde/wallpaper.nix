@@ -9,21 +9,54 @@ let
   verticalWallpaperFile = ../../../../wallpapers/wallpaper_vertical.png;
   horizontalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_horizontal.png";
   verticalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_vertical.png";
-  packagedWallpaper = "Wallpaper";
-  packagedWallpaperMetadata = pkgs.writeText "wallpaper-metadata.json" (
+  lockScreenWallpaperPlugin = "org.romanv.orientation-wallpaper";
+  lockScreenWallpaperMetadata = pkgs.writeText "orientation-wallpaper-metadata.json" (
     builtins.toJSON {
+      KPackageStructure = "Plasma/Wallpaper";
       KPlugin = {
-        Id = packagedWallpaper;
-        Name = packagedWallpaper;
+        Id = lockScreenWallpaperPlugin;
+        Name = "Orientation Wallpaper";
         License = "CC0-1.0";
         Authors = [ { Name = "romanv"; } ];
       };
     }
   );
-  packagedWallpaperPackage = pkgs.runCommand "kde-wallpaper" { } ''
-    install -Dm644 ${horizontalWallpaperFile} $out/share/wallpapers/${packagedWallpaper}/contents/images/1672x941.png
-    install -Dm644 ${verticalWallpaperFile} $out/share/wallpapers/${packagedWallpaper}/contents/images/941x1672.png
-    install -Dm644 ${packagedWallpaperMetadata} $out/share/wallpapers/${packagedWallpaper}/metadata.json
+  lockScreenWallpaperQml = pkgs.writeText "orientation-wallpaper-main.qml" ''
+    import QtQuick
+
+    Item {
+      id: root
+
+      property var configuration
+      property string pluginName: "${lockScreenWallpaperPlugin}"
+      property bool loading: image.status === Image.Loading
+
+      Image {
+        id: image
+
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        smooth: true
+        source: root.height > root.width ? "file://${verticalWallpaperFile}" : "file://${horizontalWallpaperFile}"
+        sourceSize: Qt.size(root.width * Screen.devicePixelRatio, root.height * Screen.devicePixelRatio)
+      }
+    }
+  '';
+  lockScreenWallpaperPackage = pkgs.runCommand "orientation-wallpaper" { } ''
+    install -Dm644 ${lockScreenWallpaperMetadata} $out/share/plasma/wallpapers/${lockScreenWallpaperPlugin}/metadata.json
+    install -Dm644 ${lockScreenWallpaperQml} $out/share/plasma/wallpapers/${lockScreenWallpaperPlugin}/contents/ui/main.qml
+  '';
+  lockScreenShellPackage = "org.romanv.plasma.desktop";
+  lockScreenShell = pkgs.runCommand "orientation-lockscreen-shell" { } ''
+    mkdir -p $out/share/plasma/shells
+    cp -R ${pkgs.kdePackages.plasma-desktop}/share/plasma/shells/org.kde.plasma.desktop $out/share/plasma/shells/${lockScreenShellPackage}
+    chmod -R u+w $out/share/plasma/shells/${lockScreenShellPackage}
+    substituteInPlace $out/share/plasma/shells/${lockScreenShellPackage}/metadata.json \
+      --replace '"Id": "org.kde.plasma.desktop"' '"Id": "${lockScreenShellPackage}"' \
+      --replace '"Name": "Desktop"' '"Name": "Orientation Lock Screen"'
+    substituteInPlace $out/share/plasma/shells/${lockScreenShellPackage}/contents/lockscreen/LockScreenUi.qml \
+      --replace 'Window.window.requestActivate();' 'if (lockScreenRoot.width >= lockScreenRoot.height) { Window.window.requestActivate(); }' \
+      --replace 'visible: opacity > 0' 'visible: opacity > 0 && lockScreenRoot.width >= lockScreenRoot.height'
   '';
   setWallpapersByOrientation = pkgs.writeShellScriptBin "kde-set-wallpapers" ''
     set -eu
@@ -57,17 +90,16 @@ let
 in
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   home.packages = [
-    packagedWallpaperPackage
+    lockScreenShell
+    lockScreenWallpaperPackage
     setWallpapersByOrientation
   ];
 
   programs.plasma.configFile = {
+    plasmashellrc.Shell.ShellPackage = lockScreenShellPackage;
+
     kscreenlockerrc = {
-      Greeter.WallpaperPlugin = "org.kde.image";
-      "Greeter/Wallpaper/org.kde.image/General" = {
-        Image = packagedWallpaper;
-        PreviewImage = "null";
-      };
+      Greeter.WallpaperPlugin = lockScreenWallpaperPlugin;
     };
 
     "plasma-org.kde.plasma.desktop-appletsrc" = {

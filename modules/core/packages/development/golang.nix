@@ -28,6 +28,7 @@ lib.mkIf config.dotfiles.features.development.enable {
     gci
     gnumake
     go
+    go-task
     go-minimock
     go-mockery
     go-swag
@@ -37,10 +38,13 @@ lib.mkIf config.dotfiles.features.development.enable {
     goose
     gopls
     gotools
+    gotestsum
+    govulncheck
     mockgen
     oapi-codegen
     protoc-gen-connect-go
     sqlc
+    air
     (golangci-lint.overrideAttrs (oldAttrs: rec {
       version = "1.64.8";
       src = fetchFromGitHub {

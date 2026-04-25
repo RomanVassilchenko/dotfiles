@@ -10,6 +10,5 @@ lib.mkIf config.dotfiles.features.development.enable {
     pkgs-stable.act
     pkgs-stable.android-tools
     pkgs.glab # keep on unstable — actively developed
-    pkgs.statix
   ];
 }

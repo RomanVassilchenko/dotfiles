@@ -108,7 +108,7 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
   users.users.greeter.extraGroups = [ "input" ];
 
   # Fix for https://github.com/NixOS/nixpkgs/issues/126590#issuecomment-3194531220
-  # Disabled: forces local build (no binary cache hit). Re-enable if XDG_DATA_DIRS issue returns.
+  # Disabled: forces a local build. Re-enable if XDG_DATA_DIRS issue returns.
   # nixpkgs.overlays = lib.singleton (
   #   final: prev: {
   #     kdePackages = prev.kdePackages // {

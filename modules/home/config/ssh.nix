@@ -1,29 +1,9 @@
 { lib, pkgs, ... }:
 let
   sshConfig = pkgs.writeText "ssh-config" ''
-    Include ~/.ssh/config.d/secrets
-
-    Host github.com
-      IdentityFile ~/.ssh/id_personal
-      IdentitiesOnly yes
-
-    # Forgejo git server (SSH on port 2222 via Tailscale)
-    # NixOS Forgejo uses 'forgejo' as SSH user, not 'git'
-    Host git.romanv.dev
-      HostName 100.64.0.1
-      Port 2222
-      User forgejo
-      IdentityFile ~/.ssh/id_personal
-      IdentitiesOnly yes
-
-    # Ninkear via Tailscale P2P (direct connection, no tunnel)
-    Host ninkear
-      HostName 100.64.0.1
-      User romanv
-      IdentityFile ~/.ssh/id_personal
+    Include ~/.ssh/config.d/*
 
     Host *
-      IdentityFile ~/.ssh/id_personal
       IdentitiesOnly yes
       ForwardAgent no
       Compression no

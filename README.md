@@ -52,11 +52,6 @@ dot doctor               # Health checks
 # Server (ninkear — local home server, requires Tailscale)
 dot server rebuild       # Pull and rebuild on ninkear
 dot server update        # Pull, update flake, and rebuild on ninkear
-
-# Binary cache (via ninkear)
-dot cache build          # Build all configs locally
-dot cache start          # Start remote build on ninkear (tmux)
-dot cache status         # Check remote build progress
 ```
 
 ### rebuild options

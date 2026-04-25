@@ -19,6 +19,21 @@ in
   programs.zsh = {
     enable = true;
     dotDir = "${config.xdg.configHome}/zsh";
+    completionInit = ''
+      autoload -Uz compinit
+      zstyle ':completion:*' use-cache yes
+      zstyle ':completion:*' cache-path "''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+
+      zcompdump="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+      zcompdump_refresh=("$zcompdump"(N.mh+24))
+      mkdir -p "''${zcompdump:h}"
+      if [[ ! -e "$zcompdump" || ''${#zcompdump_refresh[@]} -gt 0 ]]; then
+        compinit -d "$zcompdump"
+      else
+        compinit -C -d "$zcompdump"
+      fi
+      unset zcompdump zcompdump_refresh
+    '';
     autosuggestion = {
       enable = true;
       highlight = "fg=${overlay0}";
@@ -53,14 +68,6 @@ in
     ];
 
     initContent = ''
-      # XDG-compliant compinit with 24h cache
-      autoload -U compinit
-      if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"(#qN.mh+24) ]]; then
-        compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
-      else
-        compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
-      fi
-
       # ===========================================
       # fast-syntax-highlighting — Catppuccin Mocha
       # ===========================================
@@ -287,6 +294,15 @@ in
         claude-usage "$@"
       }
 
+      yy() {
+        local cwd_file cwd
+        cwd_file=$(mktemp -t yazi-cwd.XXXXXX) || return
+        yazi "$@" --cwd-file="$cwd_file"
+        cwd=$(command cat -- "$cwd_file" 2>/dev/null)
+        command rm -f -- "$cwd_file"
+        [[ -n "$cwd" && "$cwd" != "$PWD" ]] && cd -- "$cwd"
+      }
+
       # ===========================================
       # Suffix Aliases (type filename to open it)
       # ===========================================
@@ -311,7 +327,6 @@ in
           'update:Update flake inputs and rebuild'
           'cleanup:Trash backup files, GC old generations'
           'backup:Backup dotfiles to ninkear'
-          'cache:Cache management (build, start, status)'
           'server:Server management (rebuild, update)'
           'doctor:Run system health checks'
           'trim:Run fstrim for SSD'
@@ -329,18 +344,12 @@ in
           '--jobs:Limit parallel jobs'
         )
 
-        local -a cache_subcmds
-        cache_subcmds=('build:Build all configs locally' 'start:Start remote build on ninkear' 'status:Check remote build progress')
-
         local -a server_subcmds
         server_subcmds=('rebuild:Pull and rebuild on ninkear' 'update:Sync, update flake, rebuild ninkear')
 
         case "$words[2]" in
           rebuild|rebuild-boot|update)
             _describe -t rebuild_opts 'options' rebuild_opts
-            ;;
-          cache)
-            _describe -t cache_subcmds 'subcommands' cache_subcmds
             ;;
           server)
             _describe -t server_subcmds 'subcommands' server_subcmds
@@ -351,6 +360,77 @@ in
         esac
       }
       compdef _dot dot
+
+      _choose() {
+        _arguments -s -S \
+          '(-h --help)'{-h,--help}'[show help]' \
+          '(-V --version)'{-V,--version}'[show version]' \
+          '(-c --character-wise)'{-c,--character-wise}'[choose fields by character number]' \
+          '(-d --debug)'{-d,--debug}'[activate debug mode]' \
+          '(-x --exclusive)'{-x,--exclusive}'[use exclusive ranges]' \
+          '(-n --non-greedy)'{-n,--non-greedy}'[use non-greedy field separators]' \
+          '--one-indexed[index from 1 instead of 0]' \
+          '(-f --field-separator)'{-f,--field-separator}'[set field separator]:regex:' \
+          '(-i --input)'{-i,--input}'[read input from file]:file:_files' \
+          '(-o --output-field-separator)'{-o,--output-field-separator}'[set output field separator]:separator:' \
+          '*:field range:'
+      }
+      compdef _choose choose
+
+      _duf() {
+        local -a devices fields styles themes
+        devices=(local network fuse special loops binds)
+        fields=(mountpoint size used avail usage inodes inodes_used inodes_avail inodes_usage type filesystem)
+        styles=(unicode ascii)
+        themes=(dark light ansi)
+
+        _arguments -s -S \
+          '-all[include pseudo, duplicate, inaccessible file systems]' \
+          '-inodes[list inode information]' \
+          '-json[output devices as JSON]' \
+          '-version[show version]' \
+          '-warnings[output warnings to stderr]' \
+          '-hide[hide device classes]:device class:($devices)' \
+          '-only[show only device classes]:device class:($devices)' \
+          '-hide-fs[hide filesystems]:filesystem:' \
+          '-only-fs[show only filesystems]:filesystem:' \
+          '-hide-mp[hide mount points]:mount point:_files -/' \
+          '-only-mp[show only mount points]:mount point:_files -/' \
+          '-output[select output fields]:field:($fields)' \
+          '-sort[sort output by field]:field:($fields)' \
+          '-style[set output style]:style:($styles)' \
+          '-theme[set color theme]:theme:($themes)' \
+          '-width[set max output width]:columns:' \
+          '-avail-threshold[set available-space warning thresholds]:thresholds:' \
+          '-usage-threshold[set usage-bar warning thresholds]:thresholds:'
+      }
+      compdef _duf duf
+
+      _tokei() {
+        _arguments -s -S \
+          '(-h --help)'{-h,--help}'[show help]' \
+          '(-V --version)'{-V,--version}'[show version]' \
+          '(-c --columns)'{-c,--columns}'[set strict column width]:columns:' \
+          '(-e --exclude)'{-e,--exclude}'[ignore matching files or directories]:pattern:' \
+          '(-f --files)'{-f,--files}'[show individual file statistics]' \
+          '(-i --input)'{-i,--input}'[read previous tokei output]:file:_files' \
+          '--hidden[count hidden files]' \
+          '(-l --languages)'{-l,--languages}'[list supported languages]' \
+          '--no-ignore[ignore all ignore files]' \
+          '--no-ignore-parent[ignore parent ignore files]' \
+          '--no-ignore-dot[ignore .ignore and .tokeignore]' \
+          '--no-ignore-vcs[ignore VCS ignore files]' \
+          '(-o --output)'{-o,--output}'[set output format]:format:(json yaml cbor)' \
+          '--streaming[stream records]:mode:(simple json)' \
+          '(-s --sort)'{-s,--sort}'[sort languages by column]:column:(files lines blanks code comments)' \
+          '(-r --rsort)'{-r,--rsort}'[reverse sort languages by column]:column:(files lines blanks code comments)' \
+          '(-t --types)'{-t,--types}'[filter by language types]:language:' \
+          '(-C --compact)'{-C,--compact}'[hide embedded language statistics]' \
+          '(-n --num-format)'{-n,--num-format}'[set number format]:format:(plain commas dots underscores)' \
+          '(-v --verbose)'{-v,--verbose}'[increase log verbosity]' \
+          '*:input:_files'
+      }
+      compdef _tokei tokei
 
       if [ -f $HOME/.zshrc-personal ]; then
         source $HOME/.zshrc-personal
@@ -366,8 +446,22 @@ in
       vz = "zed .";
       lg = "lazygit";
       ld = "lazydocker";
+      y = "yy";
+      df = "duf";
+      du = "dust";
       dux = "dust";
       dui = "ncdu";
+      replace = "sd";
+      ch = "choose";
+      bench = "hyperfine";
+      lines = "tokei";
+      watch = "watchexec";
+      we = "watchexec";
+      o = "ouch";
+      compress = "ouch compress";
+      decompress = "ouch decompress";
+      http = "xh";
+      https = "xh --https";
       cc = "claude";
       oc = "opencode";
       cx = "codex";

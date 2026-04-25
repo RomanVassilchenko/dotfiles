@@ -7,6 +7,7 @@
     ./java.nix
     ./node.nix
     ./protobuf.nix
+    ./python.nix
     ./research.nix
   ];
 }
