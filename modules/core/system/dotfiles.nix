@@ -60,6 +60,18 @@ in
         description = "Display name used in Git configuration and user metadata.";
       };
 
+      gitEmail = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Email address used for Git commits and GitHub-specific configuration.";
+      };
+
+      authorizedKeys = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "SSH public keys allowed for the primary user account.";
+      };
+
       homeDirectory = mkOption {
         type = types.str;
         description = "Primary user home directory.";
@@ -74,6 +86,16 @@ in
     };
 
     locale = {
+      timeZone = mkOption {
+        type = types.str;
+        description = "System time zone.";
+      };
+
+      defaultLocale = mkOption {
+        type = types.str;
+        description = "Primary system locale.";
+      };
+
       keyboardLayout = mkOption {
         type = types.str;
         description = "XKB keyboard layout string for graphical sessions.";
@@ -177,14 +199,20 @@ in
     user = {
       name = mkDefault username;
       gitName = mkDefault hostFacts.gitUsername;
+      gitEmail = mkDefault (hostFacts.gitEmail or null);
+      authorizedKeys = mkDefault (hostFacts.authorizedKeys or [ ]);
       homeDirectory = mkDefault "/home/${username}";
     };
 
     paths = {
-      dotfiles = mkDefault hostFacts.dotfilesPath;
+      dotfiles = mkDefault (
+        hostFacts.dotfilesPath or "${config.dotfiles.user.homeDirectory}/Documents/dotfiles"
+      );
     };
 
     locale = {
+      timeZone = mkDefault (hostFacts.timeZone or "UTC");
+      defaultLocale = mkDefault (hostFacts.defaultLocale or "en_US.UTF-8");
       keyboardLayout = mkDefault hostFacts.keyboardLayout;
       consoleKeyMap = mkDefault hostFacts.consoleKeyMap;
     };

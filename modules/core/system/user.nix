@@ -54,9 +54,7 @@ in
       "wheel"
     ];
     shell = pkgs.zsh;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInNKbTTbxK433xEXs5A3az+j7z9bBxdgPQn6BhiOgnq roman.vassilchenko.work@gmail.com"
-    ];
+    openssh.authorizedKeys.keys = dotfiles.user.authorizedKeys;
   };
   nix.settings.allowed-users = [ userName ];
 }

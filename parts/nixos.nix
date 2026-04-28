@@ -2,8 +2,6 @@
 let
   inherit (inputs.nixpkgs) lib;
 
-  username = "romanv";
-
   mkStable =
     system:
     import inputs.nixpkgs-stable {
@@ -34,6 +32,7 @@ let
       hostFacts = mkHostFacts host;
       system = hostFacts.system or "x86_64-linux";
       deviceType = hostFacts.deviceType or (if hostFacts.profile == "server" then "server" else "laptop");
+      username = hostFacts.username or "youruser";
     in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
