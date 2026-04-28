@@ -4,97 +4,162 @@
 
 [![NixOS](https://img.shields.io/badge/NixOS-unstable-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/Nix-Flakes-7EBAE4?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
-[![KDE Plasma](https://img.shields.io/badge/KDE-Plasma%206-1D99F3?style=flat-square&logo=kde&logoColor=white)](https://kde.org/plasma-desktop/)
-[![Catppuccin](https://img.shields.io/badge/Theme-Catppuccin-CBA6F7?style=flat-square)](https://catppuccin.com)
+[![Home Manager](https://img.shields.io/badge/Home-Manager-6F86D6?style=flat-square)](https://github.com/nix-community/home-manager)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](./LICENSE)
+
+Modular NixOS configuration with host-specific facts, reusable feature bundles, Home Manager, and an optional private overlay.
 
 ![Fastfetch](.github/fastfetch.png)
-![Onefetch](.github/onefetch.png)
 
 </div>
 
-## Quick Start
+## Overview
+
+This repository is split into two layers:
+
+- A reusable public base for machines, users, feature bundles, and app toggles
+- An optional `private/` submodule for secrets, work-only services, and personal infrastructure
+
+The public part builds without `private/`.
+
+## Start Here
+
+- New machine or new user: follow [`docs/new-machine.md`](docs/new-machine.md)
+- Existing configured host: `sudo nixos-rebuild switch --flake .#$(hostname)`
+- Optional CLI install: `nix profile install .#dot`
+
+## Host Model
+
+Each machine lives in `hosts/<hostname>/` and has three files:
+
+- `facts.nix`: identity and defaults such as `username`, `gitUsername`, `gitEmail`, `gpuProfile`, keyboard layout, timezone, and optional SSH keys
+- `default.nix`: feature bundles and machine-specific overrides
+- `hardware.nix`: copied from `/etc/nixos/hardware-configuration.nix`
+
+New hosts should start from `hosts/template/`.
+
+The author's personal machines are kept separately:
+
+- `hosts/laptop-82sn`: personal laptop
+- `hosts/ninkear`: home server
+
+Do not use `laptop-82sn` as a generic template unless you explicitly want the author's personal choices.
+
+## Quick New-Host Flow
 
 ```bash
+HOSTNAME="my-laptop"
+
 git clone https://github.com/RomanVassilchenko/dotfiles ~/Documents/dotfiles
 cd ~/Documents/dotfiles
 
-# Copy and adapt an existing host config
-cp -r hosts/laptop-82sn hosts/$(hostname)
-sudo nixos-generate-config --show-hardware-config > hosts/$(hostname)/hardware.nix
-# Edit hosts/$(hostname)/variables.nix as needed
-# Add your host to flake.nix nixosConfigurations
+cp -r hosts/template "hosts/$HOSTNAME"
+cp /etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware.nix"
 
-# First build
-sudo nixos-rebuild switch --flake .#$(hostname)
+# Edit hosts/$HOSTNAME/facts.nix
+# Edit hosts/$HOSTNAME/default.nix
+# Add the hostname to parts/nixos.nix -> hostNames
 
-# Install dot CLI
-sudo ln -sf $PWD/dot.sh /usr/local/bin/dot
+sudo nixos-rebuild switch --flake ".#$HOSTNAME"
 ```
 
-## Private Directory
+Detailed guide: [`docs/new-machine.md`](docs/new-machine.md)
 
-`private/` is optional and is not required to build or run this dotfiles setup.
-It contains private configuration (work-specific settings, machine-specific overrides), agenix metadata, and encrypted `*.age` secret files.
-If you only need the public configuration, you can keep working without `private/`.
+## Feature Bundles
 
-## Commands
+Host `default.nix` files enable high-level bundles under `features.*`.
 
-```bash
-# System
-dot rebuild              # Rebuild current system
-dot rebuild --dry        # Preview changes
-dot rebuild-boot         # Rebuild, activate on next boot
-dot update               # Update flake inputs and rebuild
-dot cleanup              # Trash backup files and GC old generations
-dot trim                 # Run fstrim (SSD)
-dot doctor               # Health checks
+Available bundles in the public repo:
 
-# Server (ninkear — local home server, requires Tailscale)
-dot server rebuild       # Pull and rebuild on ninkear
-dot server update        # Pull, update flake, and rebuild on ninkear
-```
+- `development`: developer tooling
+- `desktop`: base graphical desktop support
+- `kde`: KDE Plasma desktop session
+- `productivity`: productivity defaults such as Bitwarden
+- `communication`: communication apps such as Telegram, Discord, and ZapZap
+- `hardware`: hardware utility apps such as Solaar
+- `printing`: print support
+- `stylix`: system-wide theming
+- `work`: work-specific integrations if your private overlay provides them
 
-### rebuild options
+App-level overrides live under `features.apps.*`. Current public app toggles include:
 
-```
---dry, -n      Preview what would change
---cores N      Limit to N CPU cores
-```
+- `bitwarden`
+- `discord`
+- `obsStudio`
+- `solaar`
+- `telegram`
+- `virtManager`
+- `zapzap`
 
-## Configuration
-
-Edit `hosts/<hostname>/variables.nix` to enable apps and set preferences:
+Example:
 
 ```nix
 {
-  gitUsername = "Your Name";
-  keyboardLayout = "us";
+  features = {
+    development.enable = true;
+    kde.enable = true;
+    productivity.enable = true;
 
-  brave    = { enable = true; };
-  discord  = { enable = true; };
-  telegram = { enable = true; autostart = true; };
-
-  games = {
-    heroic        = { enable = true; };
-    prismlauncher = { enable = true; };
+    apps = {
+      telegram = {
+        enable = true;
+        autostart = true;
+      };
+      virtManager.enable = true;
+    };
   };
 }
 ```
 
-### Profiles
+## Repository Layout
 
-| Profile       | Description                   |
-| ------------- | ----------------------------- |
-| `workstation` | KDE Plasma 6, GUI apps, audio |
-| `server`      | Headless, Docker, CLI-only    |
+![Onefetch](.github/onefetch.png)
 
-### GPU
+```text
+.
+├── flake.nix
+├── parts/nixos.nix         # Host registry and NixOS assembly
+├── hosts/
+│   ├── default/common.nix  # Generic shared defaults
+│   ├── template/           # Starting point for new machines
+│   └── <hostname>/         # Real machines
+├── features/               # Public feature bundles and app toggles
+├── modules/core/           # System modules
+├── modules/home/           # Home Manager modules
+├── modules/drivers/        # GPU driver modules
+├── config/                 # App/editor configs symlinked into $HOME
+└── private/                # Optional secrets and personal/work overlay
+```
 
-Set `gpuProfile` in `flake.nix` to `amd` or `intel`.
+## `dot` CLI
 
-## Theming
+The repo exposes a `dot` CLI as a flake package.
 
-Catppuccin Mocha system-wide via [Stylix](https://github.com/danth/stylix). Fonts: JetBrains Mono (terminal), Inter (UI). Cursor: Bibata Modern Ice.
+```bash
+nix profile install .#dot
+
+dot rebuild --plain
+dot rebuild --dry
+dot rebuild-boot
+dot update
+dot cleanup
+dot doctor
+```
+
+Server-specific commands such as backup and remote rebuilds depend on private configuration.
+
+## Public vs Private
+
+`private/` is optional and is auto-imported only when present.
+
+Typical `private/` content:
+
+- agenix secrets
+- work VPN and work Git configuration
+- self-hosted services and infrastructure integration
+- machine-specific secret material
+
+If you only want the public configuration, skip `private/` entirely.
 
 ---
 

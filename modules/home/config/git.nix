@@ -1,20 +1,25 @@
-{ dotfiles, ... }:
+{
+  dotfiles,
+  lib,
+  ...
+}:
 let
   gitUsername = dotfiles.user.gitName;
+  gitEmail = dotfiles.user.gitEmail;
 in
 {
-  # GitHub-specific git configuration
-  home.file.".config/git/github".text = ''
-    [user]
-      name = Roman Vassilchenko
-      email = 36629811+RomanVassilchenko@users.noreply.github.com
-  '';
+  home.file = lib.optionalAttrs (gitEmail != null) {
+    ".config/git/github".text = ''
+      [user]
+        name = ${gitUsername}
+        email = ${gitEmail}
+    '';
+  };
 
   programs.git = {
     enable = true;
     signing.format = null;
-    includes = [
-      # GitHub-specific configuration
+    includes = lib.optionals (gitEmail != null) [
       {
         condition = "hasconfig:remote.*.url:git@github.com:*/**";
         path = "~/.config/git/github";
@@ -31,8 +36,10 @@ in
 
     settings = {
       user = {
-        name = "${gitUsername}";
-        email = "36629811+RomanVassilchenko@users.noreply.github.com";
+        name = gitUsername;
+      }
+      // lib.optionalAttrs (gitEmail != null) {
+        email = gitEmail;
       };
 
       gpg.format = "ssh";

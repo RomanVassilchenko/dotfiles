@@ -1,7 +1,12 @@
 {
   username = "youruser";
   gitUsername = "Your Name";
-  gitEmail = null;
+  gitEmail = "you@example.com";
+
+  system = "x86_64-linux";
+  profile = "workstation";
+  gpuProfile = "intel";
+  deviceType = "laptop";
 
   keyboardLayout = "us";
   consoleKeyMap = "us";

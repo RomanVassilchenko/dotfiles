@@ -5,7 +5,11 @@
   ...
 }:
 let
-  inherit (config.dotfiles.locale) consoleKeyMap;
+  inherit (config.dotfiles.locale)
+    consoleKeyMap
+    defaultLocale
+    timeZone
+    ;
   desktopEnable = config.dotfiles.features.desktop.enable;
 in
 {
@@ -50,8 +54,8 @@ in
       use-xdg-base-directories = true;
     };
   };
-  time.timeZone = "Asia/Almaty";
-  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = timeZone;
+  i18n.defaultLocale = defaultLocale;
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_GB.UTF-8";
     LC_IDENTIFICATION = "en_GB.UTF-8";
