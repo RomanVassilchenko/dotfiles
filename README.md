@@ -148,6 +148,17 @@ dot doctor
 
 Server-specific commands such as backup and remote rebuilds depend on private configuration.
 
+## AI-Assisted Workflow
+
+This repository is organized so AI coding agents can help with day-to-day NixOS work without needing private secrets.
+
+- Use agents to inspect modules, explain host wiring, suggest feature splits, and draft safe Nix changes.
+- Keep secrets in `private/` or another ignored location, and do not paste secret values into prompts.
+- Ask agents to run `nix eval`, `nix flake check --no-build`, or `dot rebuild --plain` after changes when practical.
+- Treat generated changes like normal code review: inspect diffs, keep commits focused, and verify before rebuilding important machines.
+
+Repo-local agent resources live under `.agents/` when present. They are optional helpers, not required to build the system.
+
 ## Public vs Private
 
 `private/` is optional and is auto-imported only when present.
