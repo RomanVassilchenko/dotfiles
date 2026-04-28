@@ -1,118 +1,128 @@
 ---
 name: dotfiles-release
-description: Commit and push this dotfiles repo private-first, then public, then rebuild. Use only inside this repository.
+description: Commit and push a dotfiles repository private-first, then public, then rebuild. Use inside this repository or compatible forks.
 ---
 
-**Все сообщения пользователю на русском языке.**
+# Skill: dotfiles-release
 
-## Назначение
+Use this skill only when the user explicitly asks to release, commit, push, and/or rebuild a NixOS dotfiles repository.
 
-Этот repo-local skill выполняет release workflow только для `/home/romanv/Documents/dotfiles`:
+## Purpose
 
-1. Проверить состояние private submodule.
-2. Закоммитить все изменения в private repo, если они есть.
-3. Запушить private repo.
-4. Закоммитить все изменения в public repo, если они есть.
-5. Запушить public repo.
-6. Выполнить rebuild.
+This skill performs a safe release workflow for this repository or a compatible fork:
 
-## Важные правила
+1. Detect the public repository root from the current working tree.
+2. Check the optional `private/` submodule or nested repository if it exists.
+3. Commit and push private changes first, if there are any.
+4. Commit and push public changes, if there are any.
+5. Rebuild the current NixOS host.
 
-- Не выполнять workflow молча. Skill запускается только когда пользователь явно просит release/commit/push/rebuild dotfiles.
-- Работать только с `/home/romanv/Documents/dotfiles` и `/home/romanv/Documents/dotfiles/private`.
-- Коммитить все изменения, включая удаления и untracked файлы, кроме явно ignored файлов.
-- Не добавлять ignored файлы через `git add -f`.
-- Не раскрывать содержимое private файлов в ответах, diff snippets или commit message.
-- Не читать содержимое секретов, ключей, `.env`, raw private config и auth/session файлов.
-- Перед commit проверить `git status --short --ignored=matching` отдельно в private и public.
-- Если видишь подозрительный untracked private material в public repo, остановиться и исправить `.gitignore` или спросить пользователя.
-- Если private repo не содержит изменений, не создавать empty commit, а переходить к public.
-- Если public repo не содержит изменений, не создавать empty commit, а переходить к rebuild.
-- Не использовать `--no-verify`, `--force`, `push --force`, `commit --amend`.
-- Commit messages писать без упоминания AI.
+## Scope
 
-## Проверка перед commit
+- Work only inside the detected repository root and its optional `private/` directory.
+- Do not assume a specific username, hostname, remote name, local path, or private infrastructure.
+- Prefer the current branch and its configured upstream.
+- If there is no configured upstream, stop and ask before pushing.
+- If `private/` does not exist or is not a Git repository, skip private release steps.
 
-Выполнить в private repo:
+## Safety Rules
 
-```bash
-git status --short --ignored=matching
-git diff --stat
-git diff --cached --stat
-```
+- Never run the workflow silently. The user must explicitly request release, commit, push, or rebuild.
+- Commit all relevant tracked, modified, deleted, and untracked files, except ignored files.
+- Never add ignored files with `git add -f`.
+- Never read or reveal secret contents, keys, `.env`, raw private config, authentication files, or session files.
+- Never include private file contents in responses, diff snippets, or commit messages.
+- Do not use `--no-verify`, `--force`, `push --force`, destructive resets, or commit amend.
+- Do not create empty commits.
+- Write commit messages in Conventional Commit format without mentioning AI assistance.
 
-Выполнить в public repo:
+## Preflight Checks
+
+Run these checks in the public repository root:
 
 ```bash
 git status --short --ignored=matching
 git diff --stat
 git diff --cached --stat
+git remote -v
+git branch --show-current
+git status --short --branch
 ```
 
-Проверить, что public repo не tracking private-sensitive paths:
+If `private/` is a Git repository, run the same status and diff-stat checks there.
+
+Before committing public changes, check for accidentally tracked sensitive paths:
 
 ```bash
-git grep -n -E 'id_personal|id_xiaoxinpro_work|config/ssh|\.config/git/secrets|\.codex/rules|obsidian/obsidian\.json|private/home/config' -- ':!private'
+git grep -n -E '(^|/)(id_[^/]*|.*\.age|\.env|secrets?|credentials?|auth|session|token|config/ssh|\.config/git/secrets)(/|$)' -- ':!private' ':!.git'
 ```
 
-Если grep что-то нашел, не коммитить public до исправления.
+If this check finds suspicious public material, stop and either fix `.gitignore`, remove the material from the public repo, or ask the user.
 
 ## Private Commit
 
-Рабочая директория: `/home/romanv/Documents/dotfiles/private`.
+Only run this section when `private/` exists and is a Git repository.
 
-1. Выполнить `git status --short`.
-2. Если есть изменения, выполнить `git add -A`.
-3. Составить Conventional Commit message по изменениям.
-4. Выполнить `git commit -m "<message>"`.
-5. Выполнить `git push`.
+1. Check private repo status with `git status --short --ignored=matching`.
+2. If there are no non-ignored changes, skip private commit and push.
+3. Stage all private changes with `git add -A`.
+4. Create a Conventional Commit message based on the change type.
+5. Commit with `git commit -m "<message>"`.
+6. Push to the current branch upstream with `git push`.
 
-Рекомендуемый тип commit:
+Recommended private commit messages:
 
-- `chore: update private dotfiles state` для смешанных private changes.
-- `fix: ...` только если это явное исправление поведения.
-- `feat: ...` только если добавляется новая private-функциональность.
+- `chore: update private dotfiles state` for mixed private updates.
+- `fix: ...` only for a clear behavior fix.
+- `feat: ...` only for new private functionality.
 
 ## Public Commit
 
-Рабочая директория: `/home/romanv/Documents/dotfiles`.
+1. Check public repo status with `git status --short --ignored=matching`.
+2. If there are no non-ignored public changes, skip public commit and push.
+3. Stage all public changes with `git add -A`.
+4. If private was committed and `private/` is a submodule, ensure the submodule pointer is staged.
+5. Create a Conventional Commit message based on the change type.
+6. Commit with `git commit -m "<message>"`.
+7. Push to the current branch upstream with `git push`.
 
-1. Выполнить `git status --short`.
-2. Если есть изменения, выполнить `git add -A`.
-3. Убедиться, что submodule pointer `private` тоже попал в commit, если private был запушен.
-4. Составить Conventional Commit message по изменениям.
-5. Выполнить `git commit -m "<message>"`.
-6. Выполнить `git push`.
+Recommended public commit messages:
 
-Рекомендуемый тип commit:
-
-- `chore: update dotfiles release` для смешанных Nix/config changes.
-- `feat: add ...` для новых пакетов, modules или skills.
-- `refactor: ...` для структурных изменений без нового поведения.
-- `fix: ...` для исправлений конфигурации.
+- `chore: update dotfiles release` for mixed Nix/config changes.
+- `feat: add ...` for new modules, packages, hosts, docs, or skills.
+- `refactor: ...` for structural changes without new behavior.
+- `fix: ...` for configuration or behavior fixes.
+- `docs: ...` for documentation-only changes.
 
 ## Rebuild
 
-После успешного push public repo выполнить:
+After a successful public push, rebuild the current system.
+
+Preferred command when the repository provides the helper CLI:
 
 ```bash
 dot rebuild --plain
 ```
 
-Если rebuild упал:
+Fallback command when `dot` is unavailable:
 
-1. Диагностировать ошибку.
-2. Исправить минимально необходимым изменением.
-3. Повторить private/public commit workflow только для новых изменений.
-4. Повторить `dot rebuild --plain`.
+```bash
+sudo nixos-rebuild switch --flake .#$(hostname)
+```
 
-## Финальный ответ
+If rebuild fails:
 
-В конце коротко сообщить:
+1. Diagnose the failure without exposing secrets.
+2. Make the smallest correct fix.
+3. Repeat the private/public commit and push workflow only for the new fix.
+4. Run the rebuild again.
 
-- private commit hash или что изменений не было;
-- public commit hash или что изменений не было;
-- push result;
-- rebuild result.
+## Final Response
 
-Не включать содержимое private файлов.
+Report briefly:
+
+- Private commit hash, or that there were no private changes.
+- Public commit hash, or that there were no public changes.
+- Push result.
+- Rebuild result.
+- Any residual warning that still needs user attention.
