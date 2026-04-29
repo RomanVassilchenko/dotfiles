@@ -11,7 +11,6 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         height = 30;
         floating = false;
         hiding = "none";
-        screen = 0;
         opacity = "opaque";
 
         widgets = [
