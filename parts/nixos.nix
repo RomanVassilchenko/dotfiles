@@ -146,6 +146,7 @@ in
       apps.dot = {
         type = "app";
         program = "${dotCli}/bin/dot";
+        meta.description = "Manage and rebuild these NixOS dotfiles";
       };
     };
 

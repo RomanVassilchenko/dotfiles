@@ -50,6 +50,8 @@ pkgs.writeShellApplication {
 
     # shellcheck source=/dev/null
     [[ -f "$PROJECT_DIR/private/dot-config.sh" ]] && source "$PROJECT_DIR/private/dot-config.sh"
+    # shellcheck source=/dev/null
+    [[ -f "$PROJECT_DIR/private/dot-commands.sh" ]] && source "$PROJECT_DIR/private/dot-commands.sh"
 
     BACKUP_FILES=(
       ".config/mimeapps.list.backup"
@@ -306,6 +308,46 @@ pkgs.writeShellApplication {
       df -h /nix/store
     }
 
+    cmd_validate_fast() {
+      print_info "Parsing tracked Nix files..."
+      (
+        cd "$PROJECT_DIR"
+        git ls-files '*.nix' | while IFS= read -r file; do
+          nix-instantiate --parse "$file" >/dev/null
+        done
+      )
+
+      if [[ -x "$PROJECT_DIR/private/check.sh" ]]; then
+        print_info "Running private validation..."
+        "$PROJECT_DIR/private/check.sh"
+      fi
+
+      print_success "Fast validation passed"
+    }
+
+    cmd_validate() {
+      local mode="''${1:-full}"
+
+      case "$mode" in
+        fast)
+          cmd_validate_fast
+          ;;
+        full|flake)
+          cmd_validate_fast
+          print_info "Evaluating flake..."
+          (
+            cd "$PROJECT_DIR"
+            nix flake check --no-build
+          )
+          print_success "Validation passed"
+          ;;
+        *)
+          print_error "Usage: dot validate [fast|full|flake]"
+          exit 1
+          ;;
+      esac
+    }
+
     cmd_trim() {
       local fstrim_bin
 
@@ -378,11 +420,15 @@ pkgs.writeShellApplication {
       echo -e "  ''${CYAN}rebuild''${NC} [--dry|--dry-activate|--build|--test] [--plain] [--cores N] [--jobs N]"
       echo -e "  ''${CYAN}rebuild-boot''${NC}"
       echo -e "  ''${CYAN}update''${NC}"
+      echo -e "  ''${CYAN}validate''${NC} [fast|full|flake]"
       echo -e "  ''${CYAN}cleanup''${NC}"
       echo -e "  ''${CYAN}backup''${NC}"
       echo -e "  ''${CYAN}server rebuild|update''${NC}"
       echo -e "  ''${CYAN}doctor''${NC}"
       echo -e "  ''${CYAN}trim''${NC}"
+      if declare -F dot_private_help >/dev/null 2>&1; then
+        dot_private_help
+      fi
     }
 
     main() {
@@ -403,6 +449,10 @@ pkgs.writeShellApplication {
         update)
           shift
           cmd_update "$@"
+          ;;
+        validate)
+          shift
+          cmd_validate "''${1:-full}"
           ;;
         cleanup)
           shift
@@ -428,6 +478,13 @@ pkgs.writeShellApplication {
           print_help
           ;;
         *)
+          if declare -F dot_private_handle >/dev/null 2>&1; then
+            private_status=0
+            dot_private_handle "$@" || private_status=$?
+            if [[ "$private_status" -ne 1 ]]; then
+              exit "$private_status"
+            fi
+          fi
           print_error "Unknown command: $1"
           echo
           print_help
