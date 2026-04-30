@@ -37,10 +37,6 @@
               command = "/run/current-system/sw/bin/pkill *";
               options = [ "NOPASSWD" ];
             }
-            {
-              command = "/run/current-system/sw/bin/cat /run/agenix/headscale-preauth-key";
-              options = [ "NOPASSWD" ];
-            }
           ];
         }
       ]

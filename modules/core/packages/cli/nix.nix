@@ -5,7 +5,7 @@
   ...
 }:
 let
-  agenix = inputs.agenix.packages.${pkgs.system}.agenix;
+  inherit (inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}) agenix;
   agenix-rekey = pkgs.writeShellApplication {
     name = "agenix-rekey";
     runtimeInputs = [ agenix ];
