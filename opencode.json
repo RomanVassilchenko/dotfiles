@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "config/opencode/instructions/shell-strategy.md",
+    "config/opencode/instructions/context-strategy.md"
+  ],
+  "permission": {
+    "bash": {
+      "nix eval *": "allow",
+      "nix flake check --no-build": "allow",
+      "nix flake check --no-build *": "allow",
+      "nix fmt": "allow",
+      "nix fmt *": "allow",
+      "dot doctor": "allow",
+      "dot rebuild --dry": "allow",
+      "dot rebuild": "ask",
+      "dot rebuild *": "ask",
+      "dot rebuild-boot": "ask",
+      "dot rebuild-boot *": "ask",
+      "dot update": "ask",
+      "dot update *": "ask",
+      "dot backup": "ask",
+      "dot backup *": "ask"
+    }
+  }
+}

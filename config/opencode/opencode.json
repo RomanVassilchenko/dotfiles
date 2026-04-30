@@ -22,7 +22,10 @@
       "model": "openai/gpt-5.3-codex-spark"
     }
   },
-  "instructions": ["AGENTS.md", "instructions/shell-strategy.md"],
+  "instructions": [
+    "instructions/shell-strategy.md",
+    "instructions/context-strategy.md"
+  ],
   "compaction": {
     "auto": true,
     "prune": true,
@@ -77,6 +80,26 @@
       "wget": "deny",
       "wget *": "deny",
       "rm -rf *": "deny",
+      "git add -p": "deny",
+      "git add -p *": "deny",
+      "git rebase -i": "deny",
+      "git rebase -i *": "deny",
+      "vim": "deny",
+      "vim *": "deny",
+      "vi": "deny",
+      "vi *": "deny",
+      "nano": "deny",
+      "nano *": "deny",
+      "emacs": "deny",
+      "emacs *": "deny",
+      "less": "deny",
+      "less *": "deny",
+      "more": "deny",
+      "more *": "deny",
+      "man": "deny",
+      "man *": "deny",
+      "docker run -it *": "deny",
+      "docker exec -it *": "deny",
       "sudo": "deny",
       "sudo *": "deny",
       "chmod 777 *": "deny",
@@ -99,7 +122,6 @@
       "**/.git/**",
       "**/node_modules/**",
       "**/.direnv/**",
-      "config/.claude/projects/**",
       "config/codex/sessions/**",
       "config/gemini/tmp/**"
     ]

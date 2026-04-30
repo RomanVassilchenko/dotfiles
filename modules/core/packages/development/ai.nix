@@ -2,9 +2,9 @@
 {
   environment.systemPackages =
     (with pkgs.llm-agents; [
-      claude-code
+      # claude-code
       codex
-      gemini-cli
+      # gemini-cli
       opencode
       pi
     ])
