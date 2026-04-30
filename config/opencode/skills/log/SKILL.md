@@ -176,7 +176,7 @@ tags: [log]
 
 ## Правила Obsidian Vault
 
-**ВАЖНО:** Следуй правилам из `/home/romanv/Documents/Google\ Drive/Obsidian/CLAUDE.md`
+**ВАЖНО:** Следуй правилам Obsidian vault, если они есть в самом vault.
 
 - **НЕ** создавать YAML frontmatter в обычных документах (только в Daily)
 - **НЕ** создавать локальные Resources в проектах (использовать общие `/Resources/`)
@@ -213,7 +213,7 @@ tags: [log]
 # 2026-02-05
 
 - Сделано: Унифицировал структуру Obsidian vault...
-- Файлы: config/.claude/skills/log/SKILL.md
+- Файлы: config/opencode/skills/log/SKILL.md
 - Git: `main` `abc1234` "chore: update obsidian log skill"
 - #personal #nixos
 ```

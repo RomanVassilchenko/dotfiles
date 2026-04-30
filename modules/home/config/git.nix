@@ -30,10 +30,6 @@ in
       }
     ];
 
-    ignores = [
-      "**/.claude/settings.local.json"
-    ];
-
     settings = {
       user = {
         name = gitUsername;
