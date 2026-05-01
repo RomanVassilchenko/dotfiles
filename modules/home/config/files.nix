@@ -72,9 +72,6 @@ in
     ".config/opencode/tui.json" = {
       source = outOfStore "${publicConfig}/opencode/tui.json";
     };
-    ".config/opencode/instructions/shell-strategy.md" = {
-      source = outOfStore "${publicConfig}/opencode/instructions/shell-strategy.md";
-    };
     ".config/opencode/instructions/context-strategy.md" = {
       source = outOfStore "${publicConfig}/opencode/instructions/context-strategy.md";
     };
