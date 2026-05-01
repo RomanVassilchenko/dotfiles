@@ -16,6 +16,7 @@
       unrar
       unzip
       xdg-ninja
+      yq
       zip
     ])
     ++ [
