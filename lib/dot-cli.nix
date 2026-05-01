@@ -54,7 +54,7 @@ pkgs.writeShellApplication {
     [[ -f "$PROJECT_DIR/private/dot-commands.sh" ]] && source "$PROJECT_DIR/private/dot-commands.sh"
 
     BACKUP_FILES=(
-      ".config/mimeapps.list.backup"
+      ".config/mimeapps.list.hm-bak"
       ".gtkrc-2.0.hm-bak"
       ".config/gtk-3.0/gtk.css.hm-bak"
       ".config/gtk-3.0/settings.ini.hm-bak"
