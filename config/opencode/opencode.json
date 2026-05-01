@@ -23,7 +23,6 @@
     }
   },
   "instructions": [
-    "instructions/shell-strategy.md",
     "instructions/context-strategy.md"
   ],
   "compaction": {
@@ -129,7 +128,11 @@
   "mcp": {
     "chrome-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
     }
   }
 }
