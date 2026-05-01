@@ -2,32 +2,4 @@
 .env
 
 # Private material must not live in the public repo.
-config/s[s]h/
-
-config/codex/*
-!config/codex/AGENTS.md
-!config/codex/RTK.md
-
-config/gemini/*
-!config/gemini/GEMINI.md
-!config/gemini/hooks/
-config/gemini/hooks/*
-!config/gemini/hooks/rtk-hook-gemini.sh
-!config/gemini/settings.json
-
-config/opencode/*
-!config/opencode/opencode.json
-!config/opencode/tui.json
-!config/opencode/instructions/
-config/opencode/instructions/*
-!config/opencode/instructions/shell-strategy.md
-!config/opencode/instructions/context-strategy.md
-!config/opencode/plugins/
-config/opencode/plugins/*
-!config/opencode/plugins/rtk.ts
-!config/opencode/skills/
-config/opencode/skills/*
-!config/opencode/skills/log/
-!config/opencode/skills/log/**
-!config/opencode/skills/find-skills/
-!config/opencode/skills/find-skills/**
+config/ssh/
