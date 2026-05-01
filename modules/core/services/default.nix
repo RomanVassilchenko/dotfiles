@@ -9,6 +9,5 @@
     ./performance.nix
     ./printing.nix
     ./server
-    ./virtual-mic.nix
   ];
 }
