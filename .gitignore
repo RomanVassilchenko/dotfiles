@@ -1,5 +1,2 @@
 # Environment variables
 .env
-
-# Private material must not live in the public repo.
-config/ssh/
