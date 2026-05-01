@@ -4,5 +4,6 @@
     ffmpeg
     imagemagick
     mpv
+    poppler-utils
   ];
 }
