@@ -51,8 +51,8 @@ let
     if ! ${pkgs.llm-agents.opencode}/bin/opencode run \
       --pure \
       --title "git ai commit message" \
-      --file "$context_file" \
-      "$prompt" >"$raw_message_file"; then
+      "$prompt" \
+      --file "$context_file" >"$raw_message_file"; then
       echo "opencode failed to generate a commit message"
       exit 1
     fi
