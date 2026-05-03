@@ -151,6 +151,27 @@ in
       zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always $word'
       zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview 'git log --color=always -10 $word'
 
+      # opencode completion
+      if command -v opencode >/dev/null 2>&1; then
+        opencode_completion_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+        opencode_completion_file="$opencode_completion_dir/opencode.zsh"
+        opencode_completion_tmp="$opencode_completion_file.$$"
+        command mkdir -p "$opencode_completion_dir"
+
+        if [[ ! -s "$opencode_completion_file" || "$commands[opencode]" -nt "$opencode_completion_file" ]]; then
+          if opencode completion zsh >| "$opencode_completion_tmp" 2>/dev/null; then
+            command mv -f "$opencode_completion_tmp" "$opencode_completion_file"
+          else
+            command rm -f "$opencode_completion_tmp"
+          fi
+        fi
+
+        [[ -s "$opencode_completion_file" ]] && source "$opencode_completion_file"
+        (( $+functions[_opencode_yargs_completions] )) && compdef _opencode_yargs_completions oc
+
+        unset opencode_completion_dir opencode_completion_file opencode_completion_tmp
+      fi
+
       # Systemctl preview
       zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 

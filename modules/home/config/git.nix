@@ -103,7 +103,7 @@ in
       diff.colorMoved = "default";
 
       alias = {
-        # AI commit message (uses codex by default)
+        # AI commit message and commit via opencode
         ai = "!git-ai-commit";
 
         # Undo operations
