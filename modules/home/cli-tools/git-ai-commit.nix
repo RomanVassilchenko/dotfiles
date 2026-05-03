@@ -1,79 +1,87 @@
 { pkgs, ... }:
 let
   git-ai-commit = pkgs.writeShellScriptBin "git-ai-commit" ''
-        set -e
+    set -euo pipefail
 
-       if ! git diff --cached --quiet; then
-          diff=$(git diff --cached)
-        else
-          echo "No staged changes. Stage changes first with 'git add'"
-          exit 1
-        fi
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      echo "Not inside a git work tree"
+      exit 1
+    fi
 
-        echo "Select AI tool:"
-        echo "  1) claude"
-        echo "  2) codex (default)"
-        echo "  3) gemini"
-        echo "  4) opencode"
-        echo ""
-        printf "Choice [1-4]: "
-        read -r choice
+    if git diff --cached --quiet --exit-code; then
+      echo "No staged changes to commit"
+      echo "Stage changes with git add first."
+      exit 1
+    fi
 
-        recent_commits=$(git log --oneline -10 2>/dev/null || echo "")
+    status=$(git status --short --untracked-files=all)
 
-        prompt="Generate a git commit message for this diff. Output ONLY the commit message - no meta-commentary.
+    context_file=$(mktemp -t git-ai-context.XXXXXX)
+    raw_message_file=$(mktemp -t git-ai-message-raw.XXXXXX)
+    message_file=$(mktemp -t git-ai-message.XXXXXX)
+    trap 'rm -f "$context_file" "$raw_message_file" "$message_file"' EXIT
 
-        Follow the style of recent commits in this repo:
-        $recent_commits
+    {
+      printf 'Recent commits (latest 20):\n'
+      git log --oneline -20 2>/dev/null || true
+      printf '\nStaged files (name-status):\n'
+      git diff --cached --name-status --find-renames
+      printf '\nStaged diff summary:\n'
+      git diff --cached --summary
+      printf '\nStaged diff stat:\n'
+      git diff --cached --stat --find-renames
+      printf '\nFull working tree status (ignore unstaged and untracked entries):\n'
+      printf '%s\n' "$status"
+    } >"$context_file"
 
-        Rules:
-        - Match the prefix style (feat/fix/refactor/docs/style/test/chore, etc.)
-        - First line under 72 chars
-        - Optional body after blank line explaining why
-        - No AI attribution or quotes"
+    prompt="Generate a git commit message for ONLY the staged changes described in the attached git context file.
 
-        echo ""
-        echo "Generating commit message..."
+    Output ONLY the commit message. Do not use markdown, code fences, quotes, explanations, or AI attribution.
 
-        case "$choice" in
-          1|claude)
-            msg=$(echo "$diff" | ${pkgs.llm-agents.claude-code}/bin/claude -p \
-              --allowedTools "" \
-              --output-format text \
-              "$prompt")
-            ;;
-          3|gemini)
-            msg=$(echo "$diff" | ${pkgs.llm-agents.gemini-cli}/bin/gemini "$prompt")
-            ;;
-          4|opencode)
-            msg=$(echo "$diff" | ${pkgs.llm-agents.opencode}/bin/opencode "$prompt")
-            ;;
-          2|codex|*)
-            tmpfile=$(mktemp)
-            ${pkgs.llm-agents.codex}/bin/codex exec -o "$tmpfile" "$prompt
+    Rules:
+    - Follow the style and structure of the latest 20 commits in the context.
+    - Prefer the repo's Conventional Commit style when it fits.
+    - Use an optional scope only when it is clear from the changed files.
+    - Keep the first line under 72 characters.
+    - Add a body only when it explains useful why/context.
+    - Ignore unstaged and untracked files from the working tree status.
+    - Do not inspect files or run commands; the attached context is enough."
 
-    $diff" >/dev/null 2>&1
-            msg=$(cat "$tmpfile")
-            rm -f "$tmpfile"
-            ;;
-        esac
+    echo "Generating commit message with opencode..."
+    if ! ${pkgs.llm-agents.opencode}/bin/opencode run \
+      --pure \
+      --title "git ai commit message" \
+      --file "$context_file" \
+      "$prompt" >"$raw_message_file"; then
+      echo "opencode failed to generate a commit message"
+      exit 1
+    fi
 
-        echo ""
-        echo "Proposed commit message:"
-        echo "────────────────────────"
-        echo "$msg"
-        echo "────────────────────────"
-        echo ""
+    awk '
+      /^```/ { next }
+      {
+        sub(/\r$/, "")
+        lines[++n] = $0
+      }
+      END {
+        start = 1
+        while (start <= n && lines[start] == "") start++
+        end = n
+        while (end >= start && lines[end] == "") end--
+        for (i = start; i <= end; i++) print lines[i]
+      }
+    ' "$raw_message_file" >"$message_file"
 
-        printf "Commit with this message? [Y/n] "
-        read -r answer
+    first_line=$(IFS= read -r line <"$message_file"; printf '%s' "$line")
+    if [ -z "$first_line" ]; then
+      echo "opencode returned an empty commit message"
+      exit 1
+    fi
 
-        if [ "$answer" != "n" ] && [ "$answer" != "N" ]; then
-          git commit -m "$msg"
-          echo "Committed!"
-        else
-          echo "Aborted."
-        fi
+    echo "Commit message:"
+    cat "$message_file"
+
+    git commit -F "$message_file"
   '';
 in
 {

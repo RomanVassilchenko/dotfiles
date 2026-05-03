@@ -10,5 +10,6 @@
     ])
     ++ [
       pkgs.rtk
+      pkgs.xdotool
     ];
 }
