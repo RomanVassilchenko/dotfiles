@@ -57,8 +57,6 @@
   "breadcrumbs.enabled": true,
   "chat.editor.fontFamily": "JetBrainsMono Nerd Font Propo",
   "chat.fontFamily": "JetBrainsMono Nerd Font Propo",
-  "claudeCode.preferredLocation": "panel",
-  "claudeCode.useTerminal": true,
   "debug.console.fontFamily": "JetBrainsMono Nerd Font Propo",
   "diffEditor.experimental.showMoves": true,
   "diffEditor.hideUnchangedRegions.enabled": true,

@@ -57,10 +57,6 @@
       bind d display-popup -d "#{pane_current_path}" -w 90% -h 90% "lazydocker"
       bind b display-popup -d "#{pane_current_path}" -w 90% -h 90% "btop"
       bind o display-popup -d "#{pane_current_path}" -w 92% -h 92% "opencode"
-      bind a display-popup -d "#{pane_current_path}" -w 92% -h 92% "claude"
-      bind x display-popup -d "#{pane_current_path}" -w 92% -h 92% "codex"
-      bind m display-popup -d "#{pane_current_path}" -w 92% -h 92% "gemini"
-      bind u display-popup -d "#{pane_current_path}" -w 60% -h 12 "claude-usage"
 
       # Faster navigation and quality-of-life bindings
       bind r source-file ~/.config/tmux/tmux.conf \; display-message "tmux reloaded"

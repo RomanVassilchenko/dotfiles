@@ -8,8 +8,9 @@
   "plugin": [
     "opencode-vibeguard",
     "opencode-notify",
-    "@tarquinen/opencode-dcp",
-    "@simonwjackson/opencode-direnv"
+    "@franlol/opencode-md-table-formatter@latest",
+    "@plannotator/opencode@latest",
+    "@tarquinen/opencode-dcp"
   ],
   "agent": {
     "title": {
@@ -115,15 +116,6 @@
   //   },
   //   "webfetch": "ask",
   //   "websearch": "ask"
-  // },
-  // "watcher": {
-  //   "ignore": [
-  //     "**/.git/**",
-  //     "**/node_modules/**",
-  //     "**/.direnv/**",
-  //     "config/codex/sessions/**",
-  //     "config/gemini/tmp/**"
-  //   ]
   // },
   "mcp": {
     "chrome-devtools": {

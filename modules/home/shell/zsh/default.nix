@@ -295,9 +295,9 @@ in
       }
 
       ai-session() {
-        local tool="''${1:-claude}"
+        local tool="''${1:-opencode}"
         case "$tool" in
-          claude|opencode|codex|gemini)
+          opencode)
             "$tool" "''${@:2}"
             ;;
           *)
@@ -309,10 +309,6 @@ in
 
       hs() {
         atuin stats "$@"
-      }
-
-      cu() {
-        claude-usage "$@"
       }
 
       yy() {
@@ -483,10 +479,7 @@ in
       decompress = "ouch decompress";
       http = "xh";
       https = "xh --https";
-      cc = "claude";
       oc = "opencode";
-      cx = "codex";
-      gem = "gemini";
     };
   };
 }

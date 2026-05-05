@@ -23,6 +23,28 @@ in
       fi
     done
 
+    for path in \
+      "$HOME/.codex/AGENTS.md" \
+      "$HOME/.codex/RTK.md" \
+      "$HOME/.gemini/GEMINI.md" \
+      "$HOME/.gemini/hooks/rtk-hook-gemini.sh" \
+      "$HOME/.gemini/settings.json" \
+      "$HOME/.config/opencode/plugins/rtk.ts"; do
+      if [ -L "$path" ]; then
+        ${pkgs.coreutils}/bin/rm "$path"
+      fi
+    done
+
+    for path in \
+      "$HOME/.codex" \
+      "$HOME/.gemini/hooks" \
+      "$HOME/.gemini" \
+      "$HOME/.config/opencode/plugins"; do
+      if [ -d "$path" ] && [ ! -L "$path" ]; then
+        ${pkgs.coreutils}/bin/rmdir --ignore-fail-on-non-empty "$path"
+      fi
+    done
+
     for path in "$HOME/.agents/skills/log" "$HOME/.config/opencode/skills/log"; do
       if [ -L "$path" ]; then
         target="$(${pkgs.coreutils}/bin/readlink -f "$path" 2>/dev/null || true)"
@@ -46,23 +68,6 @@ in
       source = outOfStore "${publicConfig}/opencode/skills";
     };
 
-    ".codex/AGENTS.md" = {
-      source = outOfStore "${publicConfig}/codex/AGENTS.md";
-    };
-    ".codex/RTK.md" = {
-      source = outOfStore "${publicConfig}/codex/RTK.md";
-    };
-
-    ".gemini/GEMINI.md" = {
-      source = outOfStore "${publicConfig}/gemini/GEMINI.md";
-    };
-    ".gemini/hooks/rtk-hook-gemini.sh" = {
-      source = outOfStore "${publicConfig}/gemini/hooks/rtk-hook-gemini.sh";
-    };
-    ".gemini/settings.json" = {
-      source = outOfStore "${publicConfig}/gemini/settings.json";
-    };
-
     ".config/rtk" = {
       source = outOfStore "${publicConfig}/rtk";
     };
@@ -74,9 +79,6 @@ in
     };
     ".config/opencode/instructions/context-strategy.md" = {
       source = outOfStore "${publicConfig}/opencode/instructions/context-strategy.md";
-    };
-    ".config/opencode/plugins/rtk.ts" = {
-      source = outOfStore "${publicConfig}/opencode/plugins/rtk.ts";
     };
     ".config/opencode/skills" = {
       source = outOfStore "${publicConfig}/opencode/skills";
