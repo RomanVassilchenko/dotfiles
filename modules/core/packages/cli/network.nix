@@ -17,5 +17,13 @@
       xh # Modern httpie alternative (Rust)
     ])
     ++ [ pkgs.cloudflared ] # keep on unstable — actively updated
+    ++ lib.optionals config.dotfiles.features.work.enable (
+      with pkgs-stable;
+      [
+        kubectl
+        kubernetes-helm
+        vault
+      ]
+    )
     ++ lib.optionals config.dotfiles.features.work.enable [ pkgs-stable.openfortivpn ];
 }
