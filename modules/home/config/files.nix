@@ -25,6 +25,7 @@ in
 
     for path in \
       "$HOME/.codex/AGENTS.md" \
+      "$HOME/.codex/config.toml" \
       "$HOME/.codex/RTK.md" \
       "$HOME/.gemini/GEMINI.md" \
       "$HOME/.gemini/hooks/rtk-hook-gemini.sh" \
@@ -70,6 +71,12 @@ in
 
     ".config/rtk" = {
       source = outOfStore "${publicConfig}/rtk";
+    };
+    ".codex/AGENTS.md" = {
+      source = outOfStore "${publicConfig}/codex/AGENTS.md";
+    };
+    ".codex/config.toml" = {
+      source = outOfStore "${publicConfig}/codex/config.toml";
     };
     ".config/opencode/opencode.json" = {
       source = outOfStore "${publicConfig}/opencode/opencode.json";

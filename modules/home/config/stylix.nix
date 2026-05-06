@@ -13,6 +13,7 @@ lib.mkIf dotfiles.features.stylix.enable (
     {
       stylix.targets = {
         vscode.enable = false;
+        zed.enable = false;
         qt.enable = false;
       };
     }

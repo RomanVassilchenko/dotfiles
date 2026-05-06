@@ -6,6 +6,7 @@
     ./bitwarden.nix
     ./bottom.nix
     ./carapace.nix
+    ./codex.nix
     ./direnv.nix
     ./gh.nix
     ./btop.nix
