@@ -1,0 +1,211 @@
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_provider = "openai"
+personality = "pragmatic"
+model_reasoning_effort = "high"
+plan_mode_reasoning_effort = "xhigh"
+model_reasoning_summary = "auto"
+model_verbosity = "medium"
+tool_output_token_limit = 12000
+background_terminal_max_timeout = 300000
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+default_permissions = "workspace"
+allow_login_shell = true
+
+cli_auth_credentials_store = "auto"
+mcp_oauth_credentials_store = "auto"
+chatgpt_base_url = "https://chatgpt.com/backend-api/"
+
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = ["AGENTS.md", "CLAUDE.md", "README.md"]
+project_root_markers = [".git", "flake.nix", "package.json", "pyproject.toml", "Cargo.toml", "go.mod"]
+
+file_opener = "vscode"
+commit_attribution = ""
+hide_agent_reasoning = false
+check_for_update_on_startup = false
+web_search = "cached"
+
+[features]
+apps = true
+codex_hooks = true
+multi_agent = true
+shell_tool = true
+shell_snapshot = true
+unified_exec = true
+fast_mode = true
+personality = true
+enable_request_compression = true
+skill_mcp_dependency_install = true
+prevent_idle_sleep = true
+undo = true
+memories = true
+
+[permissions.workspace.filesystem]
+glob_scan_max_depth = 4
+
+[permissions.workspace.filesystem.":project_roots"]
+"." = "write"
+"**/.env*" = "none"
+"**/*.age" = "none"
+"**/*.pem" = "none"
+"**/*.key" = "none"
+"**/*.cert" = "none"
+"**/*.crt" = "none"
+"**/secrets.yml" = "none"
+"**/private/secrets/**" = "none"
+
+[permissions.read_only.filesystem]
+glob_scan_max_depth = 4
+
+[permissions.read_only.filesystem.":project_roots"]
+"." = "read"
+"**/.env*" = "none"
+"**/*.age" = "none"
+"**/*.pem" = "none"
+"**/*.key" = "none"
+"**/*.cert" = "none"
+"**/*.crt" = "none"
+"**/secrets.yml" = "none"
+"**/private/secrets/**" = "none"
+
+[memories]
+generate_memories = true
+use_memories = true
+disable_on_external_context = true
+
+[agents]
+max_threads = 6
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[sandbox_workspace_write]
+writable_roots = []
+network_access = false
+exclude_tmpdir_env_var = false
+exclude_slash_tmp = false
+
+[shell_environment_policy]
+inherit = "all"
+ignore_default_excludes = false
+exclude = []
+set = {}
+include_only = []
+experimental_use_profile = false
+
+[history]
+persistence = "save-all"
+max_bytes = 10485760
+
+[tui]
+notifications = true
+notification_method = "auto"
+notification_condition = "unfocused"
+animations = true
+show_tooltips = true
+status_line = ["model-with-reasoning", "context-remaining", "git-branch", "current-dir"]
+terminal_title = ["spinner", "project", "model"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
+
+[analytics]
+enabled = false
+
+[feedback]
+enabled = true
+
+[mcp_servers.openai_docs]
+url = "https://developers.openai.com/mcp"
+startup_timeout_sec = 10
+tool_timeout_sec = 60
+enabled = true
+required = false
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+startup_timeout_sec = 30
+tool_timeout_sec = 90
+# Context7 works best with an API key; enable after `npx ctx7 setup`.
+enabled = false
+required = false
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+startup_timeout_sec = 30
+tool_timeout_sec = 90
+enabled = true
+required = false
+
+[mcp_servers.chrome_devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest"]
+startup_timeout_sec = 30
+tool_timeout_sec = 90
+enabled = false
+required = false
+
+[apps]
+[apps._default]
+enabled = true
+destructive_enabled = false
+open_world_enabled = true
+default_tools_enabled = true
+default_tools_approval_mode = "prompt"
+
+[tool_suggest]
+discoverables = [
+  { type = "connector", id = "github" },
+  # Enable when Figma account/integration is configured.
+  # { type = "plugin", id = "figma@openai-curated" },
+]
+# Enable when Slack account/integration is configured.
+# disabled_tools = [
+#   { type = "plugin", id = "slack@openai-curated" },
+# ]
+
+[profiles]
+[profiles.safe]
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+default_permissions = "read_only"
+web_search = "cached"
+
+[profiles.work]
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+default_permissions = "workspace"
+web_search = "cached"
+
+[profiles.fast]
+model_reasoning_effort = "low"
+plan_mode_reasoning_effort = "medium"
+model_verbosity = "low"
+service_tier = "fast"
+
+[projects]
+[projects."/home/romanv/Documents/dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/romanv/Documents/Development/Bereke"]
+trust_level = "trusted"
+
+[tools]
+view_image = true
+
+[otel]
+log_user_prompt = false
+environment = "dev"
+exporter = "none"
+trace_exporter = "none"
+metrics_exporter = "none"
+
+[plugins."gmail@openai-curated"]
+enabled = true
+
+[plugins."github@openai-curated"]
+enabled = true
