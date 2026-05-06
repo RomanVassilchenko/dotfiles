@@ -120,11 +120,7 @@
       }
     }
   },
-  "theme": {
-    "mode": "dark",
-    "light": "One Light",
-    "dark": "Catppuccin Mocha"
-  },
+  "theme": "Catppuccin Mocha",
   "icon_theme": {
     "mode": "light",
     "light": "Catppuccin Mocha",
@@ -174,7 +170,10 @@
   "rounded_selection": true,
   "seed_search_query_from_cursor": "selection",
   "show_wrap_guides": true,
-  "wrap_guides": [80, 120],
+  "wrap_guides": [
+    80,
+    120
+  ],
   "centered_layout": {
     "left_padding": 0.16,
     "right_padding": 0.16
@@ -308,7 +307,12 @@
     "scroll_multiplier": 3.0,
     "detect_venv": {
       "on": {
-        "directories": [".venv", "venv", ".env", "env"],
+        "directories": [
+          ".venv",
+          "venv",
+          ".env",
+          "env"
+        ],
         "activate_script": "default"
       }
     },
@@ -348,10 +352,23 @@
     "**/coverage"
   ],
   "file_types": {
-    "Dockerfile": ["Dockerfile", "Dockerfile.*"],
-    "JSON": ["json", "jsonc", "*.code-snippets"],
-    "Proto": ["proto"],
-    "Shell Script": ["env", ".env", ".env.*"]
+    "Dockerfile": [
+      "Dockerfile",
+      "Dockerfile.*"
+    ],
+    "JSON": [
+      "json",
+      "jsonc",
+      "*.code-snippets"
+    ],
+    "Proto": [
+      "proto"
+    ],
+    "Shell Script": [
+      "env",
+      ".env",
+      ".env.*"
+    ]
   },
   "global_lsp_settings": {
     "button": true,
@@ -405,15 +422,29 @@
         "settings": {
           "lineLength": 120,
           "lint": {
-            "select": ["E", "F", "I", "UP", "B", "SIM"],
-            "ignore": ["E501"]
+            "select": [
+              "E",
+              "F",
+              "I",
+              "UP",
+              "B",
+              "SIM"
+            ],
+            "ignore": [
+              "E501"
+            ]
           }
         }
       }
     },
     "tailwindcss-language-server": {
       "settings": {
-        "classAttributes": ["class", "className", "ngClass", "styles"]
+        "classAttributes": [
+          "class",
+          "className",
+          "ngClass",
+          "styles"
+        ]
       }
     },
     "yaml-language-server": {
@@ -429,7 +460,9 @@
   },
   "languages": {
     "Nix": {
-      "language_servers": ["nixd"],
+      "language_servers": [
+        "nixd"
+      ],
       "formatter": {
         "external": {
           "command": "nixfmt"
@@ -437,13 +470,18 @@
       }
     },
     "Go": {
-      "language_servers": ["gopls", "golangci-lint"],
+      "language_servers": [
+        "gopls",
+        "golangci-lint"
+      ],
       "formatter": "language_server",
       "code_actions_on_format": {
         "source.organizeImports": true
       },
       "show_wrap_guides": true,
-      "wrap_guides": [80]
+      "wrap_guides": [
+        80
+      ]
     },
     "Python": {
       "formatter": {
@@ -454,13 +492,19 @@
       "code_actions_on_format": {
         "source.organizeImports.ruff": true
       },
-      "language_servers": ["basedpyright", "ruff"]
+      "language_servers": [
+        "basedpyright",
+        "ruff"
+      ]
     },
     "JavaScript": {
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+          "arguments": [
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
         }
       }
     },
@@ -468,7 +512,10 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+          "arguments": [
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
         }
       },
       "inlay_hints": {
@@ -482,7 +529,10 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+          "arguments": [
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
         }
       }
     },
@@ -490,7 +540,10 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+          "arguments": [
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
         }
       }
     },
@@ -498,7 +551,10 @@
       "formatter": {
         "external": {
           "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+          "arguments": [
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
         }
       }
     },
@@ -536,6 +592,11 @@
     "sql": true,
     "toml": true,
     "vue": true,
-    "xml": true
+    "xml": true,
+    "astro": true,
+    "biome": true,
+    "csv": true,
+    "svelte": true,
+    "terraform": true
   }
 }
