@@ -1,2 +1,6 @@
 # Environment variables
 .env
+
+# Codex config is private-only.
+/.codex
+/config/codex/

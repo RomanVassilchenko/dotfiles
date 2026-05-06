@@ -8,6 +8,7 @@
 let
   dotfilesPath = dotfiles.paths.dotfiles;
   publicConfig = "${dotfilesPath}/config";
+  privateConfig = "${dotfilesPath}/private/home/config";
   outOfStore = config.lib.file.mkOutOfStoreSymlink;
 in
 {
@@ -73,10 +74,13 @@ in
       source = outOfStore "${publicConfig}/rtk";
     };
     ".codex/AGENTS.md" = {
-      source = outOfStore "${publicConfig}/codex/AGENTS.md";
+      source = outOfStore "${privateConfig}/codex/AGENTS.md";
     };
     ".codex/config.toml" = {
-      source = outOfStore "${publicConfig}/codex/config.toml";
+      source = outOfStore "${privateConfig}/codex/config.toml";
+    };
+    ".codex/RTK.md" = {
+      source = outOfStore "${privateConfig}/codex/RTK.md";
     };
     ".config/opencode/opencode.json" = {
       source = outOfStore "${publicConfig}/opencode/opencode.json";
