@@ -19,16 +19,18 @@ in
   programs.git = {
     enable = true;
     signing.format = null;
-    includes = lib.optionals (gitEmail != null) [
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:*/**";
-        path = "~/.config/git/github";
-      }
-      {
-        condition = "hasconfig:remote.*.url:https://github.com/**";
-        path = "~/.config/git/github";
-      }
-    ];
+    includes = lib.mkAfter (
+      lib.optionals (gitEmail != null) [
+        {
+          condition = "hasconfig:remote.*.url:git@github.com:*/**";
+          path = "~/.config/git/github";
+        }
+        {
+          condition = "hasconfig:remote.*.url:https://github.com/**";
+          path = "~/.config/git/github";
+        }
+      ]
+    );
 
     settings = {
       user = {
