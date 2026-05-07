@@ -2,6 +2,8 @@
   username = "romanv";
   gitUsername = "Роман Васильченко";
   gitEmail = "36629811+RomanVassilchenko@users.noreply.github.com";
+  githubUsername = "Roman Vassilchenko";
+  githubEmail = "roman.vassilchenko.work@gmail.com";
 
   system = "x86_64-linux";
   profile = "workstation";

@@ -63,7 +63,18 @@ in
       gitEmail = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Email address used for Git commits and GitHub-specific configuration.";
+        description = "Email address used for the default Git identity.";
+      };
+
+      githubName = mkOption {
+        type = types.str;
+        description = "Display name used for Git commits in repositories with GitHub remotes.";
+      };
+
+      githubEmail = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Email address used for Git commits in repositories with GitHub remotes.";
       };
 
       authorizedKeys = mkOption {
@@ -200,6 +211,8 @@ in
       name = mkDefault username;
       gitName = mkDefault hostFacts.gitUsername;
       gitEmail = mkDefault (hostFacts.gitEmail or null);
+      githubName = mkDefault (hostFacts.githubUsername or config.dotfiles.user.gitName);
+      githubEmail = mkDefault (hostFacts.githubEmail or config.dotfiles.user.gitEmail);
       authorizedKeys = mkDefault (hostFacts.authorizedKeys or [ ]);
       homeDirectory = mkDefault "/home/${username}";
     };

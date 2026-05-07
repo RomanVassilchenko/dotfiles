@@ -2,6 +2,8 @@
   username = "youruser";
   gitUsername = "Your Name";
   gitEmail = "you@example.com";
+  githubUsername = "Your GitHub Name";
+  githubEmail = "you@users.noreply.github.com";
 
   system = "x86_64-linux";
   profile = "workstation";
