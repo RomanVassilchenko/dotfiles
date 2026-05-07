@@ -62,6 +62,8 @@ Example for a personal laptop:
   username = "alice";
   gitUsername = "Alice Example";
   gitEmail = "alice@example.com";
+  githubUsername = "Alice Example";
+  githubEmail = "alice@users.noreply.github.com";
 
   system = "x86_64-linux";
   profile = "workstation";
@@ -84,6 +86,8 @@ Meaning of the important fields:
 - `username`: primary Linux user managed by the config
 - `gitUsername`: display name for Git config and user metadata
 - `gitEmail`: Git commit email
+- `githubUsername`: optional display name for commits in repositories with GitHub remotes
+- `githubEmail`: optional email for commits in repositories with GitHub remotes
 - `system`: target platform, usually `x86_64-linux`
 - `profile`: high-level label, currently `workstation` or `server`
 - `gpuProfile`: currently `intel` or `amd`

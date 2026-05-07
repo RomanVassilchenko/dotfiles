@@ -32,7 +32,7 @@ The public part builds without `private/`.
 
 Each machine lives in `hosts/<hostname>/` and has three files:
 
-- `facts.nix`: identity and defaults such as `username`, `gitUsername`, `gitEmail`, `gpuProfile`, keyboard layout, timezone, and optional SSH keys
+- `facts.nix`: identity and defaults such as `username`, `gitUsername`, `gitEmail`, optional `githubUsername`/`githubEmail`, `gpuProfile`, keyboard layout, timezone, and optional SSH keys
 - `default.nix`: feature bundles and machine-specific overrides
 - `hardware.nix`: copied from `/etc/nixos/hardware-configuration.nix`
 
