@@ -4,7 +4,7 @@ Project-specific guidance for OpenCode and compatible coding agents in this repo
 
 ## Scope
 
-This file is only for `/home/romanv/Documents/dotfiles`. Do not carry `dot` commands, host names, NixOS rebuild workflows, or service details into other projects.
+This file is only for `/home/romanv/dotfiles`. Do not carry `dot` commands, host names, NixOS rebuild workflows, or service details into other projects.
 
 Global OpenCode behavior belongs in `config/opencode/opencode.json`. Dotfiles-only permissions and instructions belong in the root `opencode.json` project config.
 

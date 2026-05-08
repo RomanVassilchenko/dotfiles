@@ -50,8 +50,8 @@ Do not use `laptop-82sn` as a generic template unless you explicitly want the au
 ```bash
 HOSTNAME="my-laptop"
 
-git clone https://github.com/RomanVassilchenko/dotfiles ~/Documents/dotfiles
-cd ~/Documents/dotfiles
+git clone https://github.com/RomanVassilchenko/dotfiles ~/dotfiles
+cd ~/dotfiles
 
 cp -r hosts/template "hosts/$HOSTNAME"
 cp /etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware.nix"
