@@ -14,7 +14,7 @@
   consoleKeyMap = "us";
   timeZone = "Asia/Almaty";
   defaultLocale = "en_US.UTF-8";
-  dotfilesPath = "/home/romanv/Documents/dotfiles";
+  dotfilesPath = "/home/romanv/dotfiles";
   authorizedKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInNKbTTbxK433xEXs5A3az+j7z9bBxdgPQn6BhiOgnq roman.vassilchenko.work@gmail.com"
   ];

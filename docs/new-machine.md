@@ -14,8 +14,8 @@ That means the flow is:
 ## 1. Clone The Repo
 
 ```bash
-git clone https://github.com/RomanVassilchenko/dotfiles ~/Documents/dotfiles
-cd ~/Documents/dotfiles
+git clone https://github.com/RomanVassilchenko/dotfiles ~/dotfiles
+cd ~/dotfiles
 ```
 
 The public repo works without `private/`.
@@ -94,7 +94,7 @@ Meaning of the important fields:
 - `deviceType`: `laptop` or `server`
 - `authorizedKeys`: SSH public keys for the main user account
 
-`dotfilesPath` is optional. If omitted, it defaults to `~/Documents/dotfiles` for that user.
+`dotfilesPath` is optional. If omitted, it defaults to `~/dotfiles` for that user.
 
 ## 5. Choose Feature Bundles In `default.nix`
 

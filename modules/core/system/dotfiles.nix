@@ -218,9 +218,7 @@ in
     };
 
     paths = {
-      dotfiles = mkDefault (
-        hostFacts.dotfilesPath or "${config.dotfiles.user.homeDirectory}/Documents/dotfiles"
-      );
+      dotfiles = mkDefault (hostFacts.dotfilesPath or "${config.dotfiles.user.homeDirectory}/dotfiles");
     };
 
     locale = {

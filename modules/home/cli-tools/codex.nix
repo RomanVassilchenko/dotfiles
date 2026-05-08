@@ -1,30 +1,21 @@
 { pkgs, ... }:
 let
-  codex =
-    pkgs.runCommand "codex-${pkgs.codex.version}-unhidden-wrapper"
-      {
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-      }
-      ''
-        mkdir -p $out/bin
+  codex = pkgs.runCommand "codex-${pkgs.codex.version}-direct" { } ''
+    mkdir -p $out/bin
 
-        cp ${pkgs.codex}/bin/.codex-wrapped $out/bin/codex-bin
-        chmod +x $out/bin/codex-bin
-
-        makeWrapper $out/bin/codex-bin $out/bin/codex \
-          --prefix PATH : ${
-            pkgs.lib.escapeShellArg (
-              pkgs.lib.makeBinPath [
-                pkgs.ripgrep
-                pkgs.bubblewrap
-              ]
-            )
-          }
-      '';
+    if [ -x ${pkgs.codex}/bin/.codex-wrapped ]; then
+      cp ${pkgs.codex}/bin/.codex-wrapped $out/bin/codex
+    else
+      cp ${pkgs.codex}/bin/codex $out/bin/codex
+    fi
+    chmod +x $out/bin/codex
+  '';
 in
 {
   home.packages = with pkgs; [
     codex
+    bubblewrap
     nodejs
+    ripgrep
   ];
 }

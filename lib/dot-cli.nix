@@ -47,6 +47,7 @@ pkgs.writeShellApplication {
     PROJECT_DIR=$(resolve_project_dir)
     BACKUP_SERVER=""
     BACKUP_PATH=""
+    SERVER_REPO_PATH=""
 
     # shellcheck source=/dev/null
     [[ -f "$PROJECT_DIR/private/dot-config.sh" ]] && source "$PROJECT_DIR/private/dot-config.sh"
@@ -374,7 +375,7 @@ pkgs.writeShellApplication {
     cmd_server() {
       local subcmd="''${1:-}"
       local server_host="''${BACKUP_SERVER:-ninkear}"
-      local server_repo="''${BACKUP_PATH:-/home/romanv/backup/dotfiles}"
+      local server_repo="''${SERVER_REPO_PATH:-/home/romanv/dotfiles}"
 
       case "$subcmd" in
         rebuild)

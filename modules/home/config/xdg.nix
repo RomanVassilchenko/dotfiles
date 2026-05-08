@@ -40,6 +40,7 @@
       download = "$HOME/Downloads";
       music = "$HOME/Music";
       pictures = "$HOME/Pictures";
+      projects = "$HOME/Projects";
       videos = "$HOME/Videos";
       templates = "$HOME/Templates";
       publicShare = "$HOME/Public";
