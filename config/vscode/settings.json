@@ -237,6 +237,7 @@
       }
     }
   },
+  "orqflow.lsp.path": "/etc/profiles/per-user/romanv/bin/orqlsp",
   "problems.decorations.enabled": false,
   "protobuf.externalLinter.bufPath": "buf",
   "protobuf.externalLinter.enabled": true,
