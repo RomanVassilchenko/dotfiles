@@ -182,6 +182,14 @@ in
           description = "Start Telegram automatically in graphical sessions.";
         };
 
+        thunderbird.enable = mkEnableOption "Thunderbird desktop app";
+
+        thunderbird.autostart = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Start Birdtray for Thunderbird automatically in graphical sessions.";
+        };
+
         virtManager.enable = mkEnableOption "virt-manager desktop app";
 
         zapzap.enable = mkEnableOption "ZapZap desktop app";

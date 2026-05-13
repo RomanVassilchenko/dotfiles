@@ -13,6 +13,7 @@ in
     dotfiles.features.apps = {
       discord.enable = lib.mkDefault true;
       telegram.enable = lib.mkDefault true;
+      thunderbird.enable = lib.mkDefault true;
       zapzap.enable = lib.mkDefault true;
     };
   };

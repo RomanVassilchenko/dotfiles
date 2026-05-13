@@ -39,6 +39,7 @@ in
     obsStudio = mkAppOptions "OBS Studio";
     solaar = mkAppOptions "Solaar";
     telegram = mkAppOptions "Telegram";
+    thunderbird = mkAppOptions "Thunderbird";
     virtManager.enable = mkOption {
       type = types.nullOr types.bool;
       default = null;
@@ -53,6 +54,7 @@ in
     (mkAppConfig [ "dotfiles" "features" "apps" "obsStudio" ] config.features.apps.obsStudio)
     (mkAppConfig [ "dotfiles" "features" "apps" "solaar" ] config.features.apps.solaar)
     (mkAppConfig [ "dotfiles" "features" "apps" "telegram" ] config.features.apps.telegram)
+    (mkAppConfig [ "dotfiles" "features" "apps" "thunderbird" ] config.features.apps.thunderbird)
     (mkIf (config.features.apps.virtManager.enable != null) {
       dotfiles.features.apps.virtManager.enable = config.features.apps.virtManager.enable;
     })
