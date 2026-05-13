@@ -54,8 +54,8 @@
     };
   };
 
-  systemd.coredump.extraConfig = ''
-    Storage=none
-    ProcessSizeMax=0
-  '';
+  systemd.coredump.settings.Coredump = {
+    Storage = "none";
+    ProcessSizeMax = "0";
+  };
 }

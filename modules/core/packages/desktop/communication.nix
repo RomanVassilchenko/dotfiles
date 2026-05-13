@@ -9,5 +9,9 @@
     with pkgs;
     lib.optionals config.dotfiles.features.apps.discord.enable [ vesktop ]
     ++ lib.optionals config.dotfiles.features.apps.telegram.enable [ telegram-desktop ]
+    ++ lib.optionals config.dotfiles.features.apps.thunderbird.enable [
+      birdtray
+      thunderbird
+    ]
     ++ lib.optionals config.dotfiles.features.apps.zapzap.enable [ zapzap ];
 }

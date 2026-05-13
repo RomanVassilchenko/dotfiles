@@ -34,6 +34,7 @@ lib.mkIf config.dotfiles.features.development.enable {
     go-swag
     go-tools
     gofumpt
+    golangci-lint-langserver
     golines
     goose
     gopls
