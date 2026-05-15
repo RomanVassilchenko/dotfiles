@@ -1,6 +1,6 @@
 ---
 name: dotfiles-release
-description: Commit and push a dotfiles repository private-first, then public, then rebuild. Use inside this repository or compatible forks.
+description: Commit and push a dotfiles repository private-first, then public. Use inside this repository or compatible forks.
 ---
 
 # Skill: dotfiles-release
@@ -15,7 +15,7 @@ This skill performs a safe release workflow for this repository or a compatible 
 2. Check the optional `private/` submodule or nested repository if it exists.
 3. Commit and push private changes first, if there are any.
 4. Commit and push public changes, if there are any.
-5. Rebuild the current NixOS host.
+5. Stop after a successful push sequence.
 
 ## Scope
 
@@ -94,29 +94,6 @@ Recommended public commit messages:
 - `fix: ...` for configuration or behavior fixes.
 - `docs: ...` for documentation-only changes.
 
-## Rebuild
-
-After a successful public push, rebuild the current system.
-
-Preferred command when the repository provides the helper CLI:
-
-```bash
-dot rebuild --plain
-```
-
-Fallback command when `dot` is unavailable:
-
-```bash
-sudo nixos-rebuild switch --flake .#$(hostname)
-```
-
-If rebuild fails:
-
-1. Diagnose the failure without exposing secrets.
-2. Make the smallest correct fix.
-3. Repeat the private/public commit and push workflow only for the new fix.
-4. Run the rebuild again.
-
 ## Final Response
 
 Report briefly:
@@ -124,5 +101,4 @@ Report briefly:
 - Private commit hash, or that there were no private changes.
 - Public commit hash, or that there were no public changes.
 - Push result.
-- Rebuild result.
 - Any residual warning that still needs user attention.
