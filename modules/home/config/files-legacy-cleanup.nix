@@ -10,11 +10,11 @@ let
 in
 {
   home.activation.removeLegacyWholeDirectoryLinks = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-    for path in "$HOME/.codex" "$HOME/.gemini" "$HOME/.config/opencode"; do
+    for path in "$HOME/.codex" "$HOME/.gemini" "$HOME/.config/opencode" "$HOME/.config/rtk"; do
       if [ -L "$path" ]; then
         target="$(${pkgs.coreutils}/bin/readlink -f "$path" 2>/dev/null || true)"
         case "$target" in
-          ${shared.publicConfig}/codex|${shared.publicConfig}/gemini|${shared.publicConfig}/opencode|/nix/store/*)
+          ${shared.publicConfig}/codex|${shared.publicConfig}/gemini|${shared.publicConfig}/opencode|${shared.publicConfig}/rtk|/nix/store/*)
             ${pkgs.coreutils}/bin/rm "$path"
             ;;
         esac
@@ -38,7 +38,8 @@ in
       "$HOME/.codex" \
       "$HOME/.gemini/hooks" \
       "$HOME/.gemini" \
-      "$HOME/.config/opencode/plugins"; do
+      "$HOME/.config/opencode/plugins" \
+      "$HOME/.config/rtk"; do
       if [ -d "$path" ] && [ ! -L "$path" ]; then
         ${pkgs.coreutils}/bin/rmdir --ignore-fail-on-non-empty "$path"
       fi
