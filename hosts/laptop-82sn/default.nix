@@ -44,7 +44,6 @@
       bitwarden.enable = true;
       bitwarden.autostart = true;
       telegram.autostart = true;
-      thunderbird.autostart = true;
       zapzap.autostart = true;
     };
   };
