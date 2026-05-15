@@ -48,9 +48,13 @@ pkgs.writeShellApplication {
     BACKUP_SERVER=""
     BACKUP_PATH=""
     SERVER_REPO_PATH=""
+    PRIVATE_CONFIG_PRESENT=false
 
     # shellcheck source=/dev/null
-    [[ -f "$PROJECT_DIR/private/dot-config.sh" ]] && source "$PROJECT_DIR/private/dot-config.sh"
+    if [[ -f "$PROJECT_DIR/private/dot-config.sh" ]]; then
+      PRIVATE_CONFIG_PRESENT=true
+      source "$PROJECT_DIR/private/dot-config.sh"
+    fi
     # shellcheck source=/dev/null
     [[ -f "$PROJECT_DIR/private/dot-commands.sh" ]] && source "$PROJECT_DIR/private/dot-commands.sh"
 
@@ -90,34 +94,174 @@ pkgs.writeShellApplication {
     }
 
     require_private_config() {
-      if [[ -z "$BACKUP_SERVER" ]]; then
+      if [[ "$PRIVATE_CONFIG_PRESENT" != "true" ]]; then
         print_error "Private config not found. Init private/ submodule first."
-        exit 1
+        return 1
       fi
     }
 
-    get_sudo_pass() {
-      grep SUDO_PASSWORD "$PROJECT_DIR/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || true
-    }
-
-    run_sudo() {
-      local pass
+    get_sudo_bin() {
       local sudo_bin="/run/wrappers/bin/sudo"
 
       if [[ ! -x "$sudo_bin" ]]; then
         sudo_bin=$(command -v sudo)
       fi
 
-      pass=$(get_sudo_pass)
-      if [[ -n "$pass" ]]; then
-        echo "$pass" | "$sudo_bin" -S "$@"
-      else
-        "$sudo_bin" "$@"
+      printf '%s\n' "$sudo_bin"
+    }
+
+    ensure_sudo_session() {
+      local sudo_bin
+      sudo_bin=$(get_sudo_bin)
+
+      print_info "Requesting sudo credentials..."
+      if ! "$sudo_bin" -v; then
+        print_error "sudo authentication failed"
+        return 1
       fi
     }
 
-    is_ninkear_reachable() {
+    run_sudo() {
+      local sudo_bin
+      sudo_bin=$(get_sudo_bin)
+
+      "$sudo_bin" "$@"
+    }
+
+    is_remote_host_reachable() {
       ssh -o ConnectTimeout=3 -o BatchMode=yes "''${1:-$BACKUP_SERVER}" "exit" 2>/dev/null
+    }
+
+    trim_trailing_slash() {
+      local path="$1"
+
+      if [[ "$path" != "/" ]]; then
+        path="''${path%/}"
+      fi
+
+      printf '%s\n' "$path"
+    }
+
+    require_config_value() {
+      local name="$1"
+      local value="$2"
+
+      if [[ -z "$value" ]]; then
+        print_error "$name is not configured in private/dot-config.sh"
+        return 1
+      fi
+    }
+
+    require_absolute_path() {
+      local name="$1"
+      local path="$2"
+
+      if [[ "$path" != /* ]]; then
+        print_error "$name must be an absolute path, got: $path"
+        return 1
+      fi
+    }
+
+    require_safe_target_path() {
+      local name="$1"
+      local normalized_path
+      normalized_path=$(trim_trailing_slash "$2")
+
+      require_absolute_path "$name" "$normalized_path"
+
+      case "$normalized_path" in
+        /|/home|"/home/$USER"|"$HOME"|/root|/etc|/nix|/nix/store|/tmp|/var)
+          print_error "$name points to an unsafe target path: $normalized_path"
+          return 1
+          ;;
+      esac
+    }
+
+    require_distinct_target_paths() {
+      local left_name="$1"
+      local left_path right_name right_path
+      left_path=$(trim_trailing_slash "$2")
+      right_name="$3"
+      right_path=$(trim_trailing_slash "$4")
+
+      if [[ "$left_path" == "$right_path" ]]; then
+        print_error "$left_name and $right_name must not point to the same path"
+        return 1
+      fi
+
+      case "$left_path" in
+        "$right_path"/*)
+          print_error "$left_name must not be nested inside $right_name"
+          return 1
+          ;;
+      esac
+
+      case "$right_path" in
+        "$left_path"/*)
+          print_error "$right_name must not be nested inside $left_name"
+          return 1
+          ;;
+      esac
+    }
+
+    validate_remote_config_shape() {
+      require_private_config
+      require_config_value "BACKUP_SERVER" "$BACKUP_SERVER"
+      require_config_value "BACKUP_PATH" "$BACKUP_PATH"
+      require_config_value "SERVER_REPO_PATH" "$SERVER_REPO_PATH"
+      require_safe_target_path "BACKUP_PATH" "$BACKUP_PATH"
+      require_safe_target_path "SERVER_REPO_PATH" "$SERVER_REPO_PATH"
+      require_distinct_target_paths "BACKUP_PATH" "$BACKUP_PATH" "SERVER_REPO_PATH" "$SERVER_REPO_PATH"
+    }
+
+    require_remote_host() {
+      local host="$1"
+
+      if ! is_remote_host_reachable "$host"; then
+        print_error "Cannot connect to $host"
+        return 1
+      fi
+    }
+
+    run_remote_check() {
+      local host="$1"
+      local description="$2"
+      local command="$3"
+
+      # shellcheck disable=SC2029
+      if ! ssh "$host" "$command"; then
+        print_error "$description"
+        return 1
+      fi
+    }
+
+    require_remote_directory_ready() {
+      local host="$1"
+      local path="$2"
+      local label="$3"
+      local remote_path
+
+      remote_path=$(trim_trailing_slash "$path")
+      run_remote_check "$host" "$label is missing or not writable: $remote_path" \
+        "test -d \"$remote_path\" && test -w \"$remote_path\""
+      run_remote_check "$host" "$label is not owned by the remote user: $remote_path" \
+        "test -O \"$remote_path\""
+      run_remote_check "$host" "$label contains files not owned by the remote user: $remote_path" \
+        "test -z \"\$(find \"$remote_path\" -mindepth 1 ! -user \"\$(id -un)\" -print -quit 2>/dev/null)\""
+    }
+
+    require_remote_server_repo_ready() {
+      local host="$1"
+      local remote_path
+
+      remote_path=$(trim_trailing_slash "$SERVER_REPO_PATH")
+      require_remote_directory_ready "$host" "$remote_path" "Remote repo path"
+      run_remote_check "$host" "Remote repo is missing flake.nix: $remote_path" \
+        "test -f \"$remote_path/flake.nix\""
+      run_remote_check "$host" "Remote repo is missing .git metadata: $remote_path" \
+        "test -d \"$remote_path/.git\""
+      run_remote_check "$host" "Remote dot command is not available on $host" \
+        "command -v dot >/dev/null"
     }
 
     _sub_args=()
@@ -136,7 +280,7 @@ pkgs.writeShellApplication {
 
       if ! grep -Fxq "$h" <<<"$hosts"; then
         print_error "Host '$h' not found in flake nixosConfigurations"
-        exit 1
+        return 1
       fi
     }
 
@@ -161,20 +305,23 @@ pkgs.writeShellApplication {
 
       local host flake_ref prev_system needs_sudo
       host=$(hostname)
-
-      verify_hostname
-      handle_backups
-      build_substituter_args
-
-      flake_ref="$(project_flake_ref)#$host"
-      prev_system=""
-      [[ "$action" == "switch" && "$plain" == "false" ]] && prev_system=$(readlink -f /run/current-system 2>/dev/null || true)
       needs_sudo=true
       case "$action" in
         build|dry-build|dry-run)
           needs_sudo=false
           ;;
       esac
+
+      verify_hostname
+      build_substituter_args
+      if [[ "$needs_sudo" == "true" ]]; then
+        ensure_sudo_session
+      fi
+      handle_backups
+
+      flake_ref="$(project_flake_ref)#$host"
+      prev_system=""
+      [[ "$action" == "switch" && "$plain" == "false" ]] && prev_system=$(readlink -f /run/current-system 2>/dev/null || true)
 
       print_info "nixos-rebuild $action -> $host"
       if [[ "$plain" == "false" ]] && command -v nom >/dev/null 2>&1; then
@@ -257,6 +404,9 @@ pkgs.writeShellApplication {
       local nixpkgs_rev
 
       print_info "Updating flake inputs..."
+      verify_hostname
+      nix flake metadata "$(project_flake_ref)" >/dev/null
+      ensure_sudo_session
       nixpkgs_rev=$(curl -sL https://channels.nixos.org/nixos-unstable/git-revision | tr -d '[:space:]')
 
       (
@@ -278,6 +428,7 @@ pkgs.writeShellApplication {
     cmd_cleanup() {
       local nh_bin
 
+      ensure_sudo_session
       print_info "Cleaning up backup files..."
       handle_backups all
       print_info "Collecting garbage (older than 7 days)..."
@@ -292,13 +443,21 @@ pkgs.writeShellApplication {
     }
 
     cmd_doctor() {
+      local failed=0
+
       print_info "Checking host configuration..."
-      verify_hostname
-      print_success "Host is present in flake"
+      if verify_hostname; then
+        print_success "Host is present in flake"
+      else
+        failed=1
+      fi
 
       print_info "Checking flake metadata..."
-      nix flake metadata "$(project_flake_ref)" >/dev/null
-      print_success "Flake metadata evaluates"
+      if nix flake metadata "$(project_flake_ref)" >/dev/null; then
+        print_success "Flake metadata evaluates"
+      else
+        failed=1
+      fi
 
       if git -C "$PROJECT_DIR" diff --quiet && git -C "$PROJECT_DIR" diff --cached --quiet; then
         print_success "Git worktree is clean"
@@ -306,7 +465,46 @@ pkgs.writeShellApplication {
         print_warn "Git worktree has local changes"
       fi
 
+      if [[ "$PRIVATE_CONFIG_PRESENT" == "true" ]]; then
+        print_info "Checking remote config..."
+        if validate_remote_config_shape; then
+          print_success "Remote config shape is valid"
+        else
+          failed=1
+        fi
+
+        print_info "Checking remote connectivity..."
+        if is_remote_host_reachable "$BACKUP_SERVER"; then
+          print_success "Remote host is reachable: $BACKUP_SERVER"
+        else
+          print_warn "Remote host is unreachable: $BACKUP_SERVER"
+          failed=1
+        fi
+
+        if [[ "$failed" -eq 0 ]]; then
+          print_info "Checking remote backup path..."
+          if require_remote_directory_ready "$BACKUP_SERVER" "$BACKUP_PATH" "Remote backup path"; then
+            print_success "Remote backup path is ready"
+          else
+            failed=1
+          fi
+
+          print_info "Checking remote repo path..."
+          if require_remote_server_repo_ready "$BACKUP_SERVER"; then
+            print_success "Remote repo path is ready"
+          else
+            failed=1
+          fi
+        fi
+      else
+        print_warn "Private remote config not present; backup/server commands are unavailable"
+      fi
+
       df -h /nix/store
+
+      if [[ "$failed" -ne 0 ]]; then
+        exit 1
+      fi
     }
 
     cmd_validate_fast() {
@@ -317,6 +515,11 @@ pkgs.writeShellApplication {
           nix-instantiate --parse "$file" >/dev/null
         done
       )
+
+      if [[ "$PRIVATE_CONFIG_PRESENT" == "true" ]]; then
+        print_info "Validating remote config shape..."
+        validate_remote_config_shape
+      fi
 
       if [[ -x "$PROJECT_DIR/private/check.sh" ]]; then
         print_info "Running private validation..."
@@ -353,57 +556,47 @@ pkgs.writeShellApplication {
       local fstrim_bin
 
       fstrim_bin=$(command -v fstrim)
+      ensure_sudo_session
       print_info "Trimming mounted filesystems..."
       run_sudo "$fstrim_bin" -av
       print_success "Trim complete"
     }
 
     cmd_backup() {
-      require_private_config
-      if ! is_ninkear_reachable; then
-        print_error "Cannot connect to $BACKUP_SERVER"
-        exit 1
-      fi
+      validate_remote_config_shape
+      require_remote_host "$BACKUP_SERVER"
+      require_remote_directory_ready "$BACKUP_SERVER" "$BACKUP_PATH" "Remote backup path"
 
       print_info "Backing up dotfiles to $BACKUP_SERVER:$BACKUP_PATH..."
-      # shellcheck disable=SC2029
-      ssh "$BACKUP_SERVER" "mkdir -p $BACKUP_PATH"
       rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$BACKUP_SERVER:$BACKUP_PATH/"
       print_success "Backup complete -> $BACKUP_SERVER:$BACKUP_PATH"
     }
 
     cmd_server() {
       local subcmd="''${1:-}"
-      local server_host="''${BACKUP_SERVER:-ninkear}"
-      local server_repo="''${SERVER_REPO_PATH:-/home/romanv/dotfiles}"
+      local server_host="$BACKUP_SERVER"
+      local server_repo="$SERVER_REPO_PATH"
 
       case "$subcmd" in
         rebuild)
-          is_ninkear_reachable "$server_host" || {
-            print_error "Cannot connect to ninkear"
-            exit 1
-          }
+          validate_remote_config_shape
+          require_remote_host "$server_host"
+          require_remote_server_repo_ready "$server_host"
 
-          print_info "Pulling and rebuilding on ninkear..."
+          print_info "Pulling and rebuilding on $server_host..."
           # shellcheck disable=SC2029
           ssh -t "$server_host" "cd \"$server_repo\" && dot rebuild"
           print_success "Server rebuild complete"
           ;;
         update)
-          require_private_config
-          is_ninkear_reachable "$server_host" || {
-            print_error "Cannot connect to ninkear"
-            exit 1
-          }
+          validate_remote_config_shape
+          require_remote_host "$server_host"
+          require_remote_server_repo_ready "$server_host"
 
-           print_info "Syncing to ninkear:$server_repo..."
-           # shellcheck disable=SC2029
-           ssh "$server_host" "mkdir -p \"$server_repo\""
-          # shellcheck disable=SC2029
-          ssh "$server_host" "set -e; non_owned=\$(find \"$server_repo\" -mindepth 1 ! -user romanv -print -quit); if [ -n \"\$non_owned\" ]; then owner_group=\$(id -gn romanv 2>/dev/null || echo romanv); sudo chown -R romanv:\$owner_group \"$server_repo\"; fi"
+          print_info "Syncing to $server_host:$server_repo..."
           rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$server_host:$server_repo/"
 
-          print_info "Updating flake and rebuilding on ninkear..."
+          print_info "Updating flake and rebuilding on $server_host..."
           # shellcheck disable=SC2029
           ssh -t "$server_host" "cd \"$server_repo\" && NIXPKGS_REV=\$(curl -sL https://channels.nixos.org/nixos-unstable/git-revision | tr -d '[:space:]') && nix flake update && if [ -n \"\$NIXPKGS_REV\" ]; then nix flake lock --override-input nixpkgs \"github:nixos/nixpkgs/\$NIXPKGS_REV\"; fi && dot rebuild"
           print_success "Server update complete"

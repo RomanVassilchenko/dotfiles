@@ -1,9 +1,8 @@
 {
   config,
   host,
-  hostFacts ? { },
+  hostDefaults ? { },
   lib,
-  username,
   ...
 }:
 let
@@ -23,7 +22,10 @@ in
       };
 
       profile = mkOption {
-        type = types.str;
+        type = types.enum [
+          "workstation"
+          "server"
+        ];
         description = "High-level host profile, such as workstation or server.";
       };
 
@@ -33,13 +35,21 @@ in
       };
 
       gpuProfile = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr (
+          types.enum [
+            "intel"
+            "amd"
+          ]
+        );
         default = null;
         description = "GPU driver profile selected for this host.";
       };
 
       deviceType = mkOption {
-        type = types.str;
+        type = types.enum [
+          "laptop"
+          "server"
+        ];
         description = "Device class used by legacy desktop/server gating.";
       };
 
@@ -64,17 +74,6 @@ in
         type = types.nullOr types.str;
         default = null;
         description = "Email address used for the default Git identity.";
-      };
-
-      githubName = mkOption {
-        type = types.str;
-        description = "Display name used for Git commits in repositories with GitHub remotes.";
-      };
-
-      githubEmail = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "Email address used for Git commits in repositories with GitHub remotes.";
       };
 
       authorizedKeys = mkOption {
@@ -203,45 +202,72 @@ in
     };
   };
 
-  config.dotfiles = {
-    host = {
-      name = mkDefault host;
-      profile = mkDefault hostFacts.profile;
-      system = mkDefault (hostFacts.system or "x86_64-linux");
-      gpuProfile = mkDefault (hostFacts.gpuProfile or null);
-      deviceType = mkDefault (
-        hostFacts.deviceType or (if hostFacts.profile == "server" then "server" else "laptop")
-      );
-      isServer = mkDefault (config.dotfiles.host.deviceType == "server");
+  config = {
+    dotfiles = {
+      host = {
+        name = mkDefault host;
+        profile = mkDefault (hostDefaults.host.profile or "workstation");
+        system = mkDefault (hostDefaults.host.system or "x86_64-linux");
+        gpuProfile = mkDefault (hostDefaults.host.gpuProfile or null);
+        deviceType = mkDefault (
+          hostDefaults.host.deviceType
+            or (if config.dotfiles.host.profile == "server" then "server" else "laptop")
+        );
+        isServer = mkDefault (config.dotfiles.host.deviceType == "server");
+      };
+
+      user = {
+        name = mkDefault (hostDefaults.user.name or "youruser");
+        gitName = mkDefault (hostDefaults.user.gitName or "Your Name");
+        gitEmail = mkDefault (hostDefaults.user.gitEmail or null);
+        authorizedKeys = mkDefault (hostDefaults.user.authorizedKeys or [ ]);
+        homeDirectory = mkDefault "/home/${config.dotfiles.user.name}";
+      };
+
+      paths = {
+        dotfiles = mkDefault (
+          hostDefaults.paths.dotfiles or "${config.dotfiles.user.homeDirectory}/dotfiles"
+        );
+      };
+
+      locale = {
+        timeZone = mkDefault (hostDefaults.locale.timeZone or "UTC");
+        defaultLocale = mkDefault (hostDefaults.locale.defaultLocale or "en_US.UTF-8");
+        keyboardLayout = mkDefault (hostDefaults.locale.keyboardLayout or "us");
+        consoleKeyMap = mkDefault (hostDefaults.locale.consoleKeyMap or "us");
+      };
+
+      features = {
+        desktop.enable = mkDefault (!config.dotfiles.host.isServer);
+        desktop.plasma.enable = mkDefault false;
+        stylix.enable = mkDefault config.dotfiles.features.desktop.enable;
+
+        apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
+        apps.virtManager.enable = mkDefault false;
+      };
     };
 
-    user = {
-      name = mkDefault username;
-      gitName = mkDefault hostFacts.gitUsername;
-      gitEmail = mkDefault (hostFacts.gitEmail or null);
-      githubName = mkDefault (hostFacts.githubUsername or config.dotfiles.user.gitName);
-      githubEmail = mkDefault (hostFacts.githubEmail or config.dotfiles.user.gitEmail);
-      authorizedKeys = mkDefault (hostFacts.authorizedKeys or [ ]);
-      homeDirectory = mkDefault "/home/${username}";
-    };
-
-    paths = {
-      dotfiles = mkDefault (hostFacts.dotfilesPath or "${config.dotfiles.user.homeDirectory}/dotfiles");
-    };
-
-    locale = {
-      timeZone = mkDefault (hostFacts.timeZone or "UTC");
-      defaultLocale = mkDefault (hostFacts.defaultLocale or "en_US.UTF-8");
-      keyboardLayout = mkDefault hostFacts.keyboardLayout;
-      consoleKeyMap = mkDefault hostFacts.consoleKeyMap;
-    };
-
-    features = {
-      desktop.enable = mkDefault (!config.dotfiles.host.isServer);
-      stylix.enable = mkDefault config.dotfiles.features.desktop.enable;
-
-      apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
-      apps.virtManager.enable = mkDefault false;
-    };
+    assertions = [
+      {
+        assertion = config.dotfiles.user.name != "";
+        message = "dotfiles.user.name must not be empty.";
+      }
+      {
+        assertion = config.dotfiles.user.gitName != "";
+        message = "dotfiles.user.gitName must not be empty.";
+      }
+      {
+        assertion = config.dotfiles.host.system != "";
+        message = "dotfiles.host.system must not be empty.";
+      }
+      {
+        assertion = config.dotfiles.locale.keyboardLayout != "";
+        message = "dotfiles.locale.keyboardLayout must not be empty.";
+      }
+      {
+        assertion = config.dotfiles.locale.consoleKeyMap != "";
+        message = "dotfiles.locale.consoleKeyMap must not be empty.";
+      }
+    ];
   };
 }

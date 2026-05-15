@@ -6,33 +6,11 @@
 let
   gitUsername = dotfiles.user.gitName;
   gitEmail = dotfiles.user.gitEmail;
-  githubUsername = dotfiles.user.githubName;
-  githubEmail = dotfiles.user.githubEmail;
 in
 {
-  home.file = lib.optionalAttrs (githubEmail != null) {
-    ".config/git/github".text = ''
-      [user]
-        name = ${githubUsername}
-        email = ${githubEmail}
-    '';
-  };
-
   programs.git = {
     enable = true;
     signing.format = null;
-    includes = lib.mkAfter (
-      lib.optionals (githubEmail != null) [
-        {
-          condition = "hasconfig:remote.*.url:git@github.com:*/**";
-          path = "~/.config/git/github";
-        }
-        {
-          condition = "hasconfig:remote.*.url:https://github.com/**";
-          path = "~/.config/git/github";
-        }
-      ]
-    );
 
     settings = {
       user = {

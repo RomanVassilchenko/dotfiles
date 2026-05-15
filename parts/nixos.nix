@@ -1,6 +1,8 @@
 { inputs, ... }:
 let
   inherit (inputs.nixpkgs) lib;
+  hostsDir = ../hosts;
+  hostDefaults = import ../hosts/default/common.nix;
 
   mkStable =
     system:
@@ -18,21 +20,33 @@ let
     };
   };
 
-  hostNames = [
-    "laptop-82sn"
-    "ninkear"
-  ];
-
-  mkHostFacts =
-    host: lib.recursiveUpdate (import ../hosts/default/common.nix) (import ../hosts/${host}/facts.nix);
+  hostNames =
+    let
+      excluded = [
+        "default"
+        "profiles"
+        "template"
+      ];
+    in
+    lib.attrNames (
+      lib.filterAttrs (
+        name: type:
+        type == "directory"
+        && !(builtins.elem name excluded)
+        && builtins.pathExists (hostsDir + "/${name}/default.nix")
+      ) (builtins.readDir hostsDir)
+    );
 
   mkHost =
     host:
     let
-      hostFacts = mkHostFacts host;
-      system = hostFacts.system or "x86_64-linux";
-      deviceType = hostFacts.deviceType or (if hostFacts.profile == "server" then "server" else "laptop");
-      username = hostFacts.username or "youruser";
+      hostModule = import (hostsDir + "/${host}");
+      hostConfig = lib.recursiveUpdate hostDefaults (hostModule.dotfiles or { });
+      system = hostConfig.host.system or "x86_64-linux";
+      profile = hostConfig.host.profile or "workstation";
+      deviceType = hostConfig.host.deviceType or (if profile == "server" then "server" else "laptop");
+      gpuProfile = hostConfig.host.gpuProfile or null;
+      username = hostConfig.user.name or "youruser";
     in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
@@ -41,8 +55,8 @@ let
           inputs
           username
           host
-          hostFacts
           ;
+        hostDefaults = hostDefaults;
         pkgs-stable = mkStable system;
       };
       modules = [
@@ -127,7 +141,9 @@ let
         ../features
         ../modules/drivers
         ../modules/core
-        gpuConfig.${hostFacts.gpuProfile}
+      ]
+      ++ lib.optional (gpuProfile != null) gpuConfig.${gpuProfile}
+      ++ [
         inputs.stylix.nixosModules.stylix
         inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.lanzaboote.nixosModules.lanzaboote
