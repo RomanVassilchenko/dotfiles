@@ -9,7 +9,9 @@ That means the flow is:
 3. Clone this repo.
 4. Create a host from the public template.
 5. Copy the generated hardware file.
-6. Rebuild against your new host.
+6. Fill in `default.nix`.
+7. Validate the new host.
+8. Rebuild against your new host.
 
 ## 1. Clone The Repo
 
@@ -37,7 +39,6 @@ cp -r hosts/template "hosts/$HOSTNAME"
 
 This gives you:
 
-- `hosts/$HOSTNAME/facts.nix`
 - `hosts/$HOSTNAME/default.nix`
 - `hosts/$HOSTNAME/hardware.nix`
 
@@ -51,63 +52,44 @@ cp /etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware.nix"
 
 That file is the machine-specific hardware baseline. Keep it per-host.
 
-## 4. Fill In `facts.nix`
+## 4. Fill In `default.nix`
 
-Edit `hosts/$HOSTNAME/facts.nix`.
+Edit `hosts/$HOSTNAME/default.nix`.
 
-Example for a personal laptop:
-
-```nix
-{
-  username = "alice";
-  gitUsername = "Alice Example";
-  gitEmail = "alice@example.com";
-  githubUsername = "Alice Example";
-  githubEmail = "alice@users.noreply.github.com";
-
-  system = "x86_64-linux";
-  profile = "workstation";
-  gpuProfile = "amd";
-  deviceType = "laptop";
-
-  keyboardLayout = "us";
-  consoleKeyMap = "us";
-  timeZone = "Europe/Berlin";
-  defaultLocale = "en_US.UTF-8";
-
-  authorizedKeys = [
-    "ssh-ed25519 AAAA... alice@example.com"
-  ];
-}
-```
-
-Meaning of the important fields:
-
-- `username`: primary Linux user managed by the config
-- `gitUsername`: display name for Git config and user metadata
-- `gitEmail`: Git commit email
-- `githubUsername`: optional display name for commits in repositories with GitHub remotes
-- `githubEmail`: optional email for commits in repositories with GitHub remotes
-- `system`: target platform, usually `x86_64-linux`
-- `profile`: high-level label, currently `workstation` or `server`
-- `gpuProfile`: currently `intel` or `amd`
-- `deviceType`: `laptop` or `server`
-- `authorizedKeys`: SSH public keys for the main user account
-
-`dotfilesPath` is optional. If omitted, it defaults to `~/dotfiles` for that user.
-
-## 5. Choose Feature Bundles In `default.nix`
-
-Edit `hosts/$HOSTNAME/default.nix` to match the machine.
+The host file now carries both typed machine metadata under `dotfiles.*` and feature flags under `features.*`.
 
 Example workstation:
 
 ```nix
-{ ... }:
 {
   imports = [
     ./hardware.nix
   ];
+
+  dotfiles = {
+    host = {
+      profile = "workstation";
+      system = "x86_64-linux";
+      gpuProfile = "amd";
+      deviceType = "laptop";
+    };
+
+    user = {
+      name = "jane";
+      gitName = "Jane Doe";
+      gitEmail = "jane@example.com";
+      authorizedKeys = [
+        "ssh-ed25519 AAAA... jane@example.com"
+      ];
+    };
+
+    locale = {
+      keyboardLayout = "us";
+      consoleKeyMap = "us";
+      timeZone = "Europe/Berlin";
+      defaultLocale = "en_US.UTF-8";
+    };
+  };
 
   features = {
     development.enable = true;
@@ -129,42 +111,71 @@ Example workstation:
 Example headless server:
 
 ```nix
-{ ... }:
 {
   imports = [
     ./hardware.nix
   ];
 
-  features = {
-    stylix.enable = true;
+  dotfiles = {
+    host = {
+      profile = "server";
+      system = "x86_64-linux";
+      gpuProfile = "amd";
+      deviceType = "server";
+    };
+
+    user = {
+      name = "jane";
+      gitName = "Jane Doe";
+      gitEmail = "jane@example.com";
+      authorizedKeys = [
+        "ssh-ed25519 AAAA... jane@example.com"
+      ];
+    };
+
+    locale = {
+      keyboardLayout = "us";
+      consoleKeyMap = "us";
+      timeZone = "Europe/Berlin";
+      defaultLocale = "en_US.UTF-8";
+    };
   };
+
+  features.stylix.enable = true;
 }
 ```
 
-For a server, make sure `facts.nix` uses:
+Meaning of the important `dotfiles` fields:
 
-```nix
-profile = "server";
-deviceType = "server";
+- `dotfiles.host.profile`: high-level role, currently `workstation` or `server`
+- `dotfiles.host.system`: target platform, usually `x86_64-linux`
+- `dotfiles.host.gpuProfile`: currently `intel` or `amd`
+- `dotfiles.host.deviceType`: currently `laptop` or `server`
+- `dotfiles.user.name`: primary Linux user managed by the config
+- `dotfiles.user.gitName`: display name for Git config and user metadata
+- `dotfiles.user.gitEmail`: default Git commit email
+- `dotfiles.user.authorizedKeys`: SSH public keys for the main user account
+- `dotfiles.locale.*`: keyboard, console and locale settings
+
+`dotfiles.paths.dotfiles` is optional. If omitted, it defaults to `~/dotfiles` for that user.
+
+## 5. Validate The Host
+
+Because host directories are auto-discovered, there is no separate registration step anymore. If `hosts/$HOSTNAME/default.nix` exists, the flake will pick it up automatically.
+
+Run:
+
+```bash
+nix flake check --no-build
 ```
 
-## 6. Register The Host
+Or, if the helper CLI is already installed:
 
-Open `parts/nixos.nix` and add the hostname to `hostNames`.
-
-Example:
-
-```nix
-  hostNames = [
-    "laptop-82sn"
-    "ninkear"
-    "my-laptop"
-  ];
+```bash
+dot validate full
 ```
 
-This repository currently uses an explicit host list.
-
-## 7. First Rebuild
+## 6. First Rebuild
 
 Run:
 
@@ -181,8 +192,8 @@ dot rebuild --plain
 
 ## Notes About Users
 
-- If `username` matches your existing installed user, Home Manager and user settings will attach to that account.
-- If `username` is new, NixOS will create that user account on rebuild.
+- If `dotfiles.user.name` matches your existing installed user, Home Manager and user settings will attach to that account.
+- If `dotfiles.user.name` is new, NixOS will create that user account on rebuild.
 - Passwords are not declared in this repo, so a newly created user may still need `passwd` after the first activation.
 
 ## Notes About Private Configuration
@@ -196,11 +207,13 @@ If you later add a private overlay, it can provide:
 - private Git and SSH config
 - personal infrastructure modules
 
+That private layer is additive. Get the public host bootstrapped first, then initialize `private/` and re-run validation.
+
 ## Recommended Workflow
 
 For public reuse, treat these hosts as separate roles:
 
-- `hosts/template`: your reusable starting point
+- `hosts/template`: reusable starting point
 - `hosts/laptop-82sn`: author's personal laptop
 - `hosts/ninkear`: author's personal server
 

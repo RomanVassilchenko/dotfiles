@@ -7,7 +7,7 @@
 [![Home Manager](https://img.shields.io/badge/Home-Manager-6F86D6?style=flat-square)](https://github.com/nix-community/home-manager)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](./LICENSE)
 
-Modular NixOS configuration with host-specific facts, reusable feature bundles, Home Manager, and an optional private overlay.
+Modular NixOS configuration with typed host metadata, reusable feature bundles, Home Manager, and an optional private overlay.
 
 ![Fastfetch](.github/fastfetch.png)
 
@@ -30,10 +30,9 @@ The public part builds without `private/`.
 
 ## Host Model
 
-Each machine lives in `hosts/<hostname>/` and has three files:
+Each machine lives in `hosts/<hostname>/` and has two files:
 
-- `facts.nix`: identity and defaults such as `username`, `gitUsername`, `gitEmail`, optional `githubUsername`/`githubEmail`, `gpuProfile`, keyboard layout, timezone, and optional SSH keys
-- `default.nix`: feature bundles and machine-specific overrides
+- `default.nix`: typed `dotfiles.*` metadata plus feature bundles and machine-specific overrides
 - `hardware.nix`: copied from `/etc/nixos/hardware-configuration.nix`
 
 New hosts should start from `hosts/template/`.
@@ -56,9 +55,7 @@ cd ~/dotfiles
 cp -r hosts/template "hosts/$HOSTNAME"
 cp /etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware.nix"
 
-# Edit hosts/$HOSTNAME/facts.nix
 # Edit hosts/$HOSTNAME/default.nix
-# Add the hostname to parts/nixos.nix -> hostNames
 
 sudo nixos-rebuild switch --flake ".#$HOSTNAME"
 ```
