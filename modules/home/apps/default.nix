@@ -23,7 +23,6 @@
     ./obs-studio.nix
     ./solaar.nix
     ./telegram.nix
-    ./thunderbird.nix
     ./virtmanager.nix
     ./zapzap.nix
   ];
