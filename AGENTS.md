@@ -1,12 +1,12 @@
 # Dotfiles Agent Instructions
 
-Project-specific guidance for OpenCode and compatible coding agents in this repository.
+Project-specific guidance for Codex and compatible coding agents in this repository.
 
 ## Scope
 
 This file is only for `/home/romanv/dotfiles`. Do not carry `dot` commands, host names, NixOS rebuild workflows, or service details into other projects.
 
-Global OpenCode behavior belongs in `config/opencode/opencode.json`. Dotfiles-only permissions and instructions belong in the root `opencode.json` project config.
+Global Codex behavior belongs in `~/.codex/config.toml`. Dotfiles-only permissions and instructions belong in the repository `AGENTS.md` and Nix-managed Codex files.
 
 ## Repository
 

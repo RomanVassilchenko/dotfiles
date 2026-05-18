@@ -49,7 +49,7 @@ in
       if [ -L "$path" ]; then
         target="$(${pkgs.coreutils}/bin/readlink -f "$path" 2>/dev/null || true)"
         case "$target" in
-          ${shared.publicConfig}/skills/log|${shared.publicConfig}/opencode/skills/log|/nix/store/*)
+          ${shared.publicConfig}/agents/skills/log|${shared.publicConfig}/opencode/skills/log|/nix/store/*)
             ${pkgs.coreutils}/bin/rm "$path"
             ;;
         esac

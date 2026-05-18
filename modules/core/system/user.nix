@@ -9,12 +9,38 @@
 let
   inherit (config) dotfiles;
   userName = dotfiles.user.name;
+  homeManagerBackup = pkgs.writeShellApplication {
+    name = "home-manager-backup";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      set -eu
+
+      target_path="$1"
+      backup_ext="''${HOME_MANAGER_BACKUP_EXT:-hm-bak}"
+      backup_path="$target_path.$backup_ext"
+
+      if [ ! -e "$target_path" ]; then
+        exit 0
+      fi
+
+      if [ -e "$backup_path" ]; then
+        index=1
+        while [ -e "$backup_path.$index" ]; do
+          index=$((index + 1))
+        done
+        backup_path="$backup_path.$index"
+      fi
+
+      mv "$target_path" "$backup_path"
+    '';
+  };
 in
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
+    backupCommand = "${homeManagerBackup}/bin/home-manager-backup";
     backupFileExtension = "hm-bak";
     extraSpecialArgs = {
       inherit

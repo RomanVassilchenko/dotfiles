@@ -38,13 +38,13 @@ For global user skills:
 npx skills add <owner/repo> --skill <skill-name> -g -y
 ```
 
-For this dotfiles setup, global OpenCode skills are managed under:
+For this dotfiles setup, shared skills are managed under:
 
 ```text
-~/.config/opencode/skills
+~/.agents/skills
 ```
 
-Claude and Codex-compatible skill directories are symlinked to the same OpenCode skills directory.
+Codex-compatible skill directories are wired to the same shared skills directory.
 
 ## Quality Rules
 

@@ -25,7 +25,6 @@
     decompress = "ouch decompress";
     http = "xh";
     https = "xh --https";
-    oc = "opencode";
     cdx = "codex --yolo";
   };
 }

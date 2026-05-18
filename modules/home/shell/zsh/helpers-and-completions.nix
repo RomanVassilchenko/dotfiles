@@ -55,9 +55,9 @@
     }
 
     ai-session() {
-      local tool="''${1:-opencode}"
+      local tool="''${1:-codex}"
       case "$tool" in
-        opencode)
+        codex)
           "$tool" "''${@:2}"
           ;;
         *)
@@ -209,25 +209,25 @@
     }
     compdef _tokei tokei
 
-    # opencode completion
-    if command -v opencode >/dev/null 2>&1; then
-      opencode_completion_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
-      opencode_completion_file="$opencode_completion_dir/opencode.zsh"
-      opencode_completion_tmp="$opencode_completion_file.$$"
-      command mkdir -p "$opencode_completion_dir"
+    # codex completion
+    if command -v codex >/dev/null 2>&1; then
+      codex_completion_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+      codex_completion_file="$codex_completion_dir/_codex"
+      codex_completion_tmp="$codex_completion_file.$$"
+      command mkdir -p "$codex_completion_dir"
 
-      if [[ ! -s "$opencode_completion_file" || "$commands[opencode]" -nt "$opencode_completion_file" ]]; then
-        if opencode completion zsh >| "$opencode_completion_tmp" 2>/dev/null; then
-          command mv -f "$opencode_completion_tmp" "$opencode_completion_file"
+      if [[ ! -s "$codex_completion_file" || "$commands[codex]" -nt "$codex_completion_file" ]]; then
+        if codex completion zsh >| "$codex_completion_tmp" 2>/dev/null; then
+          command mv -f "$codex_completion_tmp" "$codex_completion_file"
         else
-          command rm -f "$opencode_completion_tmp"
+          command rm -f "$codex_completion_tmp"
         fi
       fi
 
-      [[ -s "$opencode_completion_file" ]] && source "$opencode_completion_file"
-      (( $+functions[_opencode_yargs_completions] )) && compdef _opencode_yargs_completions oc
+      [[ -s "$codex_completion_file" ]] && source "$codex_completion_file"
+      (( $+functions[_codex] )) && compdef _codex codex cdx
 
-      unset opencode_completion_dir opencode_completion_file opencode_completion_tmp
+      unset codex_completion_dir codex_completion_file codex_completion_tmp
     fi
 
     if [ -f $HOME/.zshrc-personal ]; then

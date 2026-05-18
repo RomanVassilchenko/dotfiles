@@ -233,7 +233,7 @@ tags: [log]
 - Проект: [Personal](Personal/)
 - Связано: [Personal](Personal/), [Obsidian Vault](INDEX.md)
 - Сделано: Унифицировал структуру Obsidian vault...
-- Файлы: config/opencode/skills/log/SKILL.md
+- Файлы: config/agents/skills/log/SKILL.md
 - Git: `main` `abc1234` "chore: update obsidian log skill"
 - #personal #nixos
 ```
