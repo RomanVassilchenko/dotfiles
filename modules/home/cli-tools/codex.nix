@@ -14,6 +14,7 @@ in
 {
   home.packages = with pkgs; [
     codex
+    codex-acp
     bubblewrap
     nodejs
     ripgrep

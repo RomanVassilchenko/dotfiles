@@ -2,7 +2,12 @@
   "cli_default_open_behavior": "existing_window",
   "agent_servers": {
     "codex-acp": {
-      "type": "registry"
+      "type": "custom",
+      "command": "/etc/profiles/per-user/romanv/bin/codex-acp",
+      "args": [
+        "-c",
+        "sandbox_mode=\"danger-full-access\""
+      ]
     },
     "github-copilot-cli": {
       "type": "registry"
