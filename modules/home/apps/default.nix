@@ -9,7 +9,6 @@
       discord.autostart = dotfiles.features.apps.discord.autostart;
       obsStudio.autostart = dotfiles.features.apps.obsStudio.autostart;
       "outlook-rdp".autostart = dotfiles.features.apps.outlookRdp.autostart;
-      solaar.autostart = dotfiles.features.apps.solaar.autostart;
       telegram.autostart = dotfiles.features.apps.telegram.autostart;
       zapzap.autostart = dotfiles.features.apps.zapzap.autostart;
     };
@@ -20,9 +19,7 @@
     ./camunda-modeler.nix
     ./discord.nix
     ./obs-studio.nix
-    ./solaar.nix
     ./telegram.nix
-    ./virtmanager.nix
     ./zapzap.nix
   ];
 }

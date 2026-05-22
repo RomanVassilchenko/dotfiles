@@ -165,14 +165,6 @@ in
           description = "Start the Outlook RDP launcher automatically in graphical sessions.";
         };
 
-        solaar.enable = mkEnableOption "Solaar desktop app";
-
-        solaar.autostart = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Start Solaar automatically in graphical sessions.";
-        };
-
         telegram.enable = mkEnableOption "Telegram desktop app";
 
         telegram.autostart = mkOption {
@@ -182,8 +174,6 @@ in
         };
 
         thunderbird.enable = mkEnableOption "Thunderbird desktop app";
-
-        virtManager.enable = mkEnableOption "virt-manager desktop app";
 
         zapzap.enable = mkEnableOption "ZapZap desktop app";
 
@@ -237,7 +227,6 @@ in
         stylix.enable = mkDefault config.dotfiles.features.desktop.enable;
 
         apps.obsStudio.enable = mkDefault config.dotfiles.features.desktop.enable;
-        apps.virtManager.enable = mkDefault false;
       };
     };
 

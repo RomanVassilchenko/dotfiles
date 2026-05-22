@@ -2,7 +2,6 @@
 {
   environment.systemPackages = with pkgs-stable; [
     bottom
-    carapace
     choose
     hyperfine
     jc

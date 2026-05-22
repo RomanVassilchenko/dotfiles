@@ -6,7 +6,6 @@
     ./creative.nix
     ./devtools.nix
     ./gaming.nix
-    ./hardware.nix
     ./productivity.nix
   ];
 }

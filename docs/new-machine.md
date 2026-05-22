@@ -102,7 +102,6 @@ Example workstation:
         enable = true;
         autostart = true;
       };
-      virtManager.enable = true;
     };
   };
 }

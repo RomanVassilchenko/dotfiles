@@ -14,7 +14,6 @@ pkgs.writeShellApplication {
     nix
     openssh
     rsync
-    tmux
     trash-cli
     util-linux
   ];

@@ -5,7 +5,6 @@
     ./communication
     ./desktop
     ./development
-    ./hardware
     ./kde
     ./printing
     ./productivity

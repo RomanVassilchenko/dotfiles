@@ -5,7 +5,6 @@
       bitwarden-cli # Bitwarden CLI.
       delta
       fd
-      git
       git-absorb
       git-branchless
       jujutsu # Git, the full tooling.

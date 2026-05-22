@@ -16,7 +16,5 @@ in
     codex
     codex-acp
     bubblewrap
-    nodejs
-    ripgrep
   ];
 }

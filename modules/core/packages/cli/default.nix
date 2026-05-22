@@ -9,6 +9,5 @@
     ./network.nix
     ./nix.nix
     ./system.nix
-    ./terminal.nix
   ];
 }

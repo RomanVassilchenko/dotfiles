@@ -22,6 +22,6 @@ in
     };
     keyboard.qmk.enable = !hostIsServer;
     logitech.wireless.enable = !hostIsServer;
-    logitech.wireless.enableGraphical = !hostIsServer;
+    logitech.wireless.enableGraphical = false;
   };
 }

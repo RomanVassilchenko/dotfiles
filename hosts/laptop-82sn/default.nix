@@ -34,7 +34,6 @@
     communication.enable = true;
     desktop.enable = true;
     development.enable = true;
-    hardware.enable = true;
     kde.enable = true;
     productivity.enable = true;
     stylix.enable = true;

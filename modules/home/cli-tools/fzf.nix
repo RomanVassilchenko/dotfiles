@@ -6,7 +6,6 @@
     enableZshIntegration = true;
     defaultOptions = [
       "--height=45%"
-      "--tmux=bottom,60%"
       "--margin=1"
       "--layout=reverse"
       "--border=rounded"

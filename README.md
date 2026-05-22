@@ -73,7 +73,6 @@ Available bundles in the public repo:
 - `kde`: KDE Plasma desktop session
 - `productivity`: productivity defaults such as Bitwarden
 - `communication`: communication apps such as Telegram, Discord, and ZapZap
-- `hardware`: hardware utility apps such as Solaar
 - `printing`: print support
 - `stylix`: system-wide theming
 - `work`: work-specific integrations if your private overlay provides them
@@ -83,9 +82,7 @@ App-level overrides live under `features.apps.*`. Current public app toggles inc
 - `bitwarden`
 - `discord`
 - `obsStudio`
-- `solaar`
 - `telegram`
-- `virtManager`
 - `zapzap`
 
 Example:
@@ -102,7 +99,6 @@ Example:
         enable = true;
         autostart = true;
       };
-      virtManager.enable = true;
     };
   };
 }
