@@ -44,9 +44,9 @@ lib.mkIf dotfiles.features.development.enable {
         golang.go
 
         # === Python ===
-        ms-python.python
-        ms-python.vscode-pylance
-        ms-python.debugpy
+        # ms-python.python
+        # ms-python.vscode-pylance
+        # ms-python.debugpy
 
         # === Web (JS/TS) ===
         dbaeumer.vscode-eslint
