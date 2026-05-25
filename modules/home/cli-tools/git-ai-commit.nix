@@ -56,6 +56,7 @@ let
           cat "$context_file"
           printf '</git_context>\n'
         } | codex exec \
+          --model gpt-5.3-codex-spark \
           --sandbox read-only \
           --output-last-message "$raw_message_file" \
           -; then

@@ -1,6 +1,7 @@
 ---
 name: log
 description: Log activity to Obsidian project folder. Call with "/log" or "log this".
+model: gpt-5.3-codex-spark
 ---
 
 **Все записи на русском языке.**
