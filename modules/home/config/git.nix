@@ -31,8 +31,6 @@ in
       log.date = "iso";
       merge.conflictStyle = "diff3";
 
-      url."git@github.com:".insteadOf = "https://github.com/";
-
       maintenance = {
         auto = true;
         strategy = "incremental";
