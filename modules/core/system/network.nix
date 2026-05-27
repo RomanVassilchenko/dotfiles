@@ -18,7 +18,10 @@ in
 
   networking = {
     hostName = "${host}";
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      dns = "systemd-resolved";
+    };
     modemmanager.enable = false;
     timeServers = options.networking.timeServers.default ++ [ "pool.ntp.org" ];
     firewall = {
@@ -49,6 +52,8 @@ in
       ];
     };
   };
+
+  services.resolved.enable = true;
 
   environment.systemPackages = lib.optionals desktopEnable [ pkgs.networkmanagerapplet ];
 }
