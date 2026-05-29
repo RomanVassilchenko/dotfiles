@@ -16,7 +16,10 @@
       openssl
       xh # Modern httpie alternative (Rust)
     ])
-    ++ [ pkgs.cloudflared ] # keep on unstable — actively updated
+    ++ (with pkgs; [
+      cloudflared # keep on unstable — actively updated
+      wrangler
+    ])
     ++ lib.optionals config.dotfiles.features.work.enable (
       with pkgs-stable;
       [

@@ -6,6 +6,7 @@
     ])
     ++ [
       pkgs.rtk
+      pkgs.t3code
       pkgs.xdotool
     ];
 }
