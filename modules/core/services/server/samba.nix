@@ -15,7 +15,7 @@ lib.mkIf config.dotfiles.host.isServer {
         "server string" = "Ninkear NAS";
         "netbios name" = "ninkear";
         security = "user";
-        "hosts allow" = "192.168.1. 100.64.0. 127.0.0.1 localhost";
+        "hosts allow" = "192.168.1. 127.0.0.1 localhost";
         "hosts deny" = "0.0.0.0/0";
         "guest account" = "nobody";
         "map to guest" = "Bad User";

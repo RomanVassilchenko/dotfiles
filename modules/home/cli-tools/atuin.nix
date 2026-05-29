@@ -13,7 +13,7 @@
 
       auto_sync = true;
       sync_frequency = "5m";
-      sync_address = "http://100.64.0.1:8888";
+      sync_address = "https://atuin.romanv.dev";
       secrets_filter = true;
 
       show_preview = true;
