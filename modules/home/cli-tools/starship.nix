@@ -201,15 +201,15 @@ in
 
       status = {
         disabled = false;
-        format = "[$symbol]($style)";
+        format = "[$symbol]($style) ";
         style = "bold fg:red";
         success_style = "bold fg:green";
         success_symbol = "";
-        symbol = " ✗";
+        symbol = " x";
         not_executable_symbol = " ⊘";
         not_found_symbol = " ?";
-        signal_symbol = " ⚡";
-        map_symbol = true;
+        signal_symbol = " x";
+        map_symbol = false;
       };
 
       cmd_duration = {
