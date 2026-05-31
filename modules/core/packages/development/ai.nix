@@ -7,6 +7,7 @@
     ++ [
       pkgs.rtk
       pkgs.t3code
+      pkgs.terax-ai
       pkgs.xdotool
     ];
 }

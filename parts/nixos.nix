@@ -64,6 +64,8 @@ let
           nixpkgs.overlays = [
             inputs.llm-agents.overlays.default
             (final: prev: {
+              terax-ai = final.callPackage ../pkgs/terax-ai.nix { };
+
               # Enable MS-RDPECAM camera redirection and prefer passthrough formats
               freerdp = prev.freerdp.overrideAttrs (old: {
                 nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.python3 ];
