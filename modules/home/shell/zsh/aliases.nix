@@ -1,4 +1,4 @@
-{ ... }:
+{ dotfiles, ... }:
 {
   programs.zsh.shellAliases = {
     c = "clear";
@@ -26,5 +26,6 @@
     http = "xh";
     https = "xh --https";
     cdx = "codex --yolo";
+    t3 = "t3code serve --host 127.0.0.1 --port 3773 --base-dir ${dotfiles.user.homeDirectory}/Projects --no-browser";
   };
 }
