@@ -309,18 +309,10 @@ pkgs.writeShellApplication {
       [[ "$action" == "switch" && "$plain" == "false" ]] && prev_system=$(readlink -f /run/current-system 2>/dev/null || true)
 
       print_info "nixos-rebuild $action -> $host"
-      if [[ "$plain" == "false" ]] && command -v nom >/dev/null 2>&1; then
-        if [[ "$needs_sudo" == "true" ]]; then
-          run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" 2>&1 | nom
-        else
-          nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" 2>&1 | nom
-        fi
+      if [[ "$needs_sudo" == "true" ]]; then
+        run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
       else
-        if [[ "$needs_sudo" == "true" ]]; then
-          run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
-        else
-          nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
-        fi
+        nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
       fi
 
       if [[ -n "$prev_system" ]] && command -v nvd >/dev/null 2>&1; then
