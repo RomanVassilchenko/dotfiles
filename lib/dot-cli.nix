@@ -109,21 +109,36 @@ pkgs.writeShellApplication {
       printf '%s\n' "$sudo_bin"
     }
 
+    SUDO_ARGS=(-n)
+
     ensure_sudo_session() {
       local sudo_bin
       sudo_bin=$(get_sudo_bin)
 
-      if ! "$sudo_bin" -n -v; then
-        print_error "Passwordless sudo is not available for this dot command"
-        return 1
+      if "$sudo_bin" -n -v 2>/dev/null; then
+        SUDO_ARGS=(-n)
+        return
       fi
+
+      if [[ -t 0 ]]; then
+        print_warn "Passwordless sudo is not active yet; using interactive sudo for this bootstrap run"
+        if ! "$sudo_bin" -v; then
+          print_error "sudo authentication failed"
+          return 1
+        fi
+        SUDO_ARGS=()
+        return
+      fi
+
+      print_error "Passwordless sudo is not available for this dot command"
+      return 1
     }
 
     run_sudo() {
       local sudo_bin
       sudo_bin=$(get_sudo_bin)
 
-      "$sudo_bin" -n "$@"
+      "$sudo_bin" "''${SUDO_ARGS[@]}" "$@"
     }
 
     is_remote_host_reachable() {
