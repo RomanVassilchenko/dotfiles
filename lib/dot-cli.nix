@@ -113,9 +113,8 @@ pkgs.writeShellApplication {
       local sudo_bin
       sudo_bin=$(get_sudo_bin)
 
-      print_info "Requesting sudo credentials..."
-      if ! "$sudo_bin" -v; then
-        print_error "sudo authentication failed"
+      if ! "$sudo_bin" -n -v; then
+        print_error "Passwordless sudo is not available for this dot command"
         return 1
       fi
     }
@@ -124,7 +123,7 @@ pkgs.writeShellApplication {
       local sudo_bin
       sudo_bin=$(get_sudo_bin)
 
-      "$sudo_bin" "$@"
+      "$sudo_bin" -n "$@"
     }
 
     is_remote_host_reachable() {
@@ -565,10 +564,15 @@ pkgs.writeShellApplication {
       validate_remote_config_shape
       require_remote_host "$BACKUP_SERVER"
       require_remote_directory_ready "$BACKUP_SERVER" "$BACKUP_PATH" "Remote backup path"
+      require_remote_server_repo_ready "$BACKUP_SERVER"
 
       print_info "Backing up dotfiles to $BACKUP_SERVER:$BACKUP_PATH..."
       rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$BACKUP_SERVER:$BACKUP_PATH/"
       print_success "Backup complete -> $BACKUP_SERVER:$BACKUP_PATH"
+
+      print_info "Syncing active server checkout to $BACKUP_SERVER:$SERVER_REPO_PATH..."
+      rsync -avz --delete --chmod=Du+w,Fu+w "$PROJECT_DIR/" "$BACKUP_SERVER:$SERVER_REPO_PATH/"
+      print_success "Server checkout synced -> $BACKUP_SERVER:$SERVER_REPO_PATH"
     }
 
     cmd_server() {

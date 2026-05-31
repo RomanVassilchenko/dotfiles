@@ -6,6 +6,13 @@
   ...
 }:
 let
+  dotPasswordlessCommands = [
+    "/run/current-system/sw/bin/fstrim *"
+    "/run/current-system/sw/bin/nh clean *"
+    "/run/current-system/sw/bin/nix store optimise"
+    "/run/current-system/sw/bin/nix-collect-garbage *"
+    "/run/current-system/sw/bin/nixos-rebuild *"
+  ];
   sudoAskpass = pkgs.writeShellApplication {
     name = "dotfiles-sudo-askpass";
     runtimeInputs = [
@@ -67,7 +74,11 @@ in
               command = "/run/current-system/sw/bin/pkill *";
               options = [ "NOPASSWD" ];
             }
-          ];
+          ]
+          ++ map (command: {
+            inherit command;
+            options = [ "NOPASSWD" ];
+          }) dotPasswordlessCommands;
         }
       ]
       ++ lib.optionals config.dotfiles.host.isServer [
