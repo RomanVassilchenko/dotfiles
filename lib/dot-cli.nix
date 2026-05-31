@@ -109,36 +109,11 @@ pkgs.writeShellApplication {
       printf '%s\n' "$sudo_bin"
     }
 
-    SUDO_ARGS=(-n)
-
-    ensure_sudo_session() {
-      local sudo_bin
-      sudo_bin=$(get_sudo_bin)
-
-      if "$sudo_bin" -n -v 2>/dev/null; then
-        SUDO_ARGS=(-n)
-        return
-      fi
-
-      if [[ -t 0 ]]; then
-        print_warn "Passwordless sudo is not active yet; using interactive sudo for this bootstrap run"
-        if ! "$sudo_bin" -v; then
-          print_error "sudo authentication failed"
-          return 1
-        fi
-        SUDO_ARGS=()
-        return
-      fi
-
-      print_error "Passwordless sudo is not available for this dot command"
-      return 1
-    }
-
     run_sudo() {
       local sudo_bin
       sudo_bin=$(get_sudo_bin)
 
-      "$sudo_bin" "''${SUDO_ARGS[@]}" "$@"
+      "$sudo_bin" "$@"
     }
 
     is_remote_host_reachable() {
@@ -327,9 +302,6 @@ pkgs.writeShellApplication {
 
       verify_hostname
       build_substituter_args
-      if [[ "$needs_sudo" == "true" ]]; then
-        ensure_sudo_session
-      fi
       handle_backups
 
       flake_ref="$(project_flake_ref)#$host"
@@ -419,7 +391,6 @@ pkgs.writeShellApplication {
       print_info "Updating flake inputs..."
       verify_hostname
       nix flake metadata "$(project_flake_ref)" >/dev/null
-      ensure_sudo_session
       nixpkgs_rev=$(curl -sL https://channels.nixos.org/nixos-unstable/git-revision | tr -d '[:space:]')
 
       (
@@ -441,7 +412,6 @@ pkgs.writeShellApplication {
     cmd_cleanup() {
       local nh_bin
 
-      ensure_sudo_session
       print_info "Cleaning up backup files..."
       handle_backups all
       print_info "Collecting garbage (older than 7 days)..."
@@ -569,7 +539,6 @@ pkgs.writeShellApplication {
       local fstrim_bin
 
       fstrim_bin=$(command -v fstrim)
-      ensure_sudo_session
       print_info "Trimming mounted filesystems..."
       run_sudo "$fstrim_bin" -av
       print_success "Trim complete"

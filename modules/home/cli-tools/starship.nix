@@ -193,7 +193,7 @@ in
 
       hostname = {
         ssh_only = true;
-        format = "[@$hostname](bold fg:mauve) ";
+        format = " [@$hostname](bold fg:mauve) ";
         ssh_symbol = " ";
       };
 
