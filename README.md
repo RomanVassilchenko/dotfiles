@@ -9,6 +9,11 @@
 
 Modular NixOS configuration with typed host metadata, reusable feature bundles, Home Manager, and an optional private overlay.
 
+<p align="center">
+  <img src=".github/fastfetch.png" alt="Fastfetch system overview" width="49%" />
+  <img src=".github/onefetch.png" alt="Onefetch repository overview" width="49%" />
+</p>
+
 </div>
 
 ## Overview
