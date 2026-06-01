@@ -28,12 +28,13 @@ The public part builds without `private/`.
 
 ## Host Model
 
-Public example machines live in `hosts/<hostname>/` and have two files:
+Public machine roles live in `hosts/<hostname>/` and define reusable metadata,
+feature bundles, and non-secret defaults:
 
 - `default.nix`: typed `dotfiles.*` metadata plus feature bundles and machine-specific overrides
-- `hardware.nix`: copied from `/etc/nixos/hardware-configuration.nix`
 
-New public hosts should start from `hosts/template/`. Real personal or work machines belong in `private/hosts/`.
+New public hosts should start from `hosts/template/`. Hardware configuration and
+personal identity overrides should live in `private/hosts/<hostname>/`.
 
 ## Quick New-Host Flow
 
@@ -103,7 +104,8 @@ Example:
 ├── parts/nixos.nix         # Host registry and NixOS assembly
 ├── hosts/
 │   ├── default/common.nix  # Generic shared defaults
-│   └── template/           # Starting point for new machines
+│   ├── template/           # Starting point for new machines
+│   └── <hostname>/         # Public host role defaults
 ├── features/               # Public feature bundles and app toggles
 ├── modules/core/           # System modules
 ├── modules/home/           # Home Manager modules
@@ -149,7 +151,7 @@ Typical `private/` content:
 - agenix secrets
 - work VPN and work Git configuration
 - self-hosted services and infrastructure integration
-- machine-specific secret material
+- machine-specific hardware and identity overrides
 
 If you only want the public configuration, skip `private/` entirely.
 

@@ -20,7 +20,8 @@ git clone https://github.com/<owner>/dotfiles ~/dotfiles
 cd ~/dotfiles
 ```
 
-The public repo works without `private/`.
+The public repo works without `private/`. Private configuration is only for
+hardware files, identity overrides, secrets, and local infrastructure.
 
 ## 2. Create A Host Directory
 
@@ -40,7 +41,7 @@ cp -r hosts/template "hosts/$HOSTNAME"
 This gives you:
 
 - `hosts/$HOSTNAME/default.nix`
-- `hosts/$HOSTNAME/hardware.nix`
+- `hosts/$HOSTNAME/hardware.nix` placeholder
 
 ## 3. Copy Hardware Configuration
 
@@ -50,7 +51,9 @@ Replace the template hardware file with the real one from the installed system:
 cp /etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware.nix"
 ```
 
-That file is the machine-specific hardware baseline. Keep it per-host.
+That file is the machine-specific hardware baseline. If the host contains
+personal disk UUIDs or other sensitive hardware details, keep the real file in
+`private/hosts/$HOSTNAME/hardware.nix` and import it from a private host module.
 
 ## 4. Fill In `default.nix`
 
@@ -205,9 +208,14 @@ If you later add a private overlay, it can provide:
 - work-only services
 - private Git and SSH config
 - personal infrastructure modules
+- real hardware configuration and identity overrides
 
-That private layer is additive. Get the public host bootstrapped first, then initialize `private/` and re-run validation.
+That private layer is additive. Public hosts should still evaluate without it.
+Get the public host bootstrapped first, then initialize `private/` and re-run
+validation.
 
 ## Recommended Workflow
 
-For public reuse, keep only generic examples under `hosts/`. Put personal and work machines in `private/hosts/` so the public repository stays reusable.
+For public reuse, keep non-secret role defaults under `hosts/`. Put personal
+hardware, identities, keys, domains, and work-only integration details in
+`private/`.

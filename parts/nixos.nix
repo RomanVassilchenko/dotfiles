@@ -31,26 +31,34 @@ let
         "template"
       ];
       namesFrom =
-        hostsDir:
+        hostsDir: requireHardware:
         lib.attrNames (
           lib.filterAttrs (
             name: type:
             type == "directory"
             && !(builtins.elem name excluded)
             && builtins.pathExists (hostsDir + "/${name}/default.nix")
+            && (!requireHardware || builtins.pathExists (hostsDir + "/${name}/hardware.nix"))
           ) (builtins.readDir hostsDir)
         );
     in
-    lib.unique (lib.concatMap namesFrom hostDirs);
+    lib.unique (
+      (namesFrom publicHostsDir true)
+      ++ (if builtins.pathExists privateHostsDir then namesFrom privateHostsDir false else [ ])
+    );
 
   mkHost =
     host:
     let
-      hostDir = lib.findFirst (
-        hostsDir: builtins.pathExists (hostsDir + "/${host}/default.nix")
-      ) (throw "Host ${host} was discovered but no host directory exists") hostDirs;
-      hostModule = import (hostDir + "/${host}");
-      hostConfig = lib.recursiveUpdate hostDefaults (hostModule.dotfiles or { });
+      publicHostPath = publicHostsDir + "/${host}";
+      privateHostPath = privateHostsDir + "/${host}";
+      hasPublicHost = builtins.pathExists (publicHostPath + "/default.nix");
+      hasPrivateHost = builtins.pathExists (privateHostPath + "/default.nix");
+      publicHostModule = if hasPublicHost then import publicHostPath else { };
+      privateHostModule = if hasPrivateHost then import privateHostPath else { };
+      hostConfig = lib.recursiveUpdate (lib.recursiveUpdate hostDefaults (
+        publicHostModule.dotfiles or { }
+      )) (privateHostModule.dotfiles or { });
       system = hostConfig.host.system or "x86_64-linux";
       profile = hostConfig.host.profile or "workstation";
       deviceType = hostConfig.host.deviceType or (if profile == "server" then "server" else "laptop");
@@ -146,11 +154,12 @@ let
             })
           ];
         }
-        (hostDir + "/${host}")
         ../features
         ../modules/drivers
         ../modules/core
       ]
+      ++ lib.optional hasPublicHost publicHostPath
+      ++ lib.optional hasPrivateHost privateHostPath
       ++ lib.optional (gpuProfile != null) gpuConfig.${gpuProfile}
       ++ [
         inputs.stylix.nixosModules.stylix
