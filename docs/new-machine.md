@@ -16,7 +16,7 @@ That means the flow is:
 ## 1. Clone The Repo
 
 ```bash
-git clone https://github.com/RomanVassilchenko/dotfiles ~/dotfiles
+git clone https://github.com/<owner>/dotfiles ~/dotfiles
 cd ~/dotfiles
 ```
 
@@ -210,10 +210,4 @@ That private layer is additive. Get the public host bootstrapped first, then ini
 
 ## Recommended Workflow
 
-For public reuse, treat these hosts as separate roles:
-
-- `hosts/template`: reusable starting point
-- `hosts/laptop-82sn`: author's personal laptop
-- `hosts/ninkear`: author's personal server
-
-That keeps the public onboarding clean while preserving personal machines in the same flake.
+For public reuse, keep only generic examples under `hosts/`. Put personal and work machines in `private/hosts/` so the public repository stays reusable.

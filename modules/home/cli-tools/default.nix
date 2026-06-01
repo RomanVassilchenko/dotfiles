@@ -1,9 +1,7 @@
 { ... }:
 {
   imports = [
-    ./atuin.nix
     ./bat.nix
-    ./bitwarden.nix
     ./bottom.nix
     ./carapace.nix
     ./codex.nix

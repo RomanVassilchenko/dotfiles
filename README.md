@@ -9,8 +9,6 @@
 
 Modular NixOS configuration with typed host metadata, reusable feature bundles, Home Manager, and an optional private overlay.
 
-![Fastfetch](.github/fastfetch.png)
-
 </div>
 
 ## Overview
@@ -30,26 +28,19 @@ The public part builds without `private/`.
 
 ## Host Model
 
-Each machine lives in `hosts/<hostname>/` and has two files:
+Public example machines live in `hosts/<hostname>/` and have two files:
 
 - `default.nix`: typed `dotfiles.*` metadata plus feature bundles and machine-specific overrides
 - `hardware.nix`: copied from `/etc/nixos/hardware-configuration.nix`
 
-New hosts should start from `hosts/template/`.
-
-The author's personal machines are kept separately:
-
-- `hosts/laptop-82sn`: personal laptop
-- `hosts/ninkear`: home server
-
-Do not use `laptop-82sn` as a generic template unless you explicitly want the author's personal choices.
+New public hosts should start from `hosts/template/`. Real personal or work machines belong in `private/hosts/`.
 
 ## Quick New-Host Flow
 
 ```bash
 HOSTNAME="my-laptop"
 
-git clone https://github.com/RomanVassilchenko/dotfiles ~/dotfiles
+git clone https://github.com/<owner>/dotfiles ~/dotfiles
 cd ~/dotfiles
 
 cp -r hosts/template "hosts/$HOSTNAME"
@@ -106,16 +97,13 @@ Example:
 
 ## Repository Layout
 
-![Onefetch](.github/onefetch.png)
-
 ```text
 .
 ├── flake.nix
 ├── parts/nixos.nix         # Host registry and NixOS assembly
 ├── hosts/
 │   ├── default/common.nix  # Generic shared defaults
-│   ├── template/           # Starting point for new machines
-│   └── <hostname>/         # Real machines
+│   └── template/           # Starting point for new machines
 ├── features/               # Public feature bundles and app toggles
 ├── modules/core/           # System modules
 ├── modules/home/           # Home Manager modules

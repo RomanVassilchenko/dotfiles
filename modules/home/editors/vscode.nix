@@ -29,11 +29,6 @@ lib.mkIf dotfiles.features.development.enable {
           command = "inlineChat.start";
           when = "editorFocus";
         }
-        {
-          key = "ctrl+shift+r";
-          command = "opensshremotes.openEmptyWindow";
-          args = "ninkear";
-        }
       ];
 
       extensions = with pkgs.vscode-extensions; [

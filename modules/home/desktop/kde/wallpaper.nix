@@ -9,7 +9,7 @@ let
   verticalWallpaperFile = ../../../../wallpapers/wallpaper_vertical.png;
   horizontalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_horizontal.png";
   verticalWallpaper = "file://${dotfiles.paths.dotfiles}/wallpapers/wallpaper_vertical.png";
-  lockScreenWallpaperPlugin = "org.romanv.orientation-wallpaper";
+  lockScreenWallpaperPlugin = "org.dotfiles.orientation-wallpaper";
   lockScreenWallpaperMetadata = pkgs.writeText "orientation-wallpaper-metadata.json" (
     builtins.toJSON {
       KPackageStructure = "Plasma/Wallpaper";
@@ -17,7 +17,7 @@ let
         Id = lockScreenWallpaperPlugin;
         Name = "Orientation Wallpaper";
         License = "CC0-1.0";
-        Authors = [ { Name = "romanv"; } ];
+        Authors = [ { Name = "dotfiles"; } ];
       };
     }
   );
@@ -46,7 +46,7 @@ let
     install -Dm644 ${lockScreenWallpaperMetadata} $out/share/plasma/wallpapers/${lockScreenWallpaperPlugin}/metadata.json
     install -Dm644 ${lockScreenWallpaperQml} $out/share/plasma/wallpapers/${lockScreenWallpaperPlugin}/contents/ui/main.qml
   '';
-  lockScreenShellPackage = "org.romanv.plasma.desktop";
+  lockScreenShellPackage = "org.dotfiles.plasma.desktop";
   lockScreenShell = pkgs.runCommand "orientation-lockscreen-shell" { } ''
     mkdir -p $out/share/plasma/shells
     cp -R ${pkgs.kdePackages.plasma-desktop}/share/plasma/shells/org.kde.plasma.desktop $out/share/plasma/shells/${lockScreenShellPackage}

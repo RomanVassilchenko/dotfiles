@@ -4,15 +4,13 @@ Project-specific guidance for Codex and compatible coding agents in this reposit
 
 ## Scope
 
-This file is only for `/home/romanv/dotfiles`. Do not carry `dot` commands, host names, NixOS rebuild workflows, or service details into other projects.
+This file is only for this dotfiles repository. Do not carry `dot` commands, host names, NixOS rebuild workflows, or service details into other projects.
 
 Global Codex behavior belongs in `~/.codex/config.toml`. Dotfiles-only permissions and instructions belong in the repository `AGENTS.md` and Nix-managed Codex files.
 
 ## Repository
 
 Modular NixOS dotfiles for multiple machines. Uses Nix Flakes, home-manager, agenix, and a private submodule for secrets/work-only configuration.
-
-Primary development device: `laptop-82sn`.
 
 ## Commands
 
@@ -30,8 +28,8 @@ Use `dot rebuild --dry` or `nix flake check --no-build` before applying system c
 
 ## Architecture
 
-- `flake.nix` defines hosts via `mkNixosConfig` and passes `host`, `vars`, `isServer`, and `profile` to modules.
-- `hosts/` contains per-machine hardware, variables, shared defaults, and profiles.
+- `flake.nix` defines hosts through `parts/nixos.nix`.
+- `hosts/` contains public templates, shared defaults, and profiles.
 - `modules/core/` contains system-level modules.
 - `modules/home/` contains home-manager user configuration.
 - `modules/drivers/` contains GPU driver modules.

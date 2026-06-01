@@ -103,7 +103,7 @@
         'rebuild-boot:Rebuild for next boot'
         'update:Update flake inputs and rebuild'
         'cleanup:Trash backup files, GC old generations'
-        'backup:Backup dotfiles to ninkear'
+        'backup:Backup dotfiles to the configured server'
         'server:Server management (rebuild, update)'
         'doctor:Run system health checks'
         'trim:Run fstrim for SSD'
@@ -122,7 +122,7 @@
       )
 
       local -a server_subcmds
-      server_subcmds=('rebuild:Pull and rebuild on ninkear' 'update:Sync, update flake, rebuild ninkear')
+      server_subcmds=('rebuild:Pull and rebuild on the configured server' 'update:Sync, update flake, rebuild the configured server')
 
       case "$words[2]" in
         rebuild|rebuild-boot|update)

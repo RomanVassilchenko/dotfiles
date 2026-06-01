@@ -237,16 +237,13 @@
       }
     }
   },
-  "orqflow.lsp.path": "/etc/profiles/per-user/romanv/bin/orqlsp",
   "problems.decorations.enabled": false,
   "protobuf.externalLinter.bufPath": "buf",
   "protobuf.externalLinter.enabled": true,
   "protobuf.externalLinter.linter": "buf",
   "redhat.telemetry.enabled": false,
   "references.preferredLocation": "view",
-  "remote.SSH.remotePlatform": {
-    "ninkear": "linux"
-  },
+  "remote.SSH.remotePlatform": {},
   "remote.SSH.showLoginTerminal": true,
   "remote.SSH.useLocalServer": true,
   "scm.defaultViewMode": "tree",

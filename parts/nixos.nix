@@ -1,7 +1,8 @@
 { inputs, ... }:
 let
   inherit (inputs.nixpkgs) lib;
-  hostsDir = ../hosts;
+  publicHostsDir = ../hosts;
+  privateHostsDir = ../private/hosts;
   hostDefaults = import ../hosts/default/common.nix;
 
   mkStable =
@@ -20,6 +21,8 @@ let
     };
   };
 
+  hostDirs = [ publicHostsDir ] ++ lib.optional (builtins.pathExists privateHostsDir) privateHostsDir;
+
   hostNames =
     let
       excluded = [
@@ -27,20 +30,26 @@ let
         "profiles"
         "template"
       ];
+      namesFrom =
+        hostsDir:
+        lib.attrNames (
+          lib.filterAttrs (
+            name: type:
+            type == "directory"
+            && !(builtins.elem name excluded)
+            && builtins.pathExists (hostsDir + "/${name}/default.nix")
+          ) (builtins.readDir hostsDir)
+        );
     in
-    lib.attrNames (
-      lib.filterAttrs (
-        name: type:
-        type == "directory"
-        && !(builtins.elem name excluded)
-        && builtins.pathExists (hostsDir + "/${name}/default.nix")
-      ) (builtins.readDir hostsDir)
-    );
+    lib.unique (lib.concatMap namesFrom hostDirs);
 
   mkHost =
     host:
     let
-      hostModule = import (hostsDir + "/${host}");
+      hostDir = lib.findFirst (
+        hostsDir: builtins.pathExists (hostsDir + "/${host}/default.nix")
+      ) (throw "Host ${host} was discovered but no host directory exists") hostDirs;
+      hostModule = import (hostDir + "/${host}");
       hostConfig = lib.recursiveUpdate hostDefaults (hostModule.dotfiles or { });
       system = hostConfig.host.system or "x86_64-linux";
       profile = hostConfig.host.profile or "workstation";
@@ -137,7 +146,7 @@ let
             })
           ];
         }
-        ../hosts/${host}
+        (hostDir + "/${host}")
         ../features
         ../modules/drivers
         ../modules/core
