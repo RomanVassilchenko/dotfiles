@@ -116,7 +116,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
       };
 
       "services/plasma-notifications-window.desktop"._launch = "Meta+N";
-      "services/brave-browser.desktop"._launch = "Meta+Shift+B";
+      "services/firefox.desktop"._launch = "Meta+Shift+B";
       "services/camunda-modeler.desktop"._launch = "Meta+Shift+U";
       "services/code.desktop"._launch = "Meta+Shift+C";
       "services/kitty.desktop"._launch = "Meta+Return";

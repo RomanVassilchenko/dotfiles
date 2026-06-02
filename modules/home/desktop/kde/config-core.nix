@@ -24,7 +24,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
       KDE.contrast = 7;
       General = {
         AccentColor = "203,166,247";
-        BrowserApplication = "brave-browser.desktop";
+        BrowserApplication = "firefox.desktop";
         TerminalApplication = "kitty";
         TerminalService = "kitty.desktop";
         fixed = "JetBrainsMono Nerd Font Mono,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";

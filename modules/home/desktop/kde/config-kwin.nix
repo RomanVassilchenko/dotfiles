@@ -119,7 +119,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         desktops = "Desktop_1";
         desktopsrule = 3;
         types = 1;
-        wmclass = "brave-browser|google-chrome|xfreerdp";
+        wmclass = "firefox|brave-browser|google-chrome|xfreerdp";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
@@ -174,8 +174,8 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         title = "Picture in picture";
         titlematch = 2;
         types = 1;
-        wmclass = "brave";
-        wmclassmatch = 1;
+        wmclass = "firefox|brave";
+        wmclassmatch = 3;
       };
 
       General = {
