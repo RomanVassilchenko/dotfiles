@@ -10,6 +10,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
     klipperrc.General.MaxClipItems = 100;
     krunnerrc.General.ActivateWhenTypingOnDesktop = true;
     krunnerrc.General.FreeFloating = true;
+    krunnerrc.Plugins.webshortcutsEnabled = true;
     ksplashrc.KSplash.Theme = "Catppuccin-Mocha-Mauve";
     kwalletrc.Wallet."First Use" = false;
 

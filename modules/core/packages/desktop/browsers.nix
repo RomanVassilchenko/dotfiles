@@ -57,6 +57,10 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       "signon.generation.enabled" = false;
       "signon.management.page.breach-alerts.enabled" = false;
       "signon.rememberSignons" = false;
+      "sidebar.position_start" = false;
+      "sidebar.revamp" = true;
+      "sidebar.verticalTabs" = true;
+      "sidebar.visibility" = "expand-on-hover";
       "widget.use-xdg-desktop-portal.file-picker" = 1;
     };
 
