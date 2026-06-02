@@ -5,6 +5,8 @@
 }:
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {
+    startup.desktopScript.panels.runAlways = true;
+
     panels = [
       {
         location = "top";
