@@ -37,6 +37,7 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       "browser.urlbar.suggest.quicksuggest.sponsored" = false;
       "dom.forms.autocomplete.formautofill" = true;
       "dom.security.https_only_mode" = true;
+      "extensions.activeThemeID" = "{76aabc99-c1a8-4c1e-832b-d4f2941d5a7a}";
       "extensions.formautofill.creditCards.enabled" = false;
       "general.autoScroll" = true;
       "intl.accept_languages" = "ru,en";
@@ -76,10 +77,6 @@ lib.mkIf config.dotfiles.features.desktop.enable {
           installation_mode = "force_installed";
           install_url = firefoxAddonUrl "plasma-integration";
         };
-        "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}" = {
-          installation_mode = "normal_installed";
-          install_url = firefoxAddonUrl "styl-us";
-        };
         "sponsorBlocker@ajay.app" = {
           installation_mode = "normal_installed";
           install_url = firefoxAddonUrl "sponsorblock";
@@ -96,9 +93,9 @@ lib.mkIf config.dotfiles.features.desktop.enable {
           installation_mode = "normal_installed";
           install_url = firefoxAddonUrl "videospeed";
         };
-        "{535fa94c-d420-4d88-a063-4c2aa05881bb}" = {
+        "{76aabc99-c1a8-4c1e-832b-d4f2941d5a7a}" = {
           installation_mode = "normal_installed";
-          install_url = firefoxAddonUrl "copy-confluence-as-markdown";
+          install_url = firefoxAddonUrl "catppuccin-mocha-mauve-git";
         };
       };
     };
