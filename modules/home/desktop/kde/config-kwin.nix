@@ -75,7 +75,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         enableSpreadLayout = false;
         enableStairLayout = false;
         enableTileLayout = false;
-        floatingClass = "brave-nngceckbapebfimnlniiiahkandclblb-Default,org.kde.kcalc,org.freedesktop.impl.portal.desktop.kde,systemsettings,kcmshell5,kcmshell6,org.kde.polkit-kde-authentication-agent-1,krunner,ksplashqml,ksplashsimple,ksplashx,plasmashell,plasma-desktop,ksmserver,kded5,kded6,kwin_wayland,kwin_x11,org.kde.kdeconnect.daemon,org.kde.discover,org.kde.kwalletd5,org.kde.kwalletd6,org.kde.plasma.emojier,pavucontrol,blueman-manager,nm-connection-editor,arandr,lxappearance,nitrogen,qt5ct,qt6ct,kvantummanager,xdg-desktop-portal-kde,org.kde.plasma-systemmonitor,org.kde.kinfocenter,org.kde.plasma.settings,org.kde.kscreen.osd,kded,plasma-interactiveconsole,plasmoidviewer,xwaylandvideobridge,vlc,mpv,feh,nsxiv,imv,zenity,kdialog,pinentry-qt,gcr-prompter,spectacle,org.kde.ark,org.kde.gwenview,org.kde.okular";
+        floatingClass = "org.kde.kcalc,org.freedesktop.impl.portal.desktop.kde,systemsettings,kcmshell5,kcmshell6,org.kde.polkit-kde-authentication-agent-1,krunner,ksplashqml,ksplashsimple,ksplashx,plasmashell,plasma-desktop,ksmserver,kded5,kded6,kwin_wayland,kwin_x11,org.kde.kdeconnect.daemon,org.kde.discover,org.kde.kwalletd5,org.kde.kwalletd6,org.kde.plasma.emojier,pavucontrol,blueman-manager,nm-connection-editor,arandr,lxappearance,nitrogen,qt5ct,qt6ct,kvantummanager,xdg-desktop-portal-kde,org.kde.plasma-systemmonitor,org.kde.kinfocenter,org.kde.plasma.settings,org.kde.kscreen.osd,kded,plasma-interactiveconsole,plasmoidviewer,xwaylandvideobridge,vlc,mpv,feh,nsxiv,imv,zenity,kdialog,pinentry-qt,gcr-prompter,spectacle,org.kde.ark,org.kde.gwenview,org.kde.okular";
         floatingTitle = "Picture in picture";
         layoutPerActivity = true;
         layoutPerDesktop = true;
@@ -119,7 +119,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         desktops = "Desktop_1";
         desktopsrule = 3;
         types = 1;
-        wmclass = "firefox|brave-browser|google-chrome|xfreerdp";
+        wmclass = "firefox|google-chrome|xfreerdp";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
@@ -174,7 +174,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         title = "Picture in picture";
         titlematch = 2;
         types = 1;
-        wmclass = "firefox|brave";
+        wmclass = "firefox";
         wmclassmatch = 3;
       };
 

@@ -21,7 +21,7 @@ in
         "--avoid"
         "^(systemd|sshd|agetty|dbus)$"
         "--prefer"
-        "^(Web Content|Isolated Web|firefox|chromium|brave|electron)$"
+        "^(Web Content|Isolated Web|firefox|chrome|chromium|electron)$"
       ];
     };
 

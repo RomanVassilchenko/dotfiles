@@ -8,15 +8,7 @@ let
   firefoxAddonUrl = slug: "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
 in
 lib.mkIf config.dotfiles.features.desktop.enable {
-  environment.systemPackages = with pkgs; [
-    (brave.override {
-      commandLineArgs = lib.concatStringsSep " " [
-        "--ozone-platform-hint=auto"
-        "--disable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder"
-      ];
-    })
-    google-chrome
-  ];
+  environment.systemPackages = [ pkgs.google-chrome ];
 
   programs.firefox = {
     enable = true;
@@ -47,7 +39,7 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       "dom.security.https_only_mode" = true;
       "extensions.formautofill.creditCards.enabled" = false;
       "general.autoScroll" = true;
-      "intl.accept_languages" = "ru,en-us";
+      "intl.accept_languages" = "ru,en";
       "intl.regional_prefs.use_os_locales" = true;
       "network.dns.disablePrefetch" = true;
       "network.http.speculative-parallel-limit" = 0;
