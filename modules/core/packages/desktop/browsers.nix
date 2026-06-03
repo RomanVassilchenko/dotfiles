@@ -37,7 +37,6 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       "browser.urlbar.suggest.quicksuggest.sponsored" = false;
       "dom.forms.autocomplete.formautofill" = true;
       "dom.security.https_only_mode" = true;
-      "extensions.activeThemeID" = "{76aabc99-c1a8-4c1e-832b-d4f2941d5a7a}";
       "extensions.formautofill.creditCards.enabled" = false;
       "general.autoScroll" = true;
       "intl.accept_languages" = "ru,en";
@@ -92,10 +91,6 @@ lib.mkIf config.dotfiles.features.desktop.enable {
         "{7be2ba16-0f1e-4d93-9ebc-5164397477a9}" = {
           installation_mode = "normal_installed";
           install_url = firefoxAddonUrl "videospeed";
-        };
-        "{76aabc99-c1a8-4c1e-832b-d4f2941d5a7a}" = {
-          installation_mode = "normal_installed";
-          install_url = firefoxAddonUrl "catppuccin-mocha-mauve-git";
         };
       };
     };

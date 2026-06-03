@@ -11,7 +11,23 @@ lib.mkIf dotfiles.features.stylix.enable (
     })
 
     {
+      programs.firefox = {
+        enable = true;
+        package = null;
+        configPath = "${config.xdg.configHome}/mozilla/firefox";
+        profiles.default = {
+          id = 0;
+          path = "izitbjng.default";
+          isDefault = true;
+          extensions.force = true;
+        };
+      };
+
       stylix.targets = {
+        firefox = {
+          profileNames = [ "default" ];
+          colorTheme.enable = true;
+        };
         vscode.enable = false;
         zed.enable = false;
         qt.enable = false;
