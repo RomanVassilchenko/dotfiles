@@ -10,7 +10,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
 
   gtk = {
     enable = true;
-    gtk4.theme = config.gtk.theme;
+    gtk4.theme = lib.mkIf (!dotfiles.features.stylix.enable) config.gtk.theme;
     theme = {
       name = lib.mkForce "catppuccin-mocha-mauve-standard";
       package = lib.mkForce (
