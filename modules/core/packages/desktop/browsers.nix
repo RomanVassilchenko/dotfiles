@@ -27,19 +27,19 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       ExtensionSettings =
         let
           chromeWebStore = "https://clients2.google.com/service/update2/crx";
-          normalInstall = {
-            installation_mode = "normal_installed";
+          forceInstall = {
+            installation_mode = "force_installed";
             update_url = chromeWebStore;
           };
         in
         {
-          aapbdbdomjkkjkaonfhkkikfgjllcleb = normalInstall; # Google Translate
-          cimiefiiaegbelhefglklhhakcgmhkai = normalInstall; # Plasma Integration
-          hkgfoiooedgoejojocmhlaklaeopbecg = normalInstall; # Picture-in-Picture
-          kekjfbackdeiabghhcdklcdoekaanoel = normalInstall; # MAL-Sync
-          mnjggcdmjocbbbhaepdhchncahnbgone = normalInstall; # SponsorBlock
-          nffaoalbilbmmfgbnbgppjihopabppdk = normalInstall; # Video Speed Controller
-          nngceckbapebfimnlniiiahkandclblb = normalInstall; # Bitwarden
+          aapbdbdomjkkjkaonfhkkikfgjllcleb = forceInstall; # Google Translate
+          cimiefiiaegbelhefglklhhakcgmhkai = forceInstall; # Plasma Integration
+          hkgfoiooedgoejojocmhlaklaeopbecg = forceInstall; # Picture-in-Picture
+          kekjfbackdeiabghhcdklcdoekaanoel = forceInstall; # MAL-Sync
+          mnjggcdmjocbbbhaepdhchncahnbgone = forceInstall; # SponsorBlock
+          nffaoalbilbmmfgbnbgppjihopabppdk = forceInstall; # Video Speed Controller
+          nngceckbapebfimnlniiiahkandclblb = forceInstall; # Bitwarden
         };
       HttpsOnlyMode = "force_enabled";
       MetricsReportingEnabled = false;
