@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs-bitwarden,
   pkgs-stable,
   ...
 }:
@@ -12,5 +13,7 @@ lib.mkIf config.dotfiles.features.productivity.enable {
       libreoffice
       obsidian
     ]
-    ++ lib.optionals config.dotfiles.features.apps.bitwarden.enable [ bitwarden-desktop ];
+    ++ lib.optionals config.dotfiles.features.apps.bitwarden.enable [
+      pkgs-bitwarden.bitwarden-desktop
+    ];
 }

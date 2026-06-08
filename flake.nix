@@ -15,6 +15,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # Stable channel — change version here to switch (e.g. "nixos-25.05", "nixos-26.05")
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-bitwarden.url = "github:nixos/nixpkgs/25f538306313eae3927264466c70d7001dcea1df";
     nvf = {
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";

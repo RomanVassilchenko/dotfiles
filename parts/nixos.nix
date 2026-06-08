@@ -12,6 +12,16 @@ let
       config.allowUnfree = true;
     };
 
+  mkBitwarden =
+    system:
+    import inputs.nixpkgs-bitwarden {
+      inherit system;
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [ "electron-39.8.10" ];
+      };
+    };
+
   gpuConfig = {
     intel = {
       drivers.intel.enable = true;
@@ -74,6 +84,7 @@ let
           host
           ;
         hostDefaults = hostDefaults;
+        pkgs-bitwarden = mkBitwarden system;
         pkgs-stable = mkStable system;
       };
       modules = [

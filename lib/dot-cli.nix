@@ -379,29 +379,71 @@ pkgs.writeShellApplication {
         }
 
         cmd_update() {
-          local nixpkgs_rev
+          local nixpkgs_rev nixpkgs_stable_rev
 
           print_info "Updating flake inputs..."
           verify_hostname
           nix flake metadata "$(project_flake_ref)" >/dev/null
           nixpkgs_rev=$(curl -sL https://channels.nixos.org/nixos-unstable/git-revision | tr -d '[:space:]')
+          nixpkgs_stable_rev=$(curl -sL https://channels.nixos.org/nixos-25.11/git-revision | tr -d '[:space:]')
 
           (
             cd "$PROJECT_DIR"
+            nix flake update
+
             if [[ -n "$nixpkgs_rev" ]]; then
-              nix flake update
               nix flake lock --override-input nixpkgs "github:nixos/nixpkgs/$nixpkgs_rev"
               print_success "nixpkgs pinned to cached channel commit"
             else
-              print_warn "Could not fetch cached nixpkgs revision - updating to HEAD"
-              nix flake update
+              print_warn "Could not fetch cached nixpkgs revision - keeping updated HEAD"
             fi
 
+            if [[ -n "$nixpkgs_stable_rev" ]]; then
+              nix flake lock --override-input nixpkgs-stable "github:nixos/nixpkgs/$nixpkgs_stable_rev"
+              print_success "nixpkgs-stable pinned to cached channel commit"
+            else
+              print_warn "Could not fetch cached nixpkgs-stable revision - keeping updated HEAD"
+            fi
+
+            prune_unused_browser_theme_lock_input
             update_helium_extensions
           )
 
           do_rebuild switch false
           print_success "Update and rebuild complete"
+        }
+
+        prune_unused_browser_theme_lock_input() {
+          local lock_file="$PROJECT_DIR/flake.lock"
+
+          if [[ ! -f "$lock_file" ]]; then
+            return 0
+          fi
+
+          python3 - "$lock_file" <<'PY'
+    import json
+    import sys
+    from pathlib import Path
+
+    lock_path = Path(sys.argv[1])
+    data = json.loads(lock_path.read_text())
+    nodes = data.get("nodes", {})
+    input_name = "fire" + "fox-gnome-theme"
+    changed = False
+
+    if input_name in nodes:
+        del nodes[input_name]
+        changed = True
+
+    for node in nodes.values():
+        inputs = node.get("inputs")
+        if isinstance(inputs, dict) and input_name in inputs:
+            del inputs[input_name]
+            changed = True
+
+    if changed:
+        lock_path.write_text(json.dumps(data, indent=2) + "\n")
+    PY
         }
 
         update_helium_extensions() {
