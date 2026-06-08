@@ -66,10 +66,35 @@ let
     ];
   };
 
+  chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
+
+  heliumExtensions = [
+    "aapbdbdomjkkjkaonfhkkikfgjllcleb" # Google Translate
+    "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma Integration
+    "hkgfoiooedgoejojocmhlaklaeopbecg" # Picture-in-Picture
+    "kekjfbackdeiabghhcdklcdoekaanoel" # MAL-Sync
+    "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock
+    "nffaoalbilbmmfgbnbgppjihopabppdk" # Video Speed Controller
+    "nngceckbapebfimnlniiiahkandclblb" # Bitwarden
+  ];
+
   preferencesFile = pkgs.writeText "helium-preferences.json" (builtins.toJSON heliumPreferences);
   localStateFile = pkgs.writeText "helium-local-state.json" (builtins.toJSON heliumLocalState);
+
+  externalExtensionFiles = builtins.listToAttrs (
+    map (
+      id:
+      lib.nameValuePair ".config/net.imput.helium/External Extensions/${id}.json" {
+        text = builtins.toJSON {
+          external_update_url = chromeWebStoreUpdateUrl;
+        };
+      }
+    ) heliumExtensions
+  );
 in
 lib.mkIf dotfiles.features.desktop.enable {
+  home.file = externalExtensionFiles;
+
   home.activation.configureHeliumPreferences = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     prefs="${config.xdg.configHome}/net.imput.helium/Default/Preferences"
     local_state="${config.xdg.configHome}/net.imput.helium/Local State"

@@ -24,23 +24,6 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
       DefaultSearchProviderSuggestURL = "https://www.google.com/complete/search?client=chrome&q={searchTerms}";
       DefaultBrowserSettingEnabled = false;
-      ExtensionSettings =
-        let
-          chromeWebStore = "https://clients2.google.com/service/update2/crx";
-          forceInstall = {
-            installation_mode = "force_installed";
-            update_url = chromeWebStore;
-          };
-        in
-        {
-          aapbdbdomjkkjkaonfhkkikfgjllcleb = forceInstall; # Google Translate
-          cimiefiiaegbelhefglklhhakcgmhkai = forceInstall; # Plasma Integration
-          hkgfoiooedgoejojocmhlaklaeopbecg = forceInstall; # Picture-in-Picture
-          kekjfbackdeiabghhcdklcdoekaanoel = forceInstall; # MAL-Sync
-          mnjggcdmjocbbbhaepdhchncahnbgone = forceInstall; # SponsorBlock
-          nffaoalbilbmmfgbnbgppjihopabppdk = forceInstall; # Video Speed Controller
-          nngceckbapebfimnlniiiahkandclblb = forceInstall; # Bitwarden
-        };
       HttpsOnlyMode = "force_enabled";
       MetricsReportingEnabled = false;
       PasswordManagerEnabled = false;
