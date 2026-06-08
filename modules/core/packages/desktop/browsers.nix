@@ -5,6 +5,92 @@
   pkgs,
   ...
 }:
+let
+  crxUrl =
+    id:
+    "https://clients2.google.com/service/update2/crx?response=redirect"
+    + "&prodversion=149.0.7827.53"
+    + "&acceptformat=crx2,crx3"
+    + "&x=id%3D${id}%26installsource%3Dondemand%26uc";
+
+  heliumExtensions = {
+    aapbdbdomjkkjkaonfhkkikfgjllcleb = {
+      name = "Google Translate";
+      version = "2.0.16.0";
+      crx = pkgs.fetchurl {
+        name = "aapbdbdomjkkjkaonfhkkikfgjllcleb.crx";
+        url = crxUrl "aapbdbdomjkkjkaonfhkkikfgjllcleb";
+        hash = "sha256-Z05TixCLsTuLjrm+e3T39tPMIu4buFw93Nm/lxpF3AI=";
+      };
+    };
+    cimiefiiaegbelhefglklhhakcgmhkai = {
+      name = "Plasma Integration";
+      version = "2.2.0.0";
+      crx = pkgs.fetchurl {
+        name = "cimiefiiaegbelhefglklhhakcgmhkai.crx";
+        url = crxUrl "cimiefiiaegbelhefglklhhakcgmhkai";
+        hash = "sha256-VD4UIbLpD2OF89x5ylT9fFQP4/ZiUYlhLG6RqDSAHxA=";
+      };
+    };
+    hkgfoiooedgoejojocmhlaklaeopbecg = {
+      name = "Picture-in-Picture";
+      version = "1.14.0.0";
+      crx = pkgs.fetchurl {
+        name = "hkgfoiooedgoejojocmhlaklaeopbecg.crx";
+        url = crxUrl "hkgfoiooedgoejojocmhlaklaeopbecg";
+        hash = "sha256-NaWNfAH9zyLIVpmK5+cb72PUZ3whU5NwCb+9BA45aGc=";
+      };
+    };
+    kekjfbackdeiabghhcdklcdoekaanoel = {
+      name = "MAL-Sync";
+      version = "0.12.3.0";
+      crx = pkgs.fetchurl {
+        name = "kekjfbackdeiabghhcdklcdoekaanoel.crx";
+        url = crxUrl "kekjfbackdeiabghhcdklcdoekaanoel";
+        hash = "sha256-JNV97f+K6txBWrlkurFk4x8Yy2TFFC9RM396r0mORfQ=";
+      };
+    };
+    mnjggcdmjocbbbhaepdhchncahnbgone = {
+      name = "SponsorBlock";
+      version = "6.1.5.0";
+      crx = pkgs.fetchurl {
+        name = "mnjggcdmjocbbbhaepdhchncahnbgone.crx";
+        url = crxUrl "mnjggcdmjocbbbhaepdhchncahnbgone";
+        hash = "sha256-nE5FE3Eo1jG8sT1KYjVl8JRbmAiyhN8IZObHsAIb0wY=";
+      };
+    };
+    nffaoalbilbmmfgbnbgppjihopabppdk = {
+      name = "Video Speed Controller";
+      version = "0.10.2.0";
+      crx = pkgs.fetchurl {
+        name = "nffaoalbilbmmfgbnbgppjihopabppdk.crx";
+        url = crxUrl "nffaoalbilbmmfgbnbgppjihopabppdk";
+        hash = "sha256-bJUxLYTCx+UCbpxZW0+By4NfK2oiYxWbhy+766a0dUY=";
+      };
+    };
+    nngceckbapebfimnlniiiahkandclblb = {
+      name = "Bitwarden";
+      version = "2026.5.1.0";
+      crx = pkgs.fetchurl {
+        name = "nngceckbapebfimnlniiiahkandclblb.crx";
+        url = crxUrl "nngceckbapebfimnlniiiahkandclblb";
+        hash = "sha256-xRK2iX2ntV6N/PQh/KcK10FoNsKV44B+UtyqvFCvelI=";
+      };
+    };
+  };
+
+  heliumExtensionUpdateManifest = pkgs.writeText "helium-extension-updates.xml" ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (id: extension: ''
+        <app appid="${id}">
+          <updatecheck codebase="file://${extension.crx}" version="${extension.version}" />
+        </app>'') heliumExtensions
+    )}
+    </gupdate>
+  '';
+in
 lib.mkIf config.dotfiles.features.desktop.enable {
   environment.systemPackages = [ pkgs.google-chrome ];
 
@@ -26,10 +112,9 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       DefaultBrowserSettingEnabled = false;
       ExtensionSettings =
         let
-          chromeWebStore = "https://clients2.google.com/service/update2/crx";
           systemInstall = {
             installation_mode = "force_installed";
-            update_url = chromeWebStore;
+            update_url = "file://${heliumExtensionUpdateManifest}";
           };
         in
         {
