@@ -165,6 +165,7 @@ let
         inputs.stylix.nixosModules.stylix
         inputs.nix-flatpak.nixosModules.nix-flatpak
         inputs.lanzaboote.nixosModules.lanzaboote
+        inputs.helium-browser.nixosModules.default
       ]
       ++ lib.optional (builtins.pathExists ../private/default.nix) ../private;
     };

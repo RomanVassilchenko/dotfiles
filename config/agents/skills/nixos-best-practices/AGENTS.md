@@ -419,13 +419,13 @@ outputs = { self, nixpkgs, home-manager, ... }@inputs:
 ```nix
 # ❌ WRONG
 # hosts/base.nix
-environment.systemPackages = with pkgs; [ firefox ];
+environment.systemPackages = with pkgs; [ browser ];
 
 # home-manager/home.nix
-home.packages = with pkgs; [ firefox ];  # Duplicate!
+home.packages = with pkgs; [ browser ];  # Duplicate!
 
 # ✅ CORRECT: Choose one location
-home.packages = with pkgs; [ firefox ];
+home.packages = with pkgs; [ browser ];
 ```
 
 ### Mistake 5: Not Following nixpkgs

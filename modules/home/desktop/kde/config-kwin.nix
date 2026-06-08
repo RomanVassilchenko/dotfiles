@@ -11,11 +11,13 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         Id_2 = "Desktop_2";
         Id_3 = "Desktop_3";
         Id_4 = "Desktop_4";
+        Id_5 = "Desktop_5";
         Name_1 = "Web";
-        Name_2 = "Dev";
-        Name_3 = "Chat";
-        Name_4 = "Play";
-        Number = 4;
+        Name_2 = "Term";
+        Name_3 = "Dev";
+        Name_4 = "Chat";
+        Name_5 = "Play";
+        Number = 5;
         Rows = 1;
       };
 
@@ -119,37 +121,47 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         desktops = "Desktop_1";
         desktopsrule = 3;
         types = 1;
-        wmclass = "firefox|google-chrome|xfreerdp";
+        wmclass = "helium|google-chrome|xfreerdp";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
 
       "3" = {
-        Description = "Dev to Desktop 2";
+        Description = "Terminals to Desktop 2";
         desktops = "Desktop_2";
         desktopsrule = 3;
         types = 1;
-        wmclass = "kitty|code|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
+        wmclass = "kitty|org.wezfurlong.wezterm|org.kde.konsole|Alacritty|com.mitchellh.ghostty";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
 
       "4" = {
-        Description = "Chat to Desktop 3";
+        Description = "Dev to Desktop 3";
         desktops = "Desktop_3";
         desktopsrule = 3;
         types = 1;
-        wmclass = "org.telegram.desktop|com.rtosta.zapzap|vesktop|zoom.*|obsidian";
+        wmclass = "code|Code|code-url-handler|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
 
       "5" = {
-        Description = "Games to Desktop 4";
+        Description = "Chat to Desktop 4";
         desktops = "Desktop_4";
         desktopsrule = 3;
         types = 1;
-        wmclass = "osu!|prismlauncher|steam|Minecraft";
+        wmclass = "org.telegram.desktop|TelegramDesktop|com.rtosta.zapzap|zapzap|vesktop|zoom.*|obsidian";
+        wmclasscomplete = false;
+        wmclassmatch = 3;
+      };
+
+      "6" = {
+        Description = "Play to Desktop 5";
+        desktops = "Desktop_5";
+        desktopsrule = 3;
+        types = 1;
+        wmclass = "osu!|prismlauncher|steam|Steam|Minecraft";
         wmclasscomplete = false;
         wmclassmatch = 3;
       };
@@ -174,13 +186,13 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         title = "Picture in picture";
         titlematch = 2;
         types = 1;
-        wmclass = "firefox";
+        wmclass = "helium";
         wmclassmatch = 3;
       };
 
       General = {
-        count = 6;
-        rules = "1,2,3,4,5,11";
+        count = 7;
+        rules = "1,2,3,4,5,6,11";
       };
     };
   };

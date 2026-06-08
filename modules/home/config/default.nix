@@ -8,6 +8,7 @@
     ./files.nix
     ./git-hooks.nix
     ./git.nix
+    ./helium.nix
     ./ssh.nix
     ./xdg.nix
   ]

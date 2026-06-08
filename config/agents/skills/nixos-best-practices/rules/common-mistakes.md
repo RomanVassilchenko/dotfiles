@@ -128,14 +128,14 @@ Install in appropriate location only.
 ```nix
 # ❌ WRONG: Same package in both places
 # hosts/base.nix
-environment.systemPackages = with pkgs; [ firefox ];
+environment.systemPackages = with pkgs; [ browser ];
 
 # home-manager/home.nix
-home.packages = with pkgs; [ firefox ];  # Duplicate!
+home.packages = with pkgs; [ browser ];  # Duplicate!
 
 # ✅ CORRECT: Choose one location
 # User apps in Home Manager
-home.packages = with pkgs; [ firefox ];
+home.packages = with pkgs; [ browser ];
 ```
 
 **See:** [package-installation.md](package-installation.md)

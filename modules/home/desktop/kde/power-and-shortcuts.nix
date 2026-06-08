@@ -47,6 +47,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         "Move with Window to Desktop 2" = "Meta+Ctrl+2";
         "Move with Window to Desktop 3" = "Meta+Ctrl+3";
         "Move with Window to Desktop 4" = "Meta+Ctrl+4";
+        "Move with Window to Desktop 5" = "Meta+Ctrl+5";
         "Switch to Desktop 1" = [
           "Meta+1"
           "Meta+Num+1"
@@ -62,6 +63,10 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         "Switch to Desktop 4" = [
           "Meta+4"
           "Meta+Num+4"
+        ];
+        "Switch to Desktop 5" = [
+          "Meta+5"
+          "Meta+Num+5"
         ];
         "Switch to Next Desktop" = "Meta+PgDown";
         "Switch to Previous Desktop" = "Meta+PgUp";
@@ -116,7 +121,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
       };
 
       "services/plasma-notifications-window.desktop"._launch = "Meta+N";
-      "services/firefox.desktop"._launch = "Meta+Shift+B";
+      "services/helium.desktop"._launch = "Meta+Shift+B";
       "services/camunda-modeler.desktop"._launch = "Meta+Shift+U";
       "services/code.desktop"._launch = "Meta+Shift+C";
       "services/kitty.desktop"._launch = "Meta+Return";
@@ -143,6 +148,7 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-2 = "Meta+Ctrl+2";
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-3 = "Meta+Ctrl+3";
       "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-4 = "Meta+Ctrl+4";
+      "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-5 = "Meta+Ctrl+5";
       "services/postman.desktop"._launch = "Meta+Shift+P";
       "services/steam.desktop"._launch = "Meta+Shift+S";
       "services/systemsettings.desktop"._launch = "Meta+,";
