@@ -16,7 +16,7 @@ let
   heliumExtensions = {
     aapbdbdomjkkjkaonfhkkikfgjllcleb = {
       name = "Google Translate";
-      version = "2.0.16.0";
+      version = "2.0.16";
       crx = pkgs.fetchurl {
         name = "aapbdbdomjkkjkaonfhkkikfgjllcleb.crx";
         url = crxUrl "aapbdbdomjkkjkaonfhkkikfgjllcleb";
@@ -25,7 +25,7 @@ let
     };
     cimiefiiaegbelhefglklhhakcgmhkai = {
       name = "Plasma Integration";
-      version = "2.2.0.0";
+      version = "2.2";
       crx = pkgs.fetchurl {
         name = "cimiefiiaegbelhefglklhhakcgmhkai.crx";
         url = crxUrl "cimiefiiaegbelhefglklhhakcgmhkai";
@@ -34,7 +34,7 @@ let
     };
     hkgfoiooedgoejojocmhlaklaeopbecg = {
       name = "Picture-in-Picture";
-      version = "1.14.0.0";
+      version = "1.14";
       crx = pkgs.fetchurl {
         name = "hkgfoiooedgoejojocmhlaklaeopbecg.crx";
         url = crxUrl "hkgfoiooedgoejojocmhlaklaeopbecg";
@@ -43,7 +43,7 @@ let
     };
     kekjfbackdeiabghhcdklcdoekaanoel = {
       name = "MAL-Sync";
-      version = "0.12.3.0";
+      version = "0.12.3";
       crx = pkgs.fetchurl {
         name = "kekjfbackdeiabghhcdklcdoekaanoel.crx";
         url = crxUrl "kekjfbackdeiabghhcdklcdoekaanoel";
@@ -52,7 +52,7 @@ let
     };
     mnjggcdmjocbbbhaepdhchncahnbgone = {
       name = "SponsorBlock";
-      version = "6.1.5.0";
+      version = "6.1.5";
       crx = pkgs.fetchurl {
         name = "mnjggcdmjocbbbhaepdhchncahnbgone.crx";
         url = crxUrl "mnjggcdmjocbbbhaepdhchncahnbgone";
@@ -61,7 +61,7 @@ let
     };
     nffaoalbilbmmfgbnbgppjihopabppdk = {
       name = "Video Speed Controller";
-      version = "0.10.2.0";
+      version = "0.10.2";
       crx = pkgs.fetchurl {
         name = "nffaoalbilbmmfgbnbgppjihopabppdk.crx";
         url = crxUrl "nffaoalbilbmmfgbnbgppjihopabppdk";
@@ -70,7 +70,7 @@ let
     };
     nngceckbapebfimnlniiiahkandclblb = {
       name = "Bitwarden";
-      version = "2026.5.1.0";
+      version = "2026.5.1";
       crx = pkgs.fetchurl {
         name = "nngceckbapebfimnlniiiahkandclblb.crx";
         url = crxUrl "nngceckbapebfimnlniiiahkandclblb";

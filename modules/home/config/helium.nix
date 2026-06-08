@@ -9,6 +9,10 @@ let
   heliumPreferences = {
     bookmark_bar.show_on_all_tabs = false;
     browser.enable_spellchecking = true;
+    browser.theme = {
+      is_grayscale = false;
+      is_grayscale2 = false;
+    };
     helium.browser = {
       centered_location_bar = true;
       layout = 2;
