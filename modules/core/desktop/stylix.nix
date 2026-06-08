@@ -49,9 +49,7 @@
       terminal = 1.0;
       popups = 1.0;
     };
-  };
 
-  programs.chromium.extraOpts.BrowserThemeColor = lib.mkIf config.dotfiles.features.stylix.enable (
-    lib.mkForce config.lib.stylix.colors.withHashtag.base01
-  );
+    targets.chromium.enable = false;
+  };
 }
