@@ -23,6 +23,7 @@
       ];
 
       kernel.sysctl = {
+        "fs.inotify.max_user_watches" = 1048576;
         "vm.max_map_count" = 2147483642;
         "vm.swappiness" = 10;
         "vm.dirty_ratio" = 10;

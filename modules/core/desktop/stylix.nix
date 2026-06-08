@@ -50,4 +50,8 @@
       popups = 1.0;
     };
   };
+
+  programs.chromium.extraOpts.BrowserThemeColor = lib.mkIf config.dotfiles.features.stylix.enable (
+    lib.mkForce config.lib.stylix.colors.withHashtag.base01
+  );
 }
