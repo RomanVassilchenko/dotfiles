@@ -1,8 +1,0 @@
-{ ... }:
-{
-  imports = [
-    ./cli
-    ./desktop
-    ./development
-  ];
-}

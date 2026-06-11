@@ -14,37 +14,25 @@ let
     base0E = "cba6f7";
   };
   c = if (config.stylix.enable or false) then config.lib.stylix.colors else catppuccinMocha;
+  paletteKeys = [
+    "base00"
+    "base02"
+    "base03"
+    "base05"
+    "base08"
+    "base09"
+    "base0A"
+    "base0B"
+    "base0C"
+    "base0D"
+    "base0E"
+  ];
+  bottomColors = map (name: "#${c.${name}}") paletteKeys;
+  bottomTemplate = builtins.readFile ./bottom/bottom.toml;
+  bottomConfig = builtins.replaceStrings (map (
+    name: "@@" + name + "@@"
+  ) paletteKeys) bottomColors bottomTemplate;
 in
 {
-  xdg.configFile."bottom/bottom.toml".text = ''
-    [flags]
-    rate = "1s"
-    retention = "10m"
-    default_widget_type = "process"
-    hide_table_gap = true
-    show_table_scroll_position = true
-    process_command = true
-    tree = true
-    temperature_type = "c"
-    theme = "default"
-
-    [colors]
-    table_header_color = "#${c.base0E}"
-    widget_title_color = "#${c.base05}"
-    border_color = "#${c.base03}"
-    highlighted_border_color = "#${c.base0E}"
-    text_color = "#${c.base05}"
-    selected_text_color = "#${c.base00}"
-    selected_bg_color = "#${c.base0E}"
-    graph_color = "#${c.base03}"
-    high_battery_color = "#${c.base0B}"
-    medium_battery_color = "#${c.base0A}"
-    low_battery_color = "#${c.base08}"
-    all_cpu_color = "#${c.base0E}"
-    avg_cpu_color = "#${c.base0D}"
-    ram_color = "#${c.base0C}"
-    swap_color = "#${c.base09}"
-    rx_color = "#${c.base0B}"
-    tx_color = "#${c.base0D}"
-  '';
+  xdg.configFile."bottom/bottom.toml".text = bottomConfig;
 }

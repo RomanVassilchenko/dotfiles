@@ -52,7 +52,7 @@ in
       username = userName;
     };
     users.${userName} = {
-      imports = [ ../../home ];
+      imports = [ ../../home/default.nix ];
       home = {
         username = userName;
         inherit (dotfiles.user) homeDirectory;

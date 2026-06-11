@@ -175,6 +175,12 @@ in
 
         thunderbird.enable = mkEnableOption "Thunderbird desktop app";
 
+        thunderbird.autostart = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Start Thunderbird automatically in graphical sessions.";
+        };
+
         zapzap.enable = mkEnableOption "ZapZap desktop app";
 
         zapzap.autostart = mkOption {

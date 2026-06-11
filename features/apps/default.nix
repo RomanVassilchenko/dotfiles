@@ -26,11 +26,23 @@ let
   };
 
   mkAppConfig =
-    path: cfg:
+    name: cfg:
+    let
+      path = [
+        "dotfiles"
+        "features"
+        "apps"
+        name
+      ];
+    in
     mkMerge [
       (mkIf (cfg.enable != null) (lib.setAttrByPath (path ++ [ "enable" ]) cfg.enable))
-      (mkIf (cfg.autostart != null) (lib.setAttrByPath (path ++ [ "autostart" ]) cfg.autostart))
+      (mkIf (cfg ? autostart && cfg.autostart != null) (
+        lib.setAttrByPath (path ++ [ "autostart" ]) cfg.autostart
+      ))
     ];
+
+  mkAppConfigs = appConfigs: lib.mapAttrsToList mkAppConfig appConfigs;
 in
 {
   options.features.apps = {
@@ -38,22 +50,16 @@ in
     discord = mkAppOptions "Discord/Vesktop";
     obsStudio = mkAppOptions "OBS Studio";
     telegram = mkAppOptions "Telegram";
-    thunderbird.enable = mkOption {
-      type = types.nullOr types.bool;
-      default = null;
-      description = "Whether to enable Thunderbird. Null keeps the current defaults.";
-    };
+    thunderbird = mkAppOptions "Thunderbird";
     zapzap = mkAppOptions "ZapZap";
   };
 
-  config = mkMerge [
-    (mkAppConfig [ "dotfiles" "features" "apps" "bitwarden" ] config.features.apps.bitwarden)
-    (mkAppConfig [ "dotfiles" "features" "apps" "discord" ] config.features.apps.discord)
-    (mkAppConfig [ "dotfiles" "features" "apps" "obsStudio" ] config.features.apps.obsStudio)
-    (mkAppConfig [ "dotfiles" "features" "apps" "telegram" ] config.features.apps.telegram)
-    (mkIf (config.features.apps.thunderbird.enable != null) {
-      dotfiles.features.apps.thunderbird.enable = config.features.apps.thunderbird.enable;
-    })
-    (mkAppConfig [ "dotfiles" "features" "apps" "zapzap" ] config.features.apps.zapzap)
-  ];
+  config = mkMerge (mkAppConfigs {
+    bitwarden = config.features.apps.bitwarden;
+    discord = config.features.apps.discord;
+    obsStudio = config.features.apps.obsStudio;
+    telegram = config.features.apps.telegram;
+    thunderbird = config.features.apps.thunderbird;
+    zapzap = config.features.apps.zapzap;
+  });
 }

@@ -4,6 +4,7 @@ let
   publicHostsDir = ../hosts;
   privateHostsDir = ../private/hosts;
   hostDefaults = import ../hosts/default/common.nix;
+  freerdpRdpCamOverlay = import ../lib/overlays/freerdp-rdpecam.nix;
 
   mkStable =
     system:
@@ -91,83 +92,72 @@ let
         {
           nixpkgs.overlays = [
             inputs.llm-agents.overlays.default
-            (final: prev: {
-              # Enable MS-RDPECAM camera redirection and prefer passthrough formats
-              freerdp = prev.freerdp.overrideAttrs (old: {
-                nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.python3 ];
-                buildInputs = old.buildInputs ++ [ final.linuxHeaders ];
-                cmakeFlags = old.cmakeFlags ++ [ "-DCHANNEL_RDPECAM_CLIENT:BOOL=ON" ];
-                postPatch = (old.postPatch or "") + ''
-                  python3 - <<'PY'
-                  from pathlib import Path
-
-                  path = Path("channels/rdpecam/client/camera_device_main.c")
-                  text = path.read_text()
-                  old = """
-                  	if (!initialized)
-                  	{
-                  		for (size_t dst = 0; dst < ARRAYSIZE(available); dst++)
-                  		{
-                  			const CAM_MEDIA_FORMAT dstFormat = available[dst];
-
-                  			for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                  			{
-                  				const CAM_MEDIA_FORMAT srcFormat = available[src];
-                  				if (freerdp_video_conversion_supported(ecamToVideoFormat(srcFormat),
-                  				                                       ecamToVideoFormat(dstFormat)))
-                  				{
-                  					formats[count++] = (CAM_MEDIA_FORMAT_INFO){ srcFormat, dstFormat };
-                  				}
-                  			}
-                  		}
-                  		initialized = TRUE;
-                  	}
-                  """
-                  new = """
-                  	if (!initialized)
-                  	{
-                  		for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                  		{
-                  			const CAM_MEDIA_FORMAT format = available[src];
-                  			if (freerdp_video_conversion_supported(ecamToVideoFormat(format),
-                  			                                       ecamToVideoFormat(format)))
-                  			{
-                  				formats[count++] = (CAM_MEDIA_FORMAT_INFO){ format, format };
-                  			}
-                  		}
-
-                  		for (size_t dst = 0; dst < ARRAYSIZE(available); dst++)
-                  		{
-                  			const CAM_MEDIA_FORMAT dstFormat = available[dst];
-
-                  			for (size_t src = 0; src < ARRAYSIZE(available); src++)
-                  			{
-                  				const CAM_MEDIA_FORMAT srcFormat = available[src];
-                  				if ((srcFormat == dstFormat) ||
-                  				    !freerdp_video_conversion_supported(ecamToVideoFormat(srcFormat),
-                  				                                       ecamToVideoFormat(dstFormat)))
-                  				{
-                  					continue;
-                  				}
-
-                  				formats[count++] = (CAM_MEDIA_FORMAT_INFO){ srcFormat, dstFormat };
-                  			}
-                  		}
-                  		initialized = TRUE;
-                  	}
-                  """
-                  if old not in text:
-                      raise SystemExit("expected FreeRDP getSupportedFormats block not found")
-                  path.write_text(text.replace(old, new))
-                  PY
-                '';
-              });
-            })
+            freerdpRdpCamOverlay
           ];
         }
-        ../features
-        ../modules/drivers
-        ../modules/core
+        ../features/apps/default.nix
+        ../features/communication/default.nix
+        ../features/desktop/default.nix
+        ../features/development/default.nix
+        ../features/kde/default.nix
+        ../features/printing/default.nix
+        ../features/productivity/default.nix
+        ../features/stylix/default.nix
+        ../features/work/default.nix
+        ../modules/drivers/amd-drivers.nix
+        ../modules/drivers/intel-drivers.nix
+        ../modules/core/desktop/fonts.nix
+        ../modules/core/desktop/plasma.nix
+        ../modules/core/desktop/stylix.nix
+        ../modules/core/packages/cli/containers.nix
+        ../modules/core/packages/cli/core.nix
+        ../modules/core/packages/cli/fetch.nix
+        ../modules/core/packages/cli/media.nix
+        ../modules/core/packages/cli/modern.nix
+        ../modules/core/packages/cli/network.nix
+        ../modules/core/packages/cli/nix.nix
+        ../modules/core/packages/cli/system.nix
+        ../modules/core/packages/development/ai.nix
+        ../modules/core/packages/development/core.nix
+        ../modules/core/packages/development/databases.nix
+        ../modules/core/packages/development/golang.nix
+        ../modules/core/packages/development/java.nix
+        ../modules/core/packages/development/node.nix
+        ../modules/core/packages/development/protobuf.nix
+        ../modules/core/packages/development/python.nix
+        ../modules/core/packages/development/research.nix
+        ../modules/core/packages/desktop/apps.nix
+        ../modules/core/packages/desktop/browsers.nix
+        ../modules/core/packages/desktop/communication.nix
+        ../modules/core/packages/desktop/creative.nix
+        ../modules/core/packages/desktop/devtools.nix
+        ../modules/core/packages/desktop/gaming.nix
+        ../modules/core/packages/desktop/productivity.nix
+        ../modules/core/services/common.nix
+        ../modules/core/services/desktop.nix
+        ../modules/core/services/flatpak.nix
+        ../modules/core/services/firewall.nix
+        ../modules/core/services/kdeconnect.nix
+        ../modules/core/services/logiops.nix
+        ../modules/core/services/performance.nix
+        ../modules/core/services/printing.nix
+        ../modules/core/services/server/atuin.nix
+        ../modules/core/services/server/samba.nix
+        ../modules/core/services/server/t3code.nix
+        ../modules/core/services/server/vaultwarden.nix
+        ../modules/core/system/dotfiles.nix
+        ../modules/core/system/boot.nix
+        ../modules/core/system/hardware.nix
+        ../modules/core/system/local-hardware-clock.nix
+        ../modules/core/system/network.nix
+        ../modules/core/system/security.nix
+        ../modules/core/system/system.nix
+        ../modules/core/system/thermal.nix
+        ../modules/core/system/user.nix
+        ../modules/core/system/virtualisation.nix
+        ../modules/core/system/boot-desktop.nix
+        ../modules/core/tools/nh.nix
+        ../modules/core/tools/packages.nix
       ]
       ++ lib.optional hasPublicHost publicHostPath
       ++ lib.optional hasPrivateHost privateHostPath

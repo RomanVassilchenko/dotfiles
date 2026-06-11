@@ -96,7 +96,6 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     discover
     khelpcenter
-    konsole
     krdp
     kwin-x11
   ];
@@ -107,55 +106,4 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
 
   users.users.greeter.extraGroups = [ "input" ];
 
-  # Fix for https://github.com/NixOS/nixpkgs/issues/126590#issuecomment-3194531220
-  # Disabled: forces a local build. Re-enable if XDG_DATA_DIRS issue returns.
-  # nixpkgs.overlays = lib.singleton (
-  #   final: prev: {
-  #     kdePackages = prev.kdePackages // {
-  #       plasma-workspace =
-  #         let
-  #           basePkg = prev.kdePackages.plasma-workspace;
-  #
-  #           xdgdataPkg = pkgs.stdenv.mkDerivation {
-  #             name = "${basePkg.name}-xdgdata";
-  #             buildInputs = [ basePkg ];
-  #             dontUnpack = true;
-  #             dontFixup = true;
-  #             dontWrapQtApps = true;
-  #             installPhase = ''
-  #               mkdir -p $out/share
-  #               ( IFS=:
-  #                 for DIR in $XDG_DATA_DIRS; do
-  #                   if [[ -d "$DIR" ]]; then
-  #                     cp -r $DIR/. $out/share/
-  #                     chmod -R u+w $out/share
-  #                   fi
-  #                 done
-  #               )
-  #             '';
-  #           };
-  #
-  #           derivedPkg = basePkg.overrideAttrs {
-  #             postInstall = ''
-  #               rm -f $out/share/xsessions/plasmax11.desktop
-  #             '';
-  #             preFixup = ''
-  #               for index in "''${!qtWrapperArgs[@]}"; do
-  #                 if [[ ''${qtWrapperArgs[$((index+0))]} == "--prefix" ]] && [[ ''${qtWrapperArgs[$((index+1))]} == "XDG_DATA_DIRS" ]]; then
-  #                   unset -v "qtWrapperArgs[$((index+0))]"
-  #                   unset -v "qtWrapperArgs[$((index+1))]"
-  #                   unset -v "qtWrapperArgs[$((index+2))]"
-  #                   unset -v "qtWrapperArgs[$((index+3))]"
-  #                 fi
-  #               done
-  #               qtWrapperArgs=("''${qtWrapperArgs[@]}")
-  #               qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "${xdgdataPkg}/share")
-  #               qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "$out/share")
-  #             '';
-  #           };
-  #         in
-  #         derivedPkg;
-  #     };
-  #   }
-  # );
 }

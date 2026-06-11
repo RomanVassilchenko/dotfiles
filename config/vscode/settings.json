@@ -250,7 +250,7 @@
   "scm.inputFontFamily": "",
   "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
-  "terminal.external.linuxExec": "ghostty",
+  "terminal.external.linuxExec": "kitty",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.enableImages": true,
