@@ -31,4 +31,9 @@
       autodetect = true;
     };
   };
+
+  systemd = {
+    services."fwupd-refresh".enable = false;
+    timers."fwupd-refresh".enable = false;
+  };
 }
