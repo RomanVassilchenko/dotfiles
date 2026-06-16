@@ -265,6 +265,7 @@
   "terminal.integrated.suggest.enabled": true,
   "terminal.integrated.tabs.focusMode": "singleClick",
   "terminal.integrated.tabStopWidth": 2,
+  "todo-tree.ripgrep": "/run/current-system/sw/bin/rg",
   "update.mode": "manual",
   "window.customMenuBarAltFocus": false,
   "window.customTitleBarVisibility": "never",
