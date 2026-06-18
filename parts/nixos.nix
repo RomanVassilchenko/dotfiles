@@ -1,27 +1,12 @@
 { inputs, ... }:
 let
   inherit (inputs.nixpkgs) lib;
-  publicHostsDir = ../hosts;
-  privateHostsDir = ../private/hosts;
+  hostDiscovery = import ../lib/host-discovery.nix { inherit inputs; };
+  moduleImports = import ../lib/module-imports.nix { inherit lib; };
+  packageSets = import ../lib/package-sets.nix { inherit inputs; };
+  inherit (hostDiscovery) publicHostsDir privateHostsDir hostNames;
   hostDefaults = import ../hosts/default/common.nix;
   freerdpRdpCamOverlay = import ../lib/overlays/freerdp-rdpecam.nix;
-
-  mkStable =
-    system:
-    import inputs.nixpkgs-stable {
-      inherit system;
-      config.allowUnfree = true;
-    };
-
-  mkBitwarden =
-    system:
-    import inputs.nixpkgs-bitwarden {
-      inherit system;
-      config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [ "electron-39.8.10" ];
-      };
-    };
 
   gpuConfig = {
     intel = {
@@ -32,31 +17,17 @@ let
     };
   };
 
-  hostDirs = [ publicHostsDir ] ++ lib.optional (builtins.pathExists privateHostsDir) privateHostsDir;
-
-  hostNames =
-    let
-      excluded = [
-        "default"
-        "profiles"
-        "template"
-      ];
-      namesFrom =
-        hostsDir: requireHardware:
-        lib.attrNames (
-          lib.filterAttrs (
-            name: type:
-            type == "directory"
-            && !(builtins.elem name excluded)
-            && builtins.pathExists (hostsDir + "/${name}/default.nix")
-            && (!requireHardware || builtins.pathExists (hostsDir + "/${name}/hardware.nix"))
-          ) (builtins.readDir hostsDir)
-        );
-    in
-    lib.unique (
-      (namesFrom publicHostsDir true)
-      ++ (if builtins.pathExists privateHostsDir then namesFrom privateHostsDir false else [ ])
-    );
+  coreModuleDirs = [
+    ../modules/drivers
+    ../modules/core/desktop
+    ../modules/core/packages/cli
+    ../modules/core/packages/development
+    ../modules/core/packages/desktop
+    ../modules/core/services
+    ../modules/core/services/server
+    ../modules/core/system
+    ../modules/core/tools
+  ];
 
   mkHost =
     host:
@@ -85,8 +56,8 @@ let
           host
           ;
         hostDefaults = hostDefaults;
-        pkgs-bitwarden = mkBitwarden system;
-        pkgs-stable = mkStable system;
+        pkgs-bitwarden = packageSets.mkBitwarden system;
+        pkgs-stable = packageSets.mkStable system;
       };
       modules = [
         {
@@ -104,61 +75,8 @@ let
         ../features/productivity/default.nix
         ../features/stylix/default.nix
         ../features/work/default.nix
-        ../modules/drivers/amd-drivers.nix
-        ../modules/drivers/intel-drivers.nix
-        ../modules/core/desktop/fonts.nix
-        ../modules/core/desktop/plasma.nix
-        ../modules/core/desktop/stylix.nix
-        ../modules/core/packages/cli/containers.nix
-        ../modules/core/packages/cli/core.nix
-        ../modules/core/packages/cli/fetch.nix
-        ../modules/core/packages/cli/media.nix
-        ../modules/core/packages/cli/modern.nix
-        ../modules/core/packages/cli/network.nix
-        ../modules/core/packages/cli/nix.nix
-        ../modules/core/packages/cli/system.nix
-        ../modules/core/packages/development/ai.nix
-        ../modules/core/packages/development/core.nix
-        ../modules/core/packages/development/databases.nix
-        ../modules/core/packages/development/golang.nix
-        ../modules/core/packages/development/java.nix
-        ../modules/core/packages/development/node.nix
-        ../modules/core/packages/development/protobuf.nix
-        ../modules/core/packages/development/python.nix
-        ../modules/core/packages/development/research.nix
-        ../modules/core/packages/desktop/apps.nix
-        ../modules/core/packages/desktop/browsers.nix
-        ../modules/core/packages/desktop/communication.nix
-        ../modules/core/packages/desktop/creative.nix
-        ../modules/core/packages/desktop/devtools.nix
-        ../modules/core/packages/desktop/gaming.nix
-        ../modules/core/packages/desktop/productivity.nix
-        ../modules/core/services/common.nix
-        ../modules/core/services/desktop.nix
-        ../modules/core/services/flatpak.nix
-        ../modules/core/services/firewall.nix
-        ../modules/core/services/kdeconnect.nix
-        ../modules/core/services/logiops.nix
-        ../modules/core/services/performance.nix
-        ../modules/core/services/printing.nix
-        ../modules/core/services/server/atuin.nix
-        ../modules/core/services/server/samba.nix
-        ../modules/core/services/server/t3code.nix
-        ../modules/core/services/server/vaultwarden.nix
-        ../modules/core/system/dotfiles.nix
-        ../modules/core/system/boot.nix
-        ../modules/core/system/hardware.nix
-        ../modules/core/system/local-hardware-clock.nix
-        ../modules/core/system/network.nix
-        ../modules/core/system/security.nix
-        ../modules/core/system/system.nix
-        ../modules/core/system/thermal.nix
-        ../modules/core/system/user.nix
-        ../modules/core/system/virtualisation.nix
-        ../modules/core/system/boot-desktop.nix
-        ../modules/core/tools/nh.nix
-        ../modules/core/tools/packages.nix
       ]
+      ++ moduleImports.filesInDirs coreModuleDirs
       ++ lib.optional hasPublicHost publicHostPath
       ++ lib.optional hasPrivateHost privateHostPath
       ++ lib.optional (gpuProfile != null) gpuConfig.${gpuProfile}
@@ -179,6 +97,7 @@ in
     in
     {
       packages.dot = dotCli;
+      formatter = pkgs.nixfmt-tree;
       apps.dot = {
         type = "app";
         program = "${dotCli}/bin/dot";

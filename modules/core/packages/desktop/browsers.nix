@@ -23,15 +23,6 @@ let
         hash = "sha256-Z05TixCLsTuLjrm+e3T39tPMIu4buFw93Nm/lxpF3AI=";
       };
     };
-    cimiefiiaegbelhefglklhhakcgmhkai = {
-      name = "Plasma Integration";
-      version = "2.2";
-      crx = pkgs.fetchurl {
-        name = "cimiefiiaegbelhefglklhhakcgmhkai.crx";
-        url = crxUrl "cimiefiiaegbelhefglklhhakcgmhkai";
-        hash = "sha256-VD4UIbLpD2OF89x5ylT9fFQP4/ZiUYlhLG6RqDSAHxA=";
-      };
-    };
     hkgfoiooedgoejojocmhlaklaeopbecg = {
       name = "Picture-in-Picture";
       version = "1.14";
@@ -119,7 +110,6 @@ lib.mkIf config.dotfiles.features.desktop.enable {
         in
         {
           aapbdbdomjkkjkaonfhkkikfgjllcleb = systemInstall; # Google Translate
-          cimiefiiaegbelhefglklhhakcgmhkai = systemInstall; # Plasma Integration
           hkgfoiooedgoejojocmhlaklaeopbecg = systemInstall; # Picture-in-Picture
           kekjfbackdeiabghhcdklcdoekaanoel = systemInstall; # MAL-Sync
           mnjggcdmjocbbbhaepdhchncahnbgone = systemInstall; # SponsorBlock

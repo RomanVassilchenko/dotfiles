@@ -4,8 +4,8 @@
   ...
 }:
 let
-  kwinrc = import ./kwin/kwinrc.nix;
-  kwinrules = import ./kwin/kwinrules.nix;
+  kwinrc = import ./kwin/_kwinrc.nix;
+  kwinrules = import ./kwin/_kwinrules.nix;
 in
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma.configFile = {

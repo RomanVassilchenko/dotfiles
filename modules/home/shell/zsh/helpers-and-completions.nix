@@ -102,10 +102,10 @@
         'rebuild:Rebuild NixOS system'
         'rebuild-boot:Rebuild for next boot'
         'update:Update flake inputs and rebuild'
+        'check:Run host, flake, and format checks'
         'cleanup:Trash backup files, GC old generations'
         'backup:Backup dotfiles to the configured server'
         'server:Server management (rebuild, update)'
-        'doctor:Run system health checks'
         'trim:Run fstrim for SSD'
         'help:Show help'
       )

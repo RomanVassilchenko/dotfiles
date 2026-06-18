@@ -4,7 +4,7 @@
   ...
 }:
 let
-  shortcuts = import ./shortcuts.nix;
+  shortcuts = import ./_shortcuts.nix;
 in
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {

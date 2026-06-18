@@ -28,6 +28,8 @@ The public part builds without `private/`.
 ## Start Here
 
 - New machine or new user: follow [`docs/new-machine.md`](docs/new-machine.md)
+- Feature bundle model: see [`docs/features.md`](docs/features.md)
+- Private-first release flow: see [`docs/release.md`](docs/release.md)
 - Existing configured host: `sudo nixos-rebuild switch --flake .#$(hostname)`
 - Optional CLI install: `nix profile install .#dot`
 
@@ -130,8 +132,8 @@ dot rebuild --plain
 dot rebuild --dry
 dot rebuild-boot
 dot update
+dot check
 dot cleanup
-dot doctor
 ```
 
 Server-specific commands such as backup and remote rebuilds depend on private configuration.

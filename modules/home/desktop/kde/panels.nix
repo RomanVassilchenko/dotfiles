@@ -4,7 +4,7 @@
   ...
 }:
 let
-  widgets = import ./panel-widgets.nix;
+  widgets = import ./_panel-widgets.nix;
 in
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma = {

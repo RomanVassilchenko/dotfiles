@@ -19,7 +19,7 @@ dot rebuild --plain      # rebuild current system through the dot wrapper
 dot rebuild --dry        # preview rebuild changes
 dot rebuild-boot         # rebuild, activate on next boot
 dot update               # update flake inputs and rebuild
-dot doctor               # health checks
+dot check                # host, flake, and formatting checks
 nix eval *               # inspect options/values
 nix flake check --no-build
 ```

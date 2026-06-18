@@ -1,7 +1,11 @@
 {
   dotfiles,
+  lib,
   ...
 }:
+let
+  moduleImports = import ../../../lib/module-imports.nix { inherit lib; };
+in
 {
   _module.args = {
     appConfig = {
@@ -14,12 +18,5 @@
     };
   };
 
-  imports = [
-    ./bitwarden.nix
-    ./camunda-modeler.nix
-    ./discord.nix
-    ./obs-studio.nix
-    ./telegram.nix
-    ./zapzap.nix
-  ];
+  imports = moduleImports.filesIn ./.;
 }

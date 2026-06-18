@@ -12,6 +12,7 @@ pkgs.writeShellApplication {
     gnused
     jq
     nix
+    nixfmt
     openssh
     python3
     rsync
@@ -89,7 +90,9 @@ pkgs.writeShellApplication {
         }
 
         list_hosts() {
-          nix eval --raw "$(project_flake_ref)#nixosConfigurations" \
+          local ref="''${1:-$(project_flake_ref)}"
+
+          nix eval --raw "$ref#nixosConfigurations" \
             --apply 'configs: builtins.concatStringsSep "\n" (builtins.attrNames configs)'
         }
 
@@ -263,13 +266,70 @@ pkgs.writeShellApplication {
         }
 
         verify_hostname() {
-          local h hosts
+          local h hosts ref
+          ref="''${1:-$(project_flake_ref)}"
           h=$(hostname)
-          hosts=$(list_hosts)
+          hosts=$(list_hosts "$ref")
 
           if ! grep -Fxq "$h" <<<"$hosts"; then
             print_error "Host '$h' not found in flake nixosConfigurations"
             return 1
+          fi
+        }
+
+        print_host_diagnostics() {
+          local host_dir hosts name has_default has_hardware ref
+          ref="''${1:-$(project_flake_ref)}"
+
+          print_info "Host discovery"
+          printf "  public hosts dir:  %s\n" "$PROJECT_DIR/hosts"
+          if [[ -d "$PROJECT_DIR/private/hosts" ]]; then
+            printf "  private hosts dir: %s\n" "$PROJECT_DIR/private/hosts"
+          else
+            printf "  private hosts dir: not present\n"
+          fi
+
+          printf "\n  %-24s %-8s %-8s %-8s\n" "host" "layer" "default" "hardware"
+
+          if [[ -d "$PROJECT_DIR/hosts" ]]; then
+            while IFS= read -r -d "" host_dir; do
+              name=$(basename "$host_dir")
+              case "$name" in
+                default|profiles|template)
+                  continue
+                  ;;
+              esac
+              has_default=false
+              has_hardware=false
+              [[ -f "$host_dir/default.nix" ]] && has_default=true
+              [[ -f "$host_dir/hardware.nix" ]] && has_hardware=true
+              printf "  %-24s %-8s %-8s %-8s\n" "$name" "public" "$has_default" "$has_hardware"
+            done < <(find "$PROJECT_DIR/hosts" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+          fi
+
+          if [[ -d "$PROJECT_DIR/private/hosts" ]]; then
+            while IFS= read -r -d "" host_dir; do
+              name=$(basename "$host_dir")
+              has_default=false
+              has_hardware=false
+              [[ -f "$host_dir/default.nix" ]] && has_default=true
+              [[ -f "$host_dir/hardware.nix" ]] && has_hardware=true
+              printf "  %-24s %-8s %-8s %-8s\n" "$name" "private" "$has_default" "$has_hardware"
+            done < <(find "$PROJECT_DIR/private/hosts" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+          fi
+
+          printf "\n"
+          if hosts=$(list_hosts "$ref" 2>/dev/null); then
+            print_info "Enabled flake hosts"
+            if [[ -n "$hosts" ]]; then
+              while IFS= read -r name; do
+                [[ -n "$name" ]] && printf "  %s\n" "$name"
+              done <<<"$hosts"
+            else
+              print_warn "No enabled hosts found in nixosConfigurations"
+            fi
+          else
+            print_warn "Could not evaluate flake host list"
           fi
         }
 
@@ -583,19 +643,36 @@ pkgs.writeShellApplication {
           print_success "Cleanup complete"
         }
 
-        cmd_doctor() {
-          local failed=0
+        cmd_check() {
+          local check_ref failed=0
+          check_ref="path:$PROJECT_DIR"
+
+          print_host_diagnostics "$check_ref"
 
           print_info "Checking host configuration..."
-          if verify_hostname; then
+          if verify_hostname "$check_ref"; then
             print_success "Host is present in flake"
           else
             failed=1
           fi
 
-          print_info "Checking flake metadata..."
-          if nix flake metadata "$(project_flake_ref)" >/dev/null; then
-            print_success "Flake metadata evaluates"
+          print_info "Checking flake without building..."
+          if (
+            cd "$PROJECT_DIR"
+            nix flake check --no-build --no-write-lock-file "$check_ref"
+          ); then
+            print_success "Flake check passed"
+          else
+            failed=1
+          fi
+
+          print_info "Checking Nix formatting..."
+          if (
+            cd "$PROJECT_DIR"
+            find . -path ./.git -prune -o -name '*.nix' -type f -print0 \
+              | xargs -0 --no-run-if-empty nixfmt --check
+          ); then
+            print_success "Nix formatting is clean"
           else
             failed=1
           fi
@@ -606,42 +683,14 @@ pkgs.writeShellApplication {
             print_warn "Git worktree has local changes"
           fi
 
-          if [[ "$PRIVATE_CONFIG_PRESENT" == "true" ]]; then
-            print_info "Checking remote config..."
-            if validate_remote_config_shape; then
-              print_success "Remote config shape is valid"
+          if [[ -x "$PROJECT_DIR/private/check.sh" ]]; then
+            print_info "Running private validation..."
+            if "$PROJECT_DIR/private/check.sh"; then
+              print_success "Private validation passed"
             else
               failed=1
             fi
-
-            print_info "Checking remote connectivity..."
-            if is_remote_host_reachable "$BACKUP_SERVER"; then
-              print_success "Remote host is reachable: $BACKUP_SERVER"
-            else
-              print_warn "Remote host is unreachable: $BACKUP_SERVER"
-              failed=1
-            fi
-
-            if [[ "$failed" -eq 0 ]]; then
-              print_info "Checking remote backup path..."
-              if require_remote_directory_ready "$BACKUP_SERVER" "$BACKUP_PATH" "Remote backup path"; then
-                print_success "Remote backup path is ready"
-              else
-                failed=1
-              fi
-
-              print_info "Checking remote repo path..."
-              if require_remote_server_repo_ready "$BACKUP_SERVER"; then
-                print_success "Remote repo path is ready"
-              else
-                failed=1
-              fi
-            fi
-          else
-            print_warn "Private remote config not present; backup/server commands are unavailable"
           fi
-
-          df -h /nix/store
 
           if [[ "$failed" -ne 0 ]]; then
             exit 1
@@ -759,11 +808,11 @@ pkgs.writeShellApplication {
           echo -e "  ''${CYAN}rebuild''${NC} [--dry|--dry-activate|--build|--test] [--plain] [--cores N] [--jobs N]"
           echo -e "  ''${CYAN}rebuild-boot''${NC}"
           echo -e "  ''${CYAN}update''${NC}"
+          echo -e "  ''${CYAN}check''${NC}"
           echo -e "  ''${CYAN}validate''${NC} [fast|full|flake]"
           echo -e "  ''${CYAN}cleanup''${NC}"
           echo -e "  ''${CYAN}backup''${NC}"
           echo -e "  ''${CYAN}server rebuild|update''${NC}"
-          echo -e "  ''${CYAN}doctor''${NC}"
           echo -e "  ''${CYAN}trim''${NC}"
           if declare -F dot_private_help >/dev/null 2>&1; then
             dot_private_help
@@ -789,6 +838,10 @@ pkgs.writeShellApplication {
               shift
               cmd_update "$@"
               ;;
+            check)
+              shift
+              cmd_check
+              ;;
             validate)
               shift
               cmd_validate "''${1:-full}"
@@ -804,10 +857,6 @@ pkgs.writeShellApplication {
             server)
               shift
               cmd_server "''${1:-}"
-              ;;
-            doctor)
-              shift
-              cmd_doctor
               ;;
             trim)
               shift

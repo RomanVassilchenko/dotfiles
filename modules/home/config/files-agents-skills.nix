@@ -5,7 +5,7 @@
   ...
 }:
 let
-  shared = import ./files-shared.nix { inherit config dotfiles; };
+  shared = import ./_files-shared.nix { inherit config dotfiles; };
 in
 {
   home.activation.cleanupAgentsSkillsParent = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
