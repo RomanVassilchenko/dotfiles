@@ -4,6 +4,7 @@
     enable = true;
     package = pkgs-stable.fzf;
     enableZshIntegration = true;
+    enableNushellIntegration = false;
     defaultOptions = [
       "--height=45%"
       "--margin=1"
