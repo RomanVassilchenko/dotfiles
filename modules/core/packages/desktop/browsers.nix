@@ -43,11 +43,11 @@ let
     };
     mnjggcdmjocbbbhaepdhchncahnbgone = {
       name = "SponsorBlock";
-      version = "6.1.5";
+      version = "6.1.6";
       crx = pkgs.fetchurl {
         name = "mnjggcdmjocbbbhaepdhchncahnbgone.crx";
         url = crxUrl "mnjggcdmjocbbbhaepdhchncahnbgone";
-        hash = "sha256-nE5FE3Eo1jG8sT1KYjVl8JRbmAiyhN8IZObHsAIb0wY=";
+        hash = "sha256-VYf+K2qZRhAcoN3nxu/nanVcXuW21uY9/EjH9zbNtP8=";
       };
     };
     nffaoalbilbmmfgbnbgppjihopabppdk = {
@@ -61,11 +61,11 @@ let
     };
     nngceckbapebfimnlniiiahkandclblb = {
       name = "Bitwarden";
-      version = "2026.5.1";
+      version = "2026.6.0";
       crx = pkgs.fetchurl {
         name = "nngceckbapebfimnlniiiahkandclblb.crx";
         url = crxUrl "nngceckbapebfimnlniiiahkandclblb";
-        hash = "sha256-xRK2iX2ntV6N/PQh/KcK10FoNsKV44B+UtyqvFCvelI=";
+        hash = "sha256-szBs8uPHBpgx4VAprSLOtD1XOAjUgecoAp6aJsvuT74=";
       };
     };
   };

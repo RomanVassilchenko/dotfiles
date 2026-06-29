@@ -12,6 +12,7 @@ lib.mkIf config.dotfiles.features.desktop.enable {
       noto-fonts
       noto-fonts-cjk-sans
       roboto-mono
+
       # icon fonts
       nerd-fonts.symbols-only
     ];

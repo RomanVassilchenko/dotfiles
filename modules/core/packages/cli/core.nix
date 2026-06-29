@@ -2,12 +2,10 @@
 {
   environment.systemPackages =
     (with pkgs-stable; [
-      bitwarden-cli # Bitwarden CLI.
       delta
       fd
       git-absorb
       git-branchless
-      jujutsu # Git, the full tooling.
       jq
       just
       ripgrep

@@ -81,6 +81,10 @@ pkgs.writeShellApplication {
         print_warn() { echo -e "''${YELLOW}[WARN]''${NC} $1"; }
         print_info() { echo -e "''${BLUE}[INFO]''${NC} $1"; }
 
+        filter_known_nix_warnings() {
+          grep -vFx "evaluation warning: Nixpkgs 26.05 will be the last release to support x86_64-darwin; see https://nixos.org/manual/nixpkgs/unstable/release-notes#x86_64-darwin-26.05"
+        }
+
         project_flake_ref() {
           local ref="$PROJECT_DIR"
           if git -C "$PROJECT_DIR" submodule status private 2>/dev/null | grep -qv "^-"; then
@@ -371,9 +375,11 @@ pkgs.writeShellApplication {
 
           print_info "nixos-rebuild $action -> $host"
           if [[ "$needs_sudo" == "true" ]]; then
-            run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
+            run_sudo nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" \
+              2> >(filter_known_nix_warnings >&2)
           else
-            nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@"
+            nixos-rebuild "$action" --flake "$flake_ref" "''${_sub_args[@]}" "$@" \
+              2> >(filter_known_nix_warnings >&2)
           fi
 
           if [[ -n "$prev_system" ]] && command -v nvd >/dev/null 2>&1; then
@@ -659,7 +665,8 @@ pkgs.writeShellApplication {
           print_info "Checking flake without building..."
           if (
             cd "$PROJECT_DIR"
-            nix flake check --no-build --no-write-lock-file "$check_ref"
+            nix flake check --no-build --no-write-lock-file "$check_ref" \
+              2> >(filter_known_nix_warnings >&2)
           ); then
             print_success "Flake check passed"
           else
@@ -731,7 +738,7 @@ pkgs.writeShellApplication {
               print_info "Evaluating flake..."
               (
                 cd "$PROJECT_DIR"
-                nix flake check --no-build
+                nix flake check --no-build 2> >(filter_known_nix_warnings >&2)
               )
               print_success "Validation passed"
               ;;

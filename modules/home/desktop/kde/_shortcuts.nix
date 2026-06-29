@@ -9,7 +9,6 @@
     KrohnkiteFocusUp = "Meta+Up";
     KrohnkiteGrowHeight = "Meta+Ctrl+Down";
     KrohnkiteGrowWidth = "Meta+Ctrl+Right";
-    KrohnkiteIncrease = "Meta+I";
     KrohnkiteNextLayout = "Meta+Space";
     KrohnkitePreviousLayout = "Meta+Shift+Space";
     KrohnkiteSetMaster = "Meta+Shift+Return";
@@ -20,6 +19,7 @@
     KrohnkiteShrinkHeight = "Meta+Ctrl+Up";
     KrohnkiteShrinkWidth = "Meta+Ctrl+Left";
     KrohnkiteToggleFloat = "Meta+F";
+    KrohnkitegrowWidth = "Meta+Ctrl+Right";
 
     "Move with Window to Desktop 1" = "Meta+Ctrl+1";
     "Move with Window to Desktop 2" = "Meta+Ctrl+2";
@@ -46,6 +46,11 @@
       "Meta+5"
       "Meta+Num+5"
     ];
+    "Show Desktop" = [ ];
+    "Switch One Desktop Down" = [ ];
+    "Switch One Desktop Up" = [ ];
+    "Switch One Desktop to the Left" = [ ];
+    "Switch One Desktop to the Right" = [ ];
     "Switch to Next Desktop" = "Meta+PgDown";
     "Switch to Previous Desktop" = "Meta+PgUp";
     "Toggle Tiling" = [ ];
@@ -55,7 +60,11 @@
     "Window Quick Tile Top" = "Meta+Ctrl+Alt+Up";
     "Window Close" = "Meta+Q";
     "Window Fullscreen" = "Meta+M";
+    "Window Maximize" = [ ];
+    "Window Minimize" = [ ];
     "Window Move Center" = "Ctrl+Alt+C";
+    "Window to Next Screen" = [ ];
+    "Window to Previous Screen" = [ ];
   };
 
   ksmserver."Lock Session" = [
@@ -74,11 +83,9 @@
   ];
 
   plasmashell = {
-    "activate application launcher" = [
-      "Meta"
-      "Alt+F1"
-    ];
+    "activate application launcher" = [ ];
     "activate task manager entry 1" = [ ];
+    "activate task manager entry 10" = [ ];
     "activate task manager entry 2" = [ ];
     "activate task manager entry 3" = [ ];
     "activate task manager entry 4" = [ ];
@@ -113,13 +120,19 @@
     "Alt+Space"
     "Meta+R"
   ];
-  "services/org.kde.spectacle.desktop".ActiveWindowScreenShot = "Meta+Print";
-  "services/org.kde.spectacle.desktop".FullScreenScreenShot = "Print";
-  "services/org.kde.spectacle.desktop"._launch = [ ];
-  "services/org.kde.spectacle.desktop".RectangularRegionScreenShot = [
-    "Meta+S"
-    "Meta+Shift+Print"
+  "services/org.kde.kscreen.desktop".ShowOSD = [
+    ""
+    "Display"
   ];
+  "services/org.kde.plasma.emojier.desktop"._launch = "Meta+.";
+  "services/org.kde.spectacle.desktop" = {
+    FullScreenScreenShot = "Print";
+    RecordRegion = [ ];
+    RectangularRegionScreenShot = [
+      "Meta+S"
+    ];
+    _launch = [ ];
+  };
   "services/org.telegram.desktop.desktop"._launch = "Meta+Shift+T";
   "services/plasma-manager-commands.desktop".clear-notifications = "Meta+Shift+Backspace";
   "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-1 = "Meta+Ctrl+1";
@@ -127,8 +140,7 @@
   "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-3 = "Meta+Ctrl+3";
   "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-4 = "Meta+Ctrl+4";
   "services/plasma-manager-commands.desktop".move-window-and-focus-to-desktop-5 = "Meta+Ctrl+5";
-  "services/postman.desktop"._launch = "Meta+Shift+P";
   "services/steam.desktop"._launch = "Meta+Shift+S";
-  "services/systemsettings.desktop"._launch = "Meta+,";
-  "services/kcm_kscreen.desktop"._launch = "Meta+P";
+  "services/systemsettings.desktop"._launch = [ ];
+  "services/kcm_kscreen.desktop"._launch = [ ];
 }

@@ -34,7 +34,7 @@
       desktops = "Desktop_3";
       desktopsrule = 3;
       types = 1;
-      wmclass = "code|Code|code-url-handler|Zed|dev.zed.Zed|camunda-modeler|DBeaver|Postman|com.obsproject.Studio";
+      wmclass = "code|Code|code-url-handler|Zed|dev.zed.Zed|camunda-modeler|DBeaver|com.obsproject.Studio";
       wmclasscomplete = false;
       wmclassmatch = 3;
     };

@@ -5,10 +5,12 @@
 }:
 lib.mkIf dotfiles.features.desktop.plasma.enable {
   programs.plasma.configFile = {
-    kiorc.Confirmations.ConfirmEmptyTrash = false;
+    kiorc.Confirmations = {
+      ConfirmDelete = true;
+      ConfirmEmptyTrash = false;
+    };
     klipperrc.General.IgnoreImages = true;
     klipperrc.General.MaxClipItems = 100;
-    krunnerrc.General.ActivateWhenTypingOnDesktop = true;
     krunnerrc.General.FreeFloating = true;
     krunnerrc.Plugins.webshortcutsEnabled = true;
     ksplashrc.KSplash.Theme = "Catppuccin-Mocha-Mauve";

@@ -86,7 +86,6 @@
       tileLayoutOrder = 4;
     };
 
-    Tiling.padding = 4;
     "org.kde.kdecoration2" = {
       BorderSize = "None";
       BorderSizeAuto = false;
@@ -95,6 +94,7 @@
     Windows = {
       DelayFocusInterval = 150;
       FocusPolicy = "FocusFollowsMouse";
+      PerOutputVirtualDesktops = true;
     };
 
     ModifierOnlyShortcuts.Meta = "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu";

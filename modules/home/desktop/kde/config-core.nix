@@ -21,7 +21,10 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
     };
 
     kdeglobals = {
-      KDE.contrast = 7;
+      KDE = {
+        contrast = 7;
+        frameContrast = 0.2;
+      };
       General = {
         AccentColor = "203,166,247";
         BrowserApplication = "helium.desktop";
@@ -34,6 +37,23 @@ lib.mkIf dotfiles.features.desktop.plasma.enable {
         toolBarFont = "Inter Variable,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
       };
       Icons.Theme = "Papirus-Dark";
+      "KFileDialog Settings" = {
+        "Allow Expansion" = false;
+        "Automatically select filename extension" = true;
+        "Breadcrumb Navigation" = true;
+        "Decoration position" = 2;
+        "Show Full Path" = false;
+        "Show Inline Previews" = true;
+        "Show Preview" = false;
+        "Show Speedbar" = true;
+        "Show hidden files" = true;
+        "Sort by" = "Name";
+        "Sort directories first" = true;
+        "Sort hidden files last" = false;
+        "Sort reversed" = false;
+        "Speedbar Width" = 159;
+        "View Style" = "DetailTree";
+      };
     };
   };
 }

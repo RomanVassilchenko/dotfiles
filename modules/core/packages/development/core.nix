@@ -9,6 +9,6 @@ lib.mkIf config.dotfiles.features.development.enable {
   environment.systemPackages = [
     pkgs-stable.act
     pkgs-stable.android-tools
-    pkgs.glab # keep on unstable — actively developed
+    pkgs.glab
   ];
 }

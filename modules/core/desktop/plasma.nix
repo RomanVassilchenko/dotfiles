@@ -48,12 +48,10 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
       ark
       dolphin
       elisa
-      filelight
       gwenview
       kamoso
       kate
       kcalc
-      kcharselect
       kcolorchooser
       kdeconnect-kde
       krohnkite
@@ -62,7 +60,6 @@ lib.mkIf config.dotfiles.features.desktop.plasma.enable {
       kwallet-pam
       kwalletmanager
       okular
-      partitionmanager
       plasma-browser-integration
       plasma-desktop
       plasma-nm

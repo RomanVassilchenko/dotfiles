@@ -2,6 +2,7 @@
 {
   environment.systemPackages =
     (with pkgs.llm-agents; [
+      opencode
       pi
     ])
     ++ [
